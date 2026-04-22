@@ -1218,10 +1218,33 @@ const THIRDPARTY_SEED = [
     recommendation:'recommended', 
     recommendationText:'Strumento istituzionale. Uso obbligatorio per registro, valutazioni, comunicazioni. Coperto da DPA scolastico firmato all\'adozione del servizio.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
-    mitigations:['Accesso famiglie con credenziali dedicate','Backup periodici gestiti dal fornitore','Verificare annualmente policy e DPA aggiornati'],
-    internalAlternatives:[]},
+    mitigations:['Accesso famiglie con credenziali dedicate','Backup periodici gestiti dal fornitore','Verifica annuale policy e DPA aggiornati'],
+    internalAlternatives:[],
+    risks:[
+      {level:'BASSO', text:'Accesso non autorizzato alle credenziali famiglia in caso di password deboli o phishing'},
+      {level:'BASSO', text:'Interruzione servizio (dipendenza dal fornitore) che blocca operazioni amministrative'},
+      {level:'BASSO', text:'Errore umano nell\'inserimento dati con conseguenze su valutazioni/comunicazioni'}
+    ],
+    requiredDocs:[
+      'Contratto di servizio Master Training (già in essere)',
+      'DPA scolastico firmato (già in essere all\'adozione del servizio)',
+      'Voce nel Registro dei Trattamenti art. 30 GDPR',
+      'Informativa trattamento dati studenti per famiglie all\'iscrizione'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione contratto e DPA (già firmato)'},
+      {role:'DPO', action:'Verifica periodica adeguatezza trattamento (annuale)'},
+      {role:'Famiglie', action:'Presa visione informativa all\'iscrizione'}
+    ],
+    technicalChecklist:[
+      'Password forti per tutti gli utenti (studenti, genitori, docenti)',
+      'Verifica profili autorizzazione: ogni utente vede solo ciò che gli compete',
+      '2FA abilitata per account Dirigente e segreteria',
+      'Backup locale periodico dei dati critici',
+      'Policy password con scadenza per account segreteria'
+    ]},
 
-  // --- GOOGLE ECOSYSTEM ---
+  // --- GOOGLE WORKSPACE ---
   {id:'tp-gws', name:'Google Workspace for Education', url:'https://workspace.google.com/edu/', cat:'Ecosistema cloud',
     source:'thirdparty', cluster:'F', active:false, individualUse:false,
     vendor:'Google Ireland Limited', country:'Irlanda (sede EU)', dataLocation:'EU/USA con SCC + DPF',
@@ -1231,10 +1254,36 @@ const THIRDPARTY_SEED = [
     contentDestination:'Account Workspace scuola — non usati per training modelli AI (clausola esplicita DPA Education)',
     transferLegalBasis:'SCC + DPF EU-USA + DPA Education',
     recommendation:'recommended',
-    recommendationText:'Infrastruttura di base della scuola. DPA Education è il più solido standard per il settore educativo. Google dichiara esplicitamente che i dati Education non sono usati per addestrare modelli AI.',
+    recommendationText:'Infrastruttura di base della scuola. DPA Education è il più solido standard per il settore educativo. Google dichiara esplicitamente che i dati Education non sono usati per addestrare modelli AI. Configurazione già rafforzata nella vostra scuola: account istituzionali tramite Classroom con funzione Gmail disabilitata — nessuna registrazione dell\'utente a servizi esterni è possibile con queste credenziali.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
-    mitigations:['Verificare che "Additional Services" non Education siano disabilitati per under-18','Profilo studente H24 con restrizioni','Informativa famiglie nel patto digitale'],
-    internalAlternatives:[]},
+    mitigations:['Gmail disabilitata sugli account studenti (già in atto)','Additional Services non-Education disabilitati per under-18','Profilo studente H24 con restrizioni','Verifica periodica impostazioni admin'],
+    internalAlternatives:[],
+    risks:[
+      {level:'BASSO', text:'Accesso da device personali fuori dal perimetro laboratorio (mitigato: profilo iPad MDM)'},
+      {level:'BASSO', text:'Condivisione impropria di file tra studenti'},
+      {level:'BASSO', text:'Trasferimento dati USA per funzionalità avanzate (mitigato da DPF + SCC)'}
+    ],
+    requiredDocs:[
+      'Contratto Workspace for Education (già in essere)',
+      'DPA Education standard (già in essere — accettato all\'attivazione)',
+      'Voce nel Registro dei Trattamenti art. 30 GDPR',
+      'Informativa trattamento dati famiglie con menzione Workspace',
+      'Regolamento digitale Prot. 09/2026 (già approvato dal CdI)'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione contratto e DPA (già firmato)'},
+      {role:'Animatore Digitale / Admin', action:'Configurazione restrizioni profili per fascia d\'età'},
+      {role:'DPO', action:'Verifica annuale adeguatezza e rinnovo DPA'},
+      {role:'Famiglie', action:'Presa visione informativa all\'iscrizione (annualmente rinnovata)'}
+    ],
+    technicalChecklist:[
+      'Gmail disabilitata per account studenti (già configurato)',
+      'Disabilitare "Additional Services" non-Education dagli utenti under-18',
+      'Classroom: restrizioni su condivisione esterna al dominio',
+      '2FA obbligatoria per Dirigente, segreteria, Animatore Digitale',
+      'Chrome Enterprise policies attive su iMac laboratorio',
+      'Log audit console Admin monitorati mensilmente'
+    ]},
 
   {id:'tp-notebooklm', name:'Google NotebookLM', url:'https://notebooklm.google.com/', cat:'IA generativa',
     source:'thirdparty', cluster:'C', active:false, individualUse:false,
@@ -1248,7 +1297,38 @@ const THIRDPARTY_SEED = [
     recommendationText:'Prima scelta per IA generativa in contesto scolastico. Zero training sui dati, fonti controllate dal docente, output verificabile. Raccomandato solo per 3ª secondaria — non per Primaria e 1ª-2ª secondaria per ragioni evolutive (maturità critica rispetto a hallucination).',
     ageTargets:{primaria:'no', secondaria12:'caution', secondaria13:'ok'},
     mitigations:['Fonti caricate SEMPRE dal docente, mai dallo studente','Notebook pre-configurato con obiettivi precisi','Ambiente laboratorio con supervisione','Formazione studenti: "no dati personali nei prompt" (Reg. Sez. 4.5)','Documentare estensione ad altre classi con aggiornamento DPIA'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Inserimento accidentale di dati personali di studenti o terzi nei prompt'},
+      {level:'MEDIO', text:'Hallucination del modello con output errati usati come fonte affidabile'},
+      {level:'BASSO', text:'Utilizzo della conoscenza generica del modello oltre le fonti caricate (default: no — NotebookLM vincolato a fonti)'},
+      {level:'BASSO', text:'Accesso non autorizzato al notebook se condivisione link non protetta'},
+      {level:'MEDIO', text:'Dipendenza pedagogica degli studenti dallo strumento IA'}
+    ],
+    requiredDocs:[
+      'DPIA specifica per IA generativa (Cluster C) estesa a NotebookLM',
+      'Informativa specifica famiglie 3ª secondaria — sperimentazione IA',
+      'Nota protocollata della Dirigente che autorizza la sperimentazione',
+      'Aggiornamento Registro Trattamenti art. 30 con voce "IA generativa didattica"',
+      'Allegato al Patto Digitale di Famiglia con clausola uso AI',
+      'Delibera Collegio Docenti se inserita nel PTOF'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Autorizzazione sperimentazione con nota protocollata'},
+      {role:'DPO', action:'Parere preventivo scritto sulla DPIA — obbligatorio prima dell\'avvio'},
+      {role:'Collegio Docenti', action:'Delibera se sperimentazione entra nel PTOF'},
+      {role:'Famiglie 3ª secondaria', action:'Presa visione informativa specifica (non consenso esplicito — coperto da Workspace)'},
+      {role:'Animatore Digitale', action:'Formazione docenti che conducono la sperimentazione'}
+    ],
+    technicalChecklist:[
+      'Verifica che account studenti abbiano accesso NotebookLM abilitato da Admin Console',
+      'Test preliminare con notebook di prova e gruppo pilota di docenti',
+      'Fonti del notebook caricate solo dal docente su Drive istituzionale',
+      'Condivisione notebook limitata agli studenti della classe specifica',
+      'Nessun link pubblico del notebook',
+      'Monitoraggio tramite Apple Remote Desktop durante sessioni',
+      'Verifica annuale che la policy Google "no training on Education data" resti valida'
+    ]},
 
   {id:'tp-youtube', name:'YouTube (embed)', url:'https://www.youtube.com/', cat:'Video',
     source:'thirdparty', cluster:'D', active:false, individualUse:false,
@@ -1261,10 +1341,29 @@ const THIRDPARTY_SEED = [
     recommendation:'recommended',
     recommendationText:'Embed video nelle app didattiche senza login studente. Il tracking è minimo. Usare youtube-nocookie.com dove possibile, anche se può causare Error 153 su alcune configurazioni (documentato nella vostra base tecnica).',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
-    mitigations:['Parametri embed: rel=0, modestbranding=1','Controllo preventivo video correlati (rel=0)','Mai chiedere login Google durante attività didattica'],
-    internalAlternatives:[]},
+    mitigations:['Parametri embed: rel=0, modestbranding=1','Controllo preventivo video correlati','Mai chiedere login Google durante attività didattica'],
+    internalAlternatives:[],
+    risks:[
+      {level:'BASSO', text:'Video correlati YouTube con contenuti non appropriati (mitigato: rel=0)'},
+      {level:'BASSO', text:'Pre-roll pubblicitari durante la lezione'},
+      {level:'BASSO', text:'Tracking Google tramite cookie se non si usa youtube-nocookie'}
+    ],
+    requiredDocs:[
+      'Voce nel Registro dei Trattamenti (già coperta da Workspace)',
+      'Nessun documento specifico aggiuntivo richiesto per embed'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Selezione preventiva dei video da embeddare nelle app'},
+      {role:'Animatore Digitale', action:'Verifica configurazione embed (rel=0, modestbranding)'}
+    ],
+    technicalChecklist:[
+      'Embed con parametri: rel=0, modestbranding=1, playsinline=1',
+      'Usare youtube-nocookie.com dove la compatibilità lo consente',
+      'Test video embed prima del deploy per verificare assenza di suggerimenti inappropriati',
+      'Per video di durata limitata, valutare download + hosting locale'
+    ]},
 
-  // --- CREAZIONE CONTENUTI ---
+  // --- CANVA FOR EDUCATION ---
   {id:'tp-canva', name:'Canva for Education', url:'https://www.canva.com/education/', cat:'Creazione contenuti',
     source:'thirdparty', cluster:'F', active:false, individualUse:false,
     vendor:'Canva Pty Ltd', country:'Australia', dataLocation:'AU/USA con SCC',
@@ -1278,7 +1377,39 @@ const THIRDPARTY_SEED = [
     recommendationText:'Strumento ricco di asset (template, immagini, font) non replicabile internamente. Accettabile per esigenze di creazione grafica e presentazioni. La modalità "account classe condiviso" è la più sicura per Primaria; account individuali istituzionali per Secondaria.',
     ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Admin Canva disabilita condivisione pubblica + Canva Community a livello dominio','Primaria 1-3: account classe condiviso, lavoro a turno supervisionato','Primaria 4-5 + Secondaria: account individuali via Workspace SSO','Moderazione contenuti: verificare immagini prodotte prima della stampa/condivisione','Informativa specifica nel patto digitale'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Condivisione involontaria di contenuti sulla Community Canva pubblica'},
+      {level:'MEDIO', text:'Accesso a template/contenuti non adatti all\'età nella libreria generale'},
+      {level:'BASSO', text:'Trasferimento dati AU/USA (mitigato da DPA + DPF)'},
+      {level:'MEDIO', text:'Account studenti con possibile accesso extra-scolastico (se credenziali condivise a casa)'},
+      {level:'BASSO', text:'Upload da parte studenti di immagini personali identificative'}
+    ],
+    requiredDocs:[
+      'DPA Canva Education (automaticamente incorporato nell\'adesione)',
+      'Voce nel Registro dei Trattamenti art. 30 GDPR',
+      'Allegato al Patto Digitale di Famiglia con clausola Canva',
+      'Informativa famiglie Primaria (modalità account classe)',
+      'Informativa famiglie Secondaria (account individuali)',
+      'Policy interna d\'uso: "cosa si può e non si può fare con Canva a scuola"'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione adesione Canva for Education'},
+      {role:'Admin Canva (Animatore Digitale)', action:'Configurazione restrizioni dominio'},
+      {role:'DPO', action:'Parere preventivo e verifica annuale'},
+      {role:'Famiglie', action:'Presa visione informativa'},
+      {role:'Docenti', action:'Formazione sull\'uso moderato e controllato'}
+    ],
+    technicalChecklist:[
+      'Admin Canva: disabilitare "Share to Community" a livello dominio',
+      'Admin Canva: disabilitare condivisione pubblica di design',
+      'Verificare che "safe-for-school content filters" siano attivi',
+      'Creare gruppo "Studenti Primaria" con restrizioni specifiche',
+      'Creare gruppo "Studenti Secondaria" con SSO Workspace',
+      'Test con account docente di prova prima del rollout',
+      'Account classe condiviso per Primaria 1-3 (no account individuali)',
+      'Log revisione contenuti creati per stampa/condivisione'
+    ]},
 
   {id:'tp-padlet', name:'Padlet', url:'https://padlet.com/', cat:'Creazione contenuti',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
@@ -1292,8 +1423,34 @@ const THIRDPARTY_SEED = [
     recommendation:'conditional',
     recommendationText:'Occasionale. Usare solo in modalità bacheca privata senza account studenti. Se l\'uso diventa sistematico, richiedere DPA scritto al supporto Padlet. Valutabile la sostituzione con Jamboard/Canva già coperti da DPA esistente.',
     ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
-    mitigations:['Bacheche sempre in modalità "privata" o "link segreto"','NO account studenti — contributi con nickname (nome fantasia)','Attivare "approvazione moderatore" prima della visibilità','Mai caricare foto/video di studenti identificabili','Chiedere DPA esplicito se uso regolare'],
-    internalAlternatives:[]},
+    mitigations:['Bacheche sempre in modalità "privata" o "link segreto"','NO account studenti — contributi con nickname','Attivare "approvazione moderatore" prima della visibilità','Mai caricare foto/video di studenti identificabili','Chiedere DPA esplicito se uso regolare'],
+    internalAlternatives:[],
+    risks:[
+      {level:'ALTO', text:'Bacheca pubblica indicizzabile da Google con contenuti di minori'},
+      {level:'MEDIO', text:'DPA non automatico — uso senza richiesta esplicita lascia scoperta la base giuridica'},
+      {level:'MEDIO', text:'Contenuti inappropriati pubblicati da studenti senza moderazione'},
+      {level:'MEDIO', text:'Upload di foto/video di minori identificabili'},
+      {level:'BASSO', text:'Trasferimento USA (mitigato da DPF)'}
+    ],
+    requiredDocs:[
+      'DPA Padlet richiesto esplicitamente al supporto (se uso sistematico)',
+      'Voce nel Registro dei Trattamenti se uso regolare',
+      'Allegato al Patto Digitale con regole d\'uso',
+      'Informativa famiglie (se contenuti prodotti da studenti)'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Autorizzazione uso sistematico e richiesta DPA'},
+      {role:'DPO', action:'Parere preventivo se uso regolare'},
+      {role:'Docente', action:'Configurazione modalità privata + moderazione'}
+    ],
+    technicalChecklist:[
+      'Bacheche in modalità "privata" o "link segreto" — mai pubblica',
+      'Attivare "approvazione moderatore" nelle impostazioni bacheca',
+      'No account studenti — contributi con nickname (nome proprio o fantasia)',
+      'Richiesta DPA al supporto Padlet Education (email edu@padlet.com)',
+      'Verifica che bacheche non indicizzate (robots.txt / flag "non pubblica")',
+      'Eliminazione bacheche a fine anno scolastico'
+    ]},
 
   {id:'tp-genially', name:'Genially', url:'https://genial.ly/', cat:'Creazione contenuti',
     source:'thirdparty', cluster:'F', active:false, individualUse:false,
@@ -1307,7 +1464,25 @@ const THIRDPARTY_SEED = [
     recommendationText:'Strumento presentazioni interattive solido sul piano normativo per sede EU. Adatto se docente crea e studenti fruiscono come viewer, oppure per lavori di classe Secondaria 3ª con account supervisionato.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Primaria: solo docente crea, studenti vedono','Secondaria: possibile lavoro produttivo con account docente condiviso'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'BASSO', text:'Contenuti creati dal docente accessibili via link se non protetti'},
+      {level:'BASSO', text:'Account docente compromesso con accesso a tutti i contenuti'}
+    ],
+    requiredDocs:[
+      'Nessun DPA aggiuntivo richiesto (GDPR nativo UE)',
+      'Voce nel Registro dei Trattamenti (se uso regolare)'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Creazione account con email istituzionale'},
+      {role:'Animatore Digitale', action:'Supporto tecnico nella configurazione'}
+    ],
+    technicalChecklist:[
+      'Account docenti con email @sacrafamiglia.education',
+      'Password forti + 2FA dove disponibile',
+      'Genially creati con visibilità "privata" o "link privato"',
+      'Condivisione studenti solo come viewer (non come editor)'
+    ]},
 
   {id:'tp-bookcreator', name:'Book Creator', url:'https://bookcreator.com/', cat:'Creazione contenuti',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
@@ -1322,9 +1497,30 @@ const THIRDPARTY_SEED = [
     recommendationText:'Occasionale. Account classe gestito dal docente, studenti scrivono i libri senza creare account propri. I prodotti restano privati.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Account classe + codice accesso studenti','Libri in modalità "privata" salvo pubblicazione consapevole','Verificare immagini caricate (filtri parentali attivi)'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Studenti caricano foto/video personali identificativi nei libri'},
+      {level:'BASSO', text:'Libri pubblicati accidentalmente con dati personali'},
+      {level:'BASSO', text:'Account classe compromesso'}
+    ],
+    requiredDocs:[
+      'DPA Book Creator scolastico (richiedere al supporto)',
+      'Voce nel Registro dei Trattamenti se uso regolare',
+      'Informativa famiglie se studenti producono contenuti personali'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione DPA scolastico'},
+      {role:'Docente', action:'Creazione account classe + gestione codici'}
+    ],
+    technicalChecklist:[
+      'Account classe (non individuali) per studenti',
+      'Codice accesso condiviso solo in laboratorio',
+      'Libri in modalità "privata" come default',
+      'Verifica immagini caricate prima di eventuale pubblicazione',
+      'Filtri safe-search attivi sui contenuti'
+    ]},
 
-  // --- QUIZ E VALUTAZIONE (categoria con forti alternative interne) ---
+  // --- QUIZ E VALUTAZIONE ---
   {id:'tp-kahoot', name:'Kahoot!', url:'https://kahoot.com/schools/', cat:'Quiz e valutazione',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
     vendor:'Kahoot! ASA', country:'Norvegia (EEA)', dataLocation:'EEA',
@@ -1338,7 +1534,28 @@ const THIRDPARTY_SEED = [
     recommendationText:'Uso occasionale accettabile solo in modalità live, mai con account studenti under-14. Esistono alternative interne già pronte nell\'ecosistema scolastico che offrono maggior controllo.',
     ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
     mitigations:['SOLO modalità live (docente proietta)','Formazione "come si sceglie il nickname" a inizio anno','Docente pulisce nickname palesemente identificativi prima dell\'avvio','Mai modalità self-paced con under-14'],
-    internalAlternatives:['Word Games','Sfida tra Casate','Fatto o Opinione?','Sei un Piccione?']},
+    internalAlternatives:['Word Games','Sfida tra Casate','Fatto o Opinione?','Sei un Piccione?'],
+    risks:[
+      {level:'MEDIO', text:'Studenti scelgono nickname identificativi (nome+cognome, iniziali+classe)'},
+      {level:'MEDIO', text:'Nickname inappropriati o offensivi tra pari'},
+      {level:'BASSO', text:'Archiviazione risultati individuali in modalità self-paced (da evitare)'},
+      {level:'BASSO', text:'Tracciamento IP partecipanti per analytics Kahoot'}
+    ],
+    requiredDocs:[
+      'Nessun documento specifico se uso sporadico modalità live',
+      'Se uso sistematico: voce Registro Trattamenti + regole nickname scritte'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Creazione account Kahoot personale o scolastico'},
+      {role:'Animatore Digitale', action:'Formazione studenti su regole nickname'}
+    ],
+    technicalChecklist:[
+      'SOLO modalità live (docente proietta, studenti rispondono temporaneamente)',
+      'Sessione formativa "come si sceglie il nickname" a inizio anno (5 minuti)',
+      'Docente filtra nickname identificativi/inappropriati prima di avviare',
+      'Disabilitare "save results" nelle impostazioni se abilitato',
+      'Considerare alternative interne prima di Kahoot per quiz ricorrenti'
+    ]},
 
   {id:'tp-quizizz', name:'Quizizz', url:'https://quizizz.com/', cat:'Quiz e valutazione',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
@@ -1353,7 +1570,25 @@ const THIRDPARTY_SEED = [
     recommendationText:'Uso occasionale accettabile. Alternative interne già disponibili per quiz didattici standard.',
     ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
     mitigations:['Modalità live + nickname puliti','Evitare storicizzazione performance individuali con under-14'],
-    internalAlternatives:['Mattoncini Magici','Sbagliando s\'Impara','Word Games']},
+    internalAlternatives:['Mattoncini Magici','Sbagliando s\'Impara','Word Games'],
+    risks:[
+      {level:'MEDIO', text:'Nickname identificativi scelti dagli studenti'},
+      {level:'MEDIO', text:'Trasferimento USA per analytics (mitigato da DPF)'},
+      {level:'BASSO', text:'Storicizzazione performance in modalità homework (da evitare)'}
+    ],
+    requiredDocs:[
+      'Nessun documento specifico se uso sporadico',
+      'Se uso sistematico: voce Registro + DPA scolastico'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Creazione account con email istituzionale'},
+      {role:'Animatore Digitale', action:'Formazione nickname e uso appropriato'}
+    ],
+    technicalChecklist:[
+      'Modalità live preferibile a modalità homework',
+      'Regole nickname comunicate prima della sessione',
+      'No homework mode per under-14'
+    ]},
 
   {id:'tp-wayground', name:'Wayground', url:'https://wayground.com/', cat:'Quiz e valutazione',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
@@ -1368,7 +1603,27 @@ const THIRDPARTY_SEED = [
     recommendationText:'Uso occasionale accettabile. Meno documentato rispetto a Kahoot/Quizizz sul piano GDPR — se diventa strumento abituale, richiedere DPA esplicito.',
     ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
     mitigations:['Modalità guest/live preferibile','Verificare clausole DPA prima di uso regolare','Monitorare aggiornamenti policy del fornitore'],
-    internalAlternatives:['Word Games','Sfida tra Casate','Mattoncini Magici']},
+    internalAlternatives:['Word Games','Sfida tra Casate','Mattoncini Magici'],
+    risks:[
+      {level:'MEDIO', text:'DPA non chiaramente documentato pubblicamente — base giuridica da verificare'},
+      {level:'MEDIO', text:'Trasferimento USA senza adesione DPF esplicita'},
+      {level:'BASSO', text:'Nickname identificativi scelti dagli studenti'}
+    ],
+    requiredDocs:[
+      'DPA esplicitamente richiesto al fornitore prima di uso sistematico',
+      'Voce nel Registro dei Trattamenti se uso regolare'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Verifica DPA prima di uso sistematico'},
+      {role:'DPO', action:'Parere preventivo data l\'incertezza normativa'},
+      {role:'Docente', action:'Uso solo modalità guest/live'}
+    ],
+    technicalChecklist:[
+      'Modalità guest/live come default',
+      'Email al supporto Wayground per richiesta DPA formale',
+      'Verifica periodica policy privacy aggiornate',
+      'Preferire alternative interne per quiz ricorrenti'
+    ]},
 
   {id:'tp-mentimeter', name:'Mentimeter', url:'https://www.mentimeter.com/', cat:'Quiz e valutazione',
     source:'thirdparty', cluster:'E', active:false, individualUse:false,
@@ -1383,7 +1638,22 @@ const THIRDPARTY_SEED = [
     recommendationText:'Solido sul piano normativo (sede EU). Modalità anonima default. Occasionale per sondaggi rapidi in classe.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Usare in modalità anonima sondaggi','Solo docente crea, studenti rispondono senza account'],
-    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione']},
+    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione'],
+    risks:[
+      {level:'BASSO', text:'Abilitazione accidentale modalità nominativa'},
+      {level:'BASSO', text:'Risposte aggregate comunque tracciabili via log docente'}
+    ],
+    requiredDocs:[
+      'Nessun documento aggiuntivo (GDPR nativo, modalità anonima)'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Creazione account con email istituzionale'}
+    ],
+    technicalChecklist:[
+      'Default: modalità anonima',
+      'Studenti rispondono senza account (solo codice sessione)',
+      'Eliminazione sondaggi non più utili per minimizzazione dati'
+    ]},
 
   {id:'tp-wordwall', name:'Wordwall', url:'https://wordwall.net/', cat:'Quiz e valutazione',
     source:'thirdparty', cluster:'D', active:false, individualUse:false,
@@ -1398,9 +1668,23 @@ const THIRDPARTY_SEED = [
     recommendationText:'Giochi didattici pronti senza raccolta dati studenti. Occasionale.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Usare solo in modalità "gioca" (no registrazione risultati individuali)'],
-    internalAlternatives:['I Mattoncini del Testo','Sbagliando s\'Impara','Word Games']},
+    internalAlternatives:['I Mattoncini del Testo','Sbagliando s\'Impara','Word Games'],
+    risks:[
+      {level:'BASSO', text:'Pubblicità contestuali in versione free'},
+      {level:'BASSO', text:'Abilitazione accidentale di leaderboard nominative'}
+    ],
+    requiredDocs:[
+      'Nessun documento aggiuntivo per uso modalità gioco anonima'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Selezione giochi pre-fatti o creazione propria'}
+    ],
+    technicalChecklist:[
+      'Modalità "gioca" senza tracking individuale',
+      'Preferire versione senza leaderboard pubblica'
+    ]},
 
-  // --- IA GENERATIVA - USO INDIVIDUALE DOCENTI ---
+  // --- IA GENERATIVA USO INDIVIDUALE ---
   {id:'tp-chatgpt', name:'ChatGPT (OpenAI)', url:'https://chat.openai.com/', cat:'IA generativa',
     source:'thirdparty', cluster:'C', active:false, individualUse:true,
     vendor:'OpenAI OpCo LLC', country:'USA', dataLocation:'USA',
@@ -1414,7 +1698,32 @@ const THIRDPARTY_SEED = [
     recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Non utilizzabile come strumento istituzionale senza sottoscrizione ChatGPT Edu/Team/Enterprise (DPA dedicato). Docenti lo usano a titolo personale per preparazione didattica, mai con studenti e mai inserendo dati personali nei prompt.',
     ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
     mitigations:['Docente: disattivare "Improve model for everyone" nelle impostazioni','MAI inserire nome/cognome/classe di studenti nei prompt','MAI condividere schermo ChatGPT con studenti durante la lezione','Per uso con studenti: migrare a NotebookLM (DPA Workspace esistente)'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Inserimento accidentale di dati personali di studenti nei prompt'},
+      {level:'MEDIO', text:'Prompt usati per training del modello se opt-out non configurato'},
+      {level:'MEDIO', text:'Uso con studenti in violazione delle regole d\'uso'},
+      {level:'BASSO', text:'Output contenente hallucination usate come fonte affidabile'},
+      {level:'BASSO', text:'Condivisione schermo accidentale durante lezione'}
+    ],
+    requiredDocs:[
+      'Comunicazione interna ai docenti: "uso strumenti IA generativa personali — regole d\'uso"',
+      'Annotazione nel Registro dei Trattamenti: servizio a uso individuale, fuori perimetro istituzionale',
+      'Policy interna: "IA generativa consumer — cosa si può e non si può fare"',
+      'Nessuna DPIA formale richiesta (non c\'è trattamento istituzionale)'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Emissione comunicazione interna sulle regole d\'uso personale'},
+      {role:'Animatore Digitale', action:'Formazione docenti sul corretto uso dei chatbot consumer'},
+      {role:'Docenti', action:'Presa visione regole e impegno scritto se richiesto'}
+    ],
+    technicalChecklist:[
+      'Ogni docente: disattiva "Improve model for everyone" in Settings → Data Controls',
+      'Ogni docente: archivia conversazioni rilevanti sul proprio device, non su ChatGPT',
+      'Divieto esplicito di usare ChatGPT davanti agli studenti durante la lezione',
+      'Prompt strutturati senza dati personali (nomi, classi, problematiche specifiche)',
+      'Per esigenze istituzionali: valutare sottoscrizione ChatGPT Edu'
+    ]},
 
   {id:'tp-claude', name:'Claude (Anthropic)', url:'https://claude.ai/', cat:'IA generativa',
     source:'thirdparty', cluster:'C', active:false, individualUse:true,
@@ -1429,7 +1738,27 @@ const THIRDPARTY_SEED = [
     recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Claude consumer non è strumento istituzionale. Usato da Animatore Digitale per progettazione didattica, sviluppo web app, redazione documenti. Mai con studenti.',
     ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
     mitigations:['Docente: non condividere prompt con dati studenti identificabili','Per uso con studenti: migrare a NotebookLM'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Inserimento accidentale di dati personali nei prompt'},
+      {level:'BASSO', text:'Hallucination su contenuti tecnici o normativi'},
+      {level:'BASSO', text:'Dipendenza operativa da strumento consumer non contrattualizzato'}
+    ],
+    requiredDocs:[
+      'Comunicazione interna come per ChatGPT',
+      'Annotazione Registro: uso individuale Animatore Digitale + docenti singoli',
+      'Nessuna DPIA formale'
+    ],
+    authorizations:[
+      {role:'Animatore Digitale', action:'Uso per progettazione didattica e sviluppo web app'},
+      {role:'Docenti', action:'Presa visione regole d\'uso (stesso perimetro ChatGPT)'}
+    ],
+    technicalChecklist:[
+      'Account Claude personale (non istituzionale) per uso individuale',
+      'Nessun dato personale di studenti nei prompt',
+      'Mai usato in presenza di studenti',
+      'Output sempre verificato prima di uso in contesto didattico'
+    ]},
 
   {id:'tp-perplexity', name:'Perplexity', url:'https://www.perplexity.ai/', cat:'IA generativa',
     source:'thirdparty', cluster:'C', active:false, individualUse:true,
@@ -1437,14 +1766,35 @@ const THIRDPARTY_SEED = [
     dpa:'NON-firmato-versione-consumer', dpfAdherent:false, policyUrl:'https://www.perplexity.ai/hub/legal/privacy-policy',
     minAge:'13 per account consumer',
     consentUnder14:'NON USARE con studenti under-14',
-    dataCollected:'Prompt del docente, cronologia query',
-    contentDestination:'Server Perplexity USA — versione Free/Pro archivia prompt per analytics',
+    dataCollected:'Query del docente, cronologia ricerche, prompt con contesto personale',
+    contentDestination:'Server Perplexity USA — versione Free/Pro archivia query per analytics',
     transferLegalBasis:'DPA con SCC disponibile solo per Enterprise Pro',
     recommendation:'individual-only',
     recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Utile come motore di ricerca con citazioni per preparazione materiale didattico. SOC 2 Type II attestato. Mai con studenti.',
     ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
     mitigations:['Docente: privacy controls per opt-out da non-essential uses','MAI inserire dati personali di studenti nei prompt','Per uso con studenti: migrare a NotebookLM'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Inserimento accidentale di dati personali nei prompt'},
+      {level:'MEDIO', text:'Assenza adesione DPF — base giuridica del trasferimento USA più fragile rispetto a ChatGPT/Claude'},
+      {level:'BASSO', text:'Accuratezza fonti citate da verificare manualmente'},
+      {level:'BASSO', text:'Sharing pubblico accidentale delle query (funzione native di Perplexity)'}
+    ],
+    requiredDocs:[
+      'Comunicazione interna (stesso modello ChatGPT/Claude)',
+      'Annotazione Registro: uso individuale',
+      'Nessuna DPIA formale'
+    ],
+    authorizations:[
+      {role:'Docenti', action:'Presa visione regole d\'uso'},
+      {role:'Animatore Digitale', action:'Formazione su uso appropriato motori IA con citazioni'}
+    ],
+    technicalChecklist:[
+      'Privacy controls in account: opt-out da analytics non essenziali',
+      'Disattivare Sharing pubblico delle conversazioni',
+      'Nessun dato personale di studenti nelle query',
+      'Verifica manuale delle fonti citate (hallucination possibile anche con citazioni)'
+    ]},
 
   {id:'tp-gemini', name:'Gemini (Google)', url:'https://gemini.google.com/', cat:'IA generativa',
     source:'thirdparty', cluster:'C', active:false, individualUse:false,
@@ -1459,7 +1809,26 @@ const THIRDPARTY_SEED = [
     recommendationText:'Se usato dentro Workspace for Education con account istituzionale, coperto dal DPA Workspace (no training). Se account personale docente, diventa uso individuale senza DPA istituto. Per studenti, preferire NotebookLM che è più controllabile.',
     ageTargets:{primaria:'no', secondaria12:'caution', secondaria13:'ok'},
     mitigations:['Verificare uso con account @sacrafamiglia.education','Preferire NotebookLM per attività con studenti'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Uso con account personale Google invece che istituzionale (perde copertura DPA)'},
+      {level:'MEDIO', text:'Hallucination del modello'},
+      {level:'BASSO', text:'Accesso alla conoscenza generica del modello senza vincoli di fonte (differenza chiave rispetto a NotebookLM)'}
+    ],
+    requiredDocs:[
+      'Nessun documento aggiuntivo se uso dentro Workspace istituzionale',
+      'Se uso sperimentale con studenti: seguire stesso percorso di NotebookLM (DPIA estesa + delibera)'
+    ],
+    authorizations:[
+      {role:'Animatore Digitale', action:'Verifica che account utilizzati siano istituzionali'},
+      {role:'Dirigente + DPO', action:'Se uso con studenti: autorizzazione come da NotebookLM'}
+    ],
+    technicalChecklist:[
+      'Verifica account utilizzato: @sacrafamiglia.education, non Gmail personale',
+      'Admin Workspace: verifica che Gemini sia abilitato per gruppo utenti docenti',
+      'Disabilitare Gemini per gruppo utenti studenti se non attivamente usato',
+      'Preferire NotebookLM per attività strutturate con studenti'
+    ]},
 
   // --- CHATBOT DIDATTICI ---
   {id:'tp-mizou', name:'Mizou', url:'https://mizou.com/', cat:'Chatbot didattico',
@@ -1475,7 +1844,38 @@ const THIRDPARTY_SEED = [
     recommendationText:'Raccomandato per attività specifiche pre-configurate dal docente. Mizou dichiara conformità GDPR/FERPA/COPPA e "no student PII required" — fattore positivo che abbassa il rischio rispetto a chatbot generalisti. Usato raramente nella vostra scuola.',
     ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Chatbot SEMPRE pre-configurato dal docente con prompt di sistema e fonti','MAI "chat libera" senza vincoli','Istruire chatbot a rifiutare richieste fuori tema didattico','Formazione studenti: no dati personali nei prompt','Mai per supporto emotivo/counseling'],
-    internalAlternatives:[]},
+    internalAlternatives:[],
+    risks:[
+      {level:'MEDIO', text:'Studenti inseriscono dati personali nella conversazione (nome, famiglia, problemi)'},
+      {level:'MEDIO', text:'Hallucination del modello su materia disciplinare'},
+      {level:'MEDIO', text:'Deriva verso conversazioni emotive/counseling se chatbot non vincolato'},
+      {level:'MEDIO', text:'Dati trasferiti all\'infrastruttura OpenAI sottostante (GPT-4) con SCC'},
+      {level:'BASSO', text:'Uso del chatbot oltre l\'orario scolastico da device personali'}
+    ],
+    requiredDocs:[
+      'DPA scolastico Mizou firmato',
+      'DPIA specifica per attività con Mizou (Cluster C)',
+      'Informativa famiglie con descrizione del chatbot e finalità didattiche',
+      'Voce nel Registro dei Trattamenti',
+      'Allegato al Patto Digitale con clausola chatbot didattico',
+      'Nota interna con prompt di sistema standardizzati per docenti'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione DPA Mizou'},
+      {role:'DPO', action:'Parere preventivo sulla DPIA'},
+      {role:'Famiglie', action:'Presa visione informativa'},
+      {role:'Animatore Digitale', action:'Formazione docenti sulla configurazione corretta dei chatbot'},
+      {role:'Docente', action:'Configurazione chatbot con prompt e fonti prima dell\'attività'}
+    ],
+    technicalChecklist:[
+      'Chatbot SEMPRE pre-configurato con prompt di sistema esplicito',
+      'Fonti didattiche caricate dal docente prima dell\'attività',
+      'Istruzione chatbot: "rifiuta educatamente richieste fuori tema [materia]"',
+      'Istruzione chatbot: "non fornire supporto emotivo, reindirizza al docente"',
+      'Link chatbot condiviso solo in laboratorio, non via Classroom/email',
+      'Supervisione Apple Remote Desktop durante sessione',
+      'Revisione conversazioni post-sessione dal dashboard docente'
+    ]},
 
   // --- INTERAZIONE CLASSE ---
   {id:'tp-wooclap', name:'Wooclap', url:'https://www.wooclap.com/', cat:'Interazione classe',
@@ -1491,7 +1891,22 @@ const THIRDPARTY_SEED = [
     recommendationText:'Solido sul piano normativo (sede EU). Occasionale per interazioni rapide in classe.',
     ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
     mitigations:['Modalità anonima preferibile'],
-    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione']}
+    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione'],
+    risks:[
+      {level:'BASSO', text:'Attivazione accidentale di modalità nominativa'},
+      {level:'BASSO', text:'Dati aggregati comunque tracciabili dal docente'}
+    ],
+    requiredDocs:[
+      'Nessun documento aggiuntivo (GDPR nativo, modalità anonima)'
+    ],
+    authorizations:[
+      {role:'Docente', action:'Creazione account con email istituzionale'}
+    ],
+    technicalChecklist:[
+      'Default: modalità anonima',
+      'Studenti rispondono senza account (solo codice)',
+      'Eliminazione eventi passati per minimizzazione'
+    ]}
 ];
 
 
@@ -3124,6 +3539,59 @@ function openVendorDetail(appId){
       <div class="vendor-section-title">Mitigazioni operative</div>
       <ul class="vendor-mit-list">${mitList}</ul>
     </div>` : ''}
+
+    <!-- PIANO DI ADOZIONE -->
+    <div class="adoption-plan">
+      <div class="adoption-plan-head">
+        <span class="ap-icon">📋</span>
+        <div>
+          <div class="ap-title">Piano di adozione nell'istituto</div>
+          <div class="ap-sub">Cosa produrre, autorizzare e configurare prima dell'attivazione</div>
+        </div>
+      </div>
+
+      <!-- Blocco 1: Rischi -->
+      ${(a.risks && a.risks.length) ? `
+      <div class="ap-block">
+        <div class="ap-block-title"><span class="ap-num">1</span> Rischi specifici identificati</div>
+        <ul class="ap-risk-list">
+          ${a.risks.map(r => {
+            const cls = r.level === 'ALTO' ? 'high' : (r.level === 'MEDIO' ? 'mid' : 'low');
+            return `<li class="ap-risk-${cls}"><span class="ap-risk-level">${r.level}</span> <span class="ap-risk-text">${escapeHtml(r.text)}</span></li>`;
+          }).join('')}
+        </ul>
+      </div>` : ''}
+
+      <!-- Blocco 2: Documenti -->
+      ${(a.requiredDocs && a.requiredDocs.length) ? `
+      <div class="ap-block">
+        <div class="ap-block-title"><span class="ap-num">2</span> Documenti da produrre</div>
+        <ul class="ap-doc-list">
+          ${a.requiredDocs.map(d => `<li>${escapeHtml(d)}</li>`).join('')}
+        </ul>
+      </div>` : ''}
+
+      <!-- Blocco 3: Autorizzazioni -->
+      ${(a.authorizations && a.authorizations.length) ? `
+      <div class="ap-block">
+        <div class="ap-block-title"><span class="ap-num">3</span> Autorizzazioni necessarie</div>
+        <table class="ap-auth-table">
+          <thead><tr><th>Ruolo</th><th>Azione</th></tr></thead>
+          <tbody>
+            ${a.authorizations.map(au => `<tr><td><strong>${escapeHtml(au.role)}</strong></td><td>${escapeHtml(au.action)}</td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>` : ''}
+
+      <!-- Blocco 4: Checklist tecnica -->
+      ${(a.technicalChecklist && a.technicalChecklist.length) ? `
+      <div class="ap-block">
+        <div class="ap-block-title"><span class="ap-num">4</span> Checklist tecnica di configurazione</div>
+        <ul class="ap-check-list">
+          ${a.technicalChecklist.map(c => `<li>${escapeHtml(c)}</li>`).join('')}
+        </ul>
+      </div>` : ''}
+    </div>
 
     ${altList ? `<div class="vendor-section">
       <div class="vendor-section-title">Alternative interne disponibili nell'ecosistema</div>
