@@ -735,6 +735,7 @@ button{font-family:inherit}
         <option value="C">Cluster C</option>
         <option value="D">Cluster D</option>
         <option value="E">Cluster E</option>
+        <option value="F">Cluster F</option>
       </select>
     </div>
     <div class="inv-filter-group">
@@ -921,8 +922,9 @@ button{font-family:inherit}
           <option value="A">A — Profilazione studenti (ALTO RISCHIO)</option>
           <option value="B">B — Monitoraggio comportamentale (ALTO-MEDIO)</option>
           <option value="C">C — Chatbot / IA generativa (MEDIO)</option>
-          <option value="D">D — App didattica senza dati personali (MINIMO)</option>
-          <option value="E">E — Raccolta dati occasionale (BASSO-MEDIO)</option>
+          <option value="D">D — App senza dati personali (MINIMO)</option>
+          <option value="E">E — Raccolta dati studenti (BASSO-MEDIO)</option>
+          <option value="F">F — Strumenti professionali docenti (BASSO)</option>
         </select>
       </div>
     </div>
@@ -1108,8 +1110,8 @@ const CLASSI_SECONDARIA = ['1A','1B','1C','2A','2B','2C','3A','3B','3C'];
 // cluster: null = da classificare, A/B/C/D/E = classificazione suggerita
 const INVENTORY_SEED = [
   // --- PORTALE (top) ---
-  {id:'inv-001', name:'TI ASCOLTO!', url:'https://sondaggiostudenti.vercel.app/', cat:'Portale', cluster:'A'},
-  {id:'inv-002', name:'Calibro', url:'https://calibro.neocities.org/', cat:'Portale', cluster:'A'},
+  {id:'inv-001', name:'TI ASCOLTO!', url:'https://sondaggiostudenti.vercel.app/', cat:'Portale', cluster:'E'},
+  {id:'inv-002', name:'Calibro', url:'https://calibro.neocities.org/', cat:'Portale', cluster:'F'},
   {id:'inv-003', name:'Patto Digitale di Famiglia', url:'https://pattodigitale.neocities.org/', cat:'Portale', cluster:null},
   {id:'inv-004', name:'Guida per Genitori', url:'https://genitori.neocities.org/', cat:'Portale', cluster:'D'},
   {id:'inv-005', name:'Scuola Digitale', url:'https://scuolaipad.neocities.org/', cat:'Portale', cluster:'D'},
@@ -1119,7 +1121,7 @@ const INVENTORY_SEED = [
   {id:'inv-008', name:"L'Occhio Critico", url:'https://guglielmoildentone.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
   {id:'inv-009', name:'Riconosci la Manipolazione', url:'https://manipolazione.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-010', name:'Social sotto la Lente', url:'https://socialschool.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
-  {id:'inv-011', name:'Sei un Piccione?', url:'https://comportamentismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-011', name:'Sei un Piccione?', url:'https://comportamentismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:'E'},
   {id:'inv-012', name:"Quanto consuma l'AI?", url:'https://aiconsumi.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
   {id:'inv-013', name:'Il Sicofante Digitale', url:'https://sicofante.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-014', name:'Famiglia Accorti', url:'https://famigliaaccorti.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
@@ -1131,7 +1133,7 @@ const INVENTORY_SEED = [
   {id:'inv-020', name:'CyberEscape', url:'https://cyberescape.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
   {id:'inv-021', name:'Il Voto che Ruba', url:'https://truffa-ballerina.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
   {id:'inv-022', name:'Cyber Sentinel', url:'https://attacchinformatici.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
-  {id:'inv-023', name:'Commissariato Digitale', url:'https://polizia-postale.vercel.app/', cat:'Cittadinanza Digitale', cluster:'B'},
+  {id:'inv-023', name:'Commissariato Digitale', url:'https://polizia-postale.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
   // --- LAB. SCRITTURA ---
   {id:'inv-024', name:'I Mattoncini del Testo', url:'https://mattoncini.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-025', name:"Impara dall'Errore", url:'https://errore.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
@@ -1141,12 +1143,12 @@ const INVENTORY_SEED = [
   {id:'inv-029', name:'Scrivere con le Immagini', url:'https://immagine.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-030', name:"La Bottega dell'Argomentazione", url:'https://insegnareapensare.vercel.app/', cat:'Lab. Scrittura', cluster:null},
   {id:'inv-031', name:'Testo Argomentativo', url:'https://laboratorioscrittura.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
-  {id:'inv-032', name:'ArgoMentor', url:'https://argomentor.vercel.app/', cat:'Lab. Scrittura', cluster:'B'},
+  {id:'inv-032', name:'ArgoMentor', url:'https://argomentor.vercel.app/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-033', name:"Scrivere dall'Ascolto", url:'https://ascolto.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-034', name:'Mental Coaching', url:'https://mentalcoach.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-035', name:'Video Shorts', url:'https://videoshorts.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-036', name:'Debate in Classe', url:'https://schooldebate.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
-  {id:'inv-037', name:'BottegaScrivi', url:'https://laboscrittura.vercel.app/', cat:'Lab. Scrittura', cluster:'B'},
+  {id:'inv-037', name:'BottegaScrivi', url:'https://laboscrittura.vercel.app/', cat:'Lab. Scrittura', cluster:'E'},
   {id:'inv-038', name:'ScriviMeglio', url:'https://tracciatema.neocities.org/', cat:'Lab. Scrittura', cluster:null},
   // --- INFORMATICA & TECH ---
   {id:'inv-039', name:'Fake Hunter', url:'https://fakehunter.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
@@ -1222,8 +1224,11 @@ const CLUSTERS = {
   D: { code:'D', name:'App didattica senza dati personali', risk:'MINIMO',
     desc:'Il sistema non raccoglie alcun dato personale riconducibile a studente. Tracking solo aggregato/anonimo. DPIA non obbligatoria: sufficiente registrazione semplificata.',
     fria:false },
-  E: { code:'E', name:'Raccolta dati occasionale', risk:'BASSO-MEDIO',
-    desc:'Il sistema raccoglie dati personali una tantum (sondaggi, quiz, leaderboard). DPIA semplificata, principi di minimizzazione e limitazione temporale della conservazione.',
+  E: { code:'E', name:'Raccolta dati studenti', risk:'BASSO-MEDIO',
+    desc:'Il sistema raccoglie dati personali degli studenti (nominativi o aggregati), inseriti dagli studenti stessi — sondaggi, quiz, attività con nominativo. DPIA semplificata focalizzata su minimizzazione, controllo accessi e cancellazione programmata.',
+    fria:false },
+  F: { code:'F', name:'Strumenti professionali docenti', risk:'BASSO',
+    desc:'Il sistema è accessibile esclusivamente dall\'area riservata docenti. I dati sono inseriti dai docenti (adulti consapevoli) in esercizio delle proprie funzioni professionali — simile a registro elettronico, verbali, griglie di valutazione. Base giuridica: obbligo legale/interesse pubblico dell\'istituzione scolastica.',
     fria:false }
 };
 
@@ -2771,6 +2776,7 @@ function renderInventory(){
           <option value="C">Cluster C</option>
           <option value="D">Cluster D</option>
           <option value="E">Cluster E</option>
+          <option value="F">Cluster F</option>
           <option value="null">Reset</option>
         </select>
         <button class="inv-btn-sm danger" onclick="deleteInvApp('${a.id}')" title="Elimina">✕</button>
@@ -2782,7 +2788,7 @@ function renderInventory(){
 }
 
 function renderInventoryStats(){
-  const stats = {total: app.inventory.length, A:0, B:0, C:0, D:0, E:0, unc:0};
+  const stats = {total: app.inventory.length, A:0, B:0, C:0, D:0, E:0, F:0, unc:0};
   app.inventory.forEach(a => {
     if (a.cluster) stats[a.cluster] = (stats[a.cluster]||0) + 1;
     else stats.unc++;
@@ -2819,12 +2825,17 @@ function renderInventoryStats(){
     <div class="inv-stat cluster-D">
       <div class="inv-stat-label">Cluster D</div>
       <div class="inv-stat-value">${stats.D}</div>
-      <div class="inv-stat-sub">No dati pers. · MIN.</div>
+      <div class="inv-stat-sub">Senza dati · MINIMO</div>
     </div>
     <div class="inv-stat cluster-E">
       <div class="inv-stat-label">Cluster E</div>
       <div class="inv-stat-value">${stats.E}</div>
-      <div class="inv-stat-sub">Occasionale · BASSO</div>
+      <div class="inv-stat-sub">Dati studenti · BASSO-MED.</div>
+    </div>
+    <div class="inv-stat cluster-F">
+      <div class="inv-stat-label">Cluster F</div>
+      <div class="inv-stat-value">${stats.F}</div>
+      <div class="inv-stat-sub">Area docenti · BASSO</div>
     </div>
   `;
 }
@@ -2832,15 +2843,16 @@ function renderInventoryStats(){
 function renderInventoryGenCards(){
   const grid = document.getElementById('invGenGrid');
   if (!grid) return;
-  const stats = {A:0, B:0, C:0, D:0, E:0};
+  const stats = {A:0, B:0, C:0, D:0, E:0, F:0};
   app.inventory.forEach(a => { if (a.cluster) stats[a.cluster]++; });
 
   const cards = [
     {code:'A', cluster:CLUSTERS.A, action:'Crea DPIA cluster', desc:'Profilazione studenti (Allegato III AI Act, FRIA obbligatoria)'},
     {code:'B', cluster:CLUSTERS.B, action:'Crea DPIA cluster', desc:'Monitoraggio comportamentale (alto rischio in contesti valutativi)'},
     {code:'C', cluster:CLUSTERS.C, action:'Crea DPIA cluster', desc:'Chatbot e IA generativa (obblighi art. 50 AI Act + DPA)'},
-    {code:'D', cluster:CLUSTERS.D, action:'Crea Registro semplificato', desc:'Applicazioni senza dati personali — unico PDF ex art. 30 GDPR'},
-    {code:'E', cluster:CLUSTERS.E, action:'Crea DPIA cluster', desc:'Raccolta dati occasionale (sondaggi, quiz, leaderboard one-shot)'}
+    {code:'D', cluster:CLUSTERS.D, action:'Crea Registro semplificato', desc:'Applicazioni senza dati personali — Registro semplificato ex art. 30 GDPR'},
+    {code:'E', cluster:CLUSTERS.E, action:'Crea DPIA cluster', desc:'Raccolta dati studenti (sondaggi, quiz, leaderboard — inseriti dagli studenti)'},
+    {code:'F', cluster:CLUSTERS.F, action:'Crea DPIA cluster', desc:'Strumenti professionali docenti (area riservata, dati tipo registro elettronico)'}
   ];
 
   grid.innerHTML = cards.map(c => {
@@ -3053,7 +3065,7 @@ function generatePublicPage(){
   if (!apps.length){ showToast('Inventario vuoto', true); return; }
 
   // Raggruppa per cluster
-  const byCluster = {A:[], B:[], C:[], D:[], E:[], N:[]};
+  const byCluster = {A:[], B:[], C:[], D:[], E:[], F:[], N:[]};
   apps.forEach(a => {
     const c = a.cluster || 'N';
     byCluster[c].push(a);
@@ -3070,7 +3082,7 @@ function generatePublicPage(){
   const counts = {
     total: apps.length,
     A: byCluster.A.length, B: byCluster.B.length, C: byCluster.C.length,
-    D: byCluster.D.length, E: byCluster.E.length, N: byCluster.N.length
+    D: byCluster.D.length, E: byCluster.E.length, F: byCluster.F.length, N: byCluster.N.length
   };
   const classified = counts.total - counts.N;
   const pct = counts.total ? Math.round(classified/counts.total*100) : 0;
@@ -3159,6 +3171,7 @@ a:hover{text-decoration:underline}
 .cluster-card.C{border-top-color:var(--blue)}
 .cluster-card.D{border-top-color:var(--neutral)}
 .cluster-card.E{border-top-color:var(--ink-soft)}
+.cluster-card.F{border-top-color:var(--blue-mid)}
 .cluster-card h3{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:6px}
 .cluster-card .cluster-code{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);font-weight:700;margin-right:8px}
 .cluster-card .cluster-risk{display:inline-block;padding:2px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-radius:2px;margin-top:4px}
@@ -3193,6 +3206,7 @@ a:hover{text-decoration:underline}
 .cluster-badge.C{background:var(--blue-soft);color:var(--blue)}
 .cluster-badge.D{background:var(--neutral-soft);color:var(--neutral)}
 .cluster-badge.E{background:var(--cream);color:var(--ink-soft)}
+.cluster-badge.F{background:var(--blue-soft);color:var(--blue-mid)}
 .cluster-badge.N{background:#FEF9E5;color:#B8860B}
 
 .docs-list{display:grid;grid-template-columns:1fr;gap:10px;margin-top:20px}
@@ -3321,10 +3335,16 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline;text-underline-off
         <div class="count">${counts.D} applicazion${counts.D===1?'e':'i'}</div>
       </div>
       <div class="cluster-card E">
-        <h3><span class="cluster-code">E</span>Raccolta occasionale</h3>
+        <h3><span class="cluster-code">E</span>Raccolta dati studenti</h3>
         <div class="cluster-risk">Rischio BASSO-MEDIO</div>
-        <p>Sistemi che raccolgono dati personali una tantum (sondaggi, quiz, leaderboard one-shot). DPIA semplificata con focus su minimizzazione.</p>
+        <p>Applicazioni con raccolta dati degli studenti (nominativi o aggregati). Uso in laboratorio con supervisione del docente, cancellazione a fine anno scolastico.</p>
         <div class="count">${counts.E} applicazion${counts.E===1?'e':'i'}</div>
+      </div>
+      <div class="cluster-card F">
+        <h3><span class="cluster-code">F</span>Strumenti professionali docenti</h3>
+        <div class="cluster-risk">Rischio BASSO</div>
+        <p>Strumenti dell'area riservata docenti (come registro elettronico). I dati sono inseriti dai docenti in esercizio delle proprie funzioni professionali.</p>
+        <div class="count">${counts.F} applicazion${counts.F===1?'e':'i'}</div>
       </div>
     </div>
   </section>
@@ -3340,6 +3360,7 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline;text-underline-off
       <button class="filter-btn" onclick="filterCluster('C',this)">Cluster C <span class="num">${counts.C}</span></button>
       <button class="filter-btn" onclick="filterCluster('D',this)">Cluster D <span class="num">${counts.D}</span></button>
       <button class="filter-btn" onclick="filterCluster('E',this)">Cluster E <span class="num">${counts.E}</span></button>
+      <button class="filter-btn" onclick="filterCluster('F',this)">Cluster F <span class="num">${counts.F}</span></button>
       ${counts.N > 0 ? `<button class="filter-btn" onclick="filterCluster('N',this)">Da classificare <span class="num">${counts.N}</span></button>` : ''}
     </div>
 
@@ -3510,7 +3531,8 @@ function generateBadgesJS(){
     B: {name:'Monitoraggio comportamentale', risk:'ALTO-MEDIO', color:'#B8860B', status:'DPIA + FRIA'},
     C: {name:'Chatbot / IA generativa', risk:'MEDIO', color:'#1E4A8A', status:'DPIA + DPA'},
     D: {name:'Senza dati personali', risk:'MINIMO', color:'#6B7280', status:'Registro art. 30'},
-    E: {name:'Raccolta occasionale', risk:'BASSO-MEDIO', color:'#4A5160', status:'DPIA semplificata'}
+    E: {name:'Raccolta dati studenti', risk:'BASSO-MEDIO', color:'#4A5160', status:'DPIA semplificata'},
+    F: {name:'Strumenti professionali docenti', risk:'BASSO', color:'#2C5F8D', status:'DPIA semplificata'}
   };
 
   const js = `/* ======================================================================
@@ -3549,6 +3571,7 @@ function generateBadgesJS(){
       .dpia-C{background:#1E4A8A}
       .dpia-D{background:#6B7280}
       .dpia-E{background:#4A5160}
+      .dpia-F{background:#2C5F8D}
 
       .dpia-tooltip{
         position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-4px);
@@ -3652,11 +3675,11 @@ function generateBadgesJS(){
     const note = document.createElement('aside');
     note.id = 'dpia-footer-note';
     note.className = 'dpia-footer-note';
-    const counts = {A:0,B:0,C:0,D:0,E:0};
+    const counts = {A:0,B:0,C:0,D:0,E:0,F:0};
     Object.values(DPIA_DATA.apps).forEach(a => counts[a.c]++);
     const total = Object.keys(DPIA_DATA.apps).length;
 
-    const legendItems = ['A','B','C','D','E'].filter(c => counts[c] > 0).map(c => {
+    const legendItems = ['A','B','C','D','E','F'].filter(c => counts[c] > 0).map(c => {
       const info = DPIA_DATA.clusters[c];
       return '<span><span class="dpia-badge dpia-' + c + '">' + c + '</span> ' + info.name + ' (' + counts[c] + ')</span>';
     }).join('');
