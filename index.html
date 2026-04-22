@@ -715,6 +715,13 @@ button{font-family:inherit}
     <button class="btn secondary sm" onclick="importInventoryJSON()">Importa JSON</button>
     <input type="file" id="invImportInput" accept=".json" style="display:none">
     <button class="btn secondary sm" onclick="resetInventory()">Reset inventario</button>
+
+    <div class="inv-source-toggle" style="margin-left:8px">
+      <button class="active" onclick="filterBySource('all', this)">Tutte</button>
+      <button onclick="filterBySource('internal', this)">Interne</button>
+      <button onclick="filterBySource('thirdparty', this)">Terzi</button>
+    </div>
+
     <button class="btn sm" onclick="generatePublicPage()" style="background:var(--blue-dark);border-color:var(--blue-dark)">
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 3 H10 L13 6 V13 H3 Z M10 3 V6 H13 M5 9 H11 M5 11 H9" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg>
       Pagina pubblica
@@ -1196,6 +1203,143 @@ const INVENTORY_SEED = [
   {id:'inv-078', name:'Word Games', url:'https://sacrafamigliagames.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
   {id:'inv-079', name:'Profemon', url:'https://profemon.neocities.org/', cat:'Sport e Giochi', cluster:'D'}
 ];
+
+// ========== SEED SERVIZI TERZI ==========
+const THIRDPARTY_SEED = [
+  // --- Registro e gestione amministrativa ---
+  {id:'tp-mastercom', name:'Mastercom', url:'https://www.registroelettronico.com/', cat:'Registro elettronico',
+    source:'thirdparty', cluster:'F',
+    vendor:'Master Training S.r.l.', country:'Italia', dataLocation:'Italia (EU)',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://www.registroelettronico.com/privacy',
+    individualUse:false, active:false,
+    note:'Registro elettronico ufficiale della scuola. Tratta anagrafica studenti, voti, assenze, comunicazioni famiglie. DPA scolastico standard firmato all\'adozione del servizio. Sede legale Correggio (RE).'},
+
+  // --- Google ecosystem ---
+  {id:'tp-gws', name:'Google Workspace for Education Core', url:'https://workspace.google.com/edu/', cat:'Ecosistema cloud',
+    source:'thirdparty', cluster:'F',
+    vendor:'Google Ireland Limited', country:'Irlanda (sede EU)', dataLocation:'EU/USA con SCC',
+    dpa:'standard-education', dpfAdherent:true, policyUrl:'https://workspace.google.com/terms/education_privacy.html',
+    individualUse:false, active:false,
+    note:'Gmail istituzionale, Classroom, Drive, Meet, Calendar. DPA Education esclude training modelli AI. Copre autenticazione di tutti gli utenti Workspace.'},
+
+  {id:'tp-notebooklm', name:'Google NotebookLM', url:'https://notebooklm.google.com/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C',
+    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
+    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://notebooklm.google.com/notebooks',
+    individualUse:false, active:false,
+    note:'Assistente IA basato su Gemini che opera solo su fonti caricate dal docente. Già coperto dal DPA Workspace for Education in essere. Fonti pre-configurate dal docente, studenti non caricano documenti propri. Sperimentazione classi 3ª secondaria.'},
+
+  {id:'tp-youtube', name:'YouTube (embed)', url:'https://www.youtube.com/', cat:'Video',
+    source:'thirdparty', cluster:'D',
+    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
+    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://policies.google.com/privacy',
+    individualUse:false, active:false,
+    note:'Embed di video YouTube nelle app didattiche. Uso senza login studente → tracking ridotto. Da valutare passaggio a youtube-nocookie.com per eliminare cookie Google dagli embed (nota: causa Error 153 su alcune app).'},
+
+  // --- Creazione contenuti ---
+  {id:'tp-canva', name:'Canva for Education', url:'https://www.canva.com/education/', cat:'Creazione contenuti',
+    source:'thirdparty', cluster:'F',
+    vendor:'Canva Pty Ltd', country:'Australia', dataLocation:'AU/USA con SCC',
+    dpa:'standard-education', dpfAdherent:true, policyUrl:'https://www.canva.com/trust/privacy/',
+    individualUse:false, active:false,
+    note:'Aderisce a Data Privacy Framework EU-USA. DPA GDPR-compliant incorporato automaticamente. FERPA e COPPA compliant. Se solo docenti usano Canva per preparare materiali, cluster F; se studenti hanno account individuali, riclassificare E.'},
+
+  {id:'tp-padlet', name:'Padlet', url:'https://padlet.com/', cat:'Creazione contenuti',
+    source:'thirdparty', cluster:'E',
+    vendor:'Padlet Inc.', country:'USA', dataLocation:'USA con SCC',
+    dpa:'su-richiesta', dpfAdherent:true, policyUrl:'https://padlet.com/about/privacy',
+    individualUse:false, active:false,
+    note:'Bacheca collaborativa. Se studenti scrivono contributi nominativi → cluster E. Se bacheca di sola lettura del docente → cluster D.'},
+
+  {id:'tp-genially', name:'Genially', url:'https://genial.ly/', cat:'Creazione contenuti',
+    source:'thirdparty', cluster:'F',
+    vendor:'Genially Web SL', country:'Spagna (EU)', dataLocation:'EU',
+    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://genial.ly/privacy-policy/',
+    individualUse:false, active:false,
+    note:'Piattaforma creazione presentazioni interattive. Sede Spagna, dati EU, GDPR nativo senza necessità di trasferimento extra-UE.'},
+
+  // --- Quiz e valutazione ---
+  {id:'tp-kahoot', name:'Kahoot!', url:'https://kahoot.com/schools/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E',
+    vendor:'Kahoot! ASA', country:'Norvegia (EEA)', dataLocation:'EEA',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://kahoot.com/privacy-policy/',
+    individualUse:false, active:false,
+    note:'Quiz gamificato. Sede Norvegia (paese EEA, decisione di adeguatezza UE). Raccoglie nickname studenti durante le sessioni.'},
+
+  {id:'tp-quizizz', name:'Quizizz', url:'https://quizizz.com/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E',
+    vendor:'Quizizz Inc.', country:'USA', dataLocation:'USA con SCC',
+    dpa:'standard-scolastico', dpfAdherent:true, policyUrl:'https://quizizz.com/privacy',
+    individualUse:false, active:false,
+    note:'Quiz gamificato. DPF aderente. DPA scolastico disponibile su richiesta. Raccolta nickname e risultati durante sessioni.'},
+
+  {id:'tp-mentimeter', name:'Mentimeter', url:'https://www.mentimeter.com/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E',
+    vendor:'Mentimeter AB', country:'Svezia (EU)', dataLocation:'EU',
+    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.mentimeter.com/privacy-policy',
+    individualUse:false, active:false,
+    note:'Sondaggi e quiz interattivi. Sede Svezia, GDPR nativo. Può funzionare anonimo (cluster D) oppure con identificatori (cluster E).'},
+
+  {id:'tp-wordwall', name:'Wordwall', url:'https://wordwall.net/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'D',
+    vendor:'Visual Education Ltd', country:'Regno Unito', dataLocation:'UK',
+    dpa:'standard', dpfAdherent:false, policyUrl:'https://wordwall.net/privacy',
+    individualUse:false, active:false,
+    note:'Giochi didattici pronti e personalizzabili. UK con decisione di adeguatezza UE post-Brexit. Giochi tipicamente anonimi senza raccolta dati.'},
+
+  // --- IA generativa — USO INDIVIDUALE DOCENTI (senza DPA istituto) ---
+  {id:'tp-chatgpt', name:'ChatGPT (OpenAI)', url:'https://chat.openai.com/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C',
+    vendor:'OpenAI OpCo LLC', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://openai.com/policies/privacy-policy',
+    individualUse:true, active:false,
+    note:'USO INDIVIDUALE docenti — versione consumer senza DPA istituzionale. DPA disponibile solo per ChatGPT Edu/Team/Enterprise. I dati inseriti in versione free/Plus possono essere usati per training. Direttiva interna: docenti non inseriscono dati personali di studenti nei prompt.'},
+
+  {id:'tp-claude', name:'Claude (Anthropic)', url:'https://claude.ai/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C',
+    vendor:'Anthropic PBC', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://www.anthropic.com/legal/privacy',
+    individualUse:true, active:false,
+    note:'USO INDIVIDUALE docenti — versione consumer senza DPA istituzionale. DPA disponibile solo per Claude Team/Enterprise/API. Anthropic dichiara di non usare i prompt consumer per training di default. Usato da Animatore Digitale per progettazione didattica.'},
+
+  {id:'tp-perplexity', name:'Perplexity', url:'https://www.perplexity.ai/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C',
+    vendor:'Perplexity AI Inc.', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:false, policyUrl:'https://www.perplexity.ai/hub/legal/privacy-policy',
+    individualUse:true, active:false,
+    note:'USO INDIVIDUALE docenti — versione Free/Pro senza DPA istituzionale. DPA con SCC GDPR disponibile solo per Perplexity Enterprise Pro. SOC 2 Type II attestato. Versione consumer archivia prompt per analytics; i dati enterprise non usati per training.'},
+
+  {id:'tp-gemini', name:'Gemini (Google)', url:'https://gemini.google.com/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C',
+    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
+    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://policies.google.com/privacy',
+    individualUse:false, active:false,
+    note:'Se utilizzato dentro Workspace for Education con account istituzionale, coperto dal DPA Workspace. In quel caso: no training sui dati Education. Uso con account personali = individuale senza DPA istituto.'},
+
+  // --- Chatbot didattici ---
+  {id:'tp-mizou', name:'Mizou', url:'https://mizou.com/', cat:'Chatbot didattico',
+    source:'thirdparty', cluster:'C',
+    vendor:'Mizou Ltd', country:'USA', dataLocation:'USA con SCC',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://mizou.com/privacy',
+    individualUse:false, active:false,
+    note:'Marketplace chatbot didattici. Dichiara conformità GDPR/FERPA/COPPA. Dichiara "no student PII required": fattore positivo che abbassa rischio rispetto a chatbot generalisti. Usato raramente. Fonte LLM sottostante: GPT-4.'},
+
+  // --- Collaborazione ---
+  {id:'tp-wooclap', name:'Wooclap', url:'https://www.wooclap.com/', cat:'Interazione classe',
+    source:'thirdparty', cluster:'E',
+    vendor:'Wooclap SA', country:'Belgio (EU)', dataLocation:'EU',
+    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.wooclap.com/privacy/',
+    individualUse:false, active:false,
+    note:'Sondaggi e domande live in classe. Sede Belgio, GDPR nativo. Partecipazione anonima possibile (cluster D) o nominativa (E).'},
+
+  {id:'tp-bookcreator', name:'Book Creator', url:'https://bookcreator.com/', cat:'Creazione contenuti',
+    source:'thirdparty', cluster:'E',
+    vendor:'Red Jumper Ltd', country:'Regno Unito', dataLocation:'UK',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://bookcreator.com/privacy/',
+    individualUse:false, active:false,
+    note:'Creazione libri digitali da parte degli studenti. UK con adeguatezza UE. Gli studenti creano contenuti propri, potenzialmente dati personali nei libri realizzati.'}
+];
+
 
 
 const SCUOLA = {
@@ -2710,20 +2854,94 @@ async function loadInventory(){
     if (r && r.value){
       const p = JSON.parse(r.value);
       app.inventory = p.items || [];
+      // Normalizza: aggiungi source=internal se mancante (retrocompatibilità)
+      app.inventory.forEach(a => { if (!a.source) a.source = 'internal'; });
+      // Integra servizi terzi non ancora presenti nell'inventario salvato
+      const existingIds = new Set(app.inventory.map(a => a.id));
+      const missing = THIRDPARTY_SEED.filter(tp => !existingIds.has(tp.id));
+      if (missing.length > 0){
+        app.inventory = app.inventory.concat(JSON.parse(JSON.stringify(missing)));
+        await saveInventory();
+      }
     } else {
-      // Prima volta: carico seed
-      app.inventory = JSON.parse(JSON.stringify(INVENTORY_SEED));
+      // Prima volta: carico seed interno + seed terze parti
+      const internal = INVENTORY_SEED.map(a => ({...a, source:'internal'}));
+      const thirdparty = JSON.parse(JSON.stringify(THIRDPARTY_SEED));
+      app.inventory = internal.concat(thirdparty);
       await saveInventory();
     }
   } catch(e){
-    app.inventory = JSON.parse(JSON.stringify(INVENTORY_SEED));
+    const internal = INVENTORY_SEED.map(a => ({...a, source:'internal'}));
+    const thirdparty = JSON.parse(JSON.stringify(THIRDPARTY_SEED));
+    app.inventory = internal.concat(thirdparty);
   }
   app.invSel = new Set();
+  if (!app.filterSource) app.filterSource = 'all';
 }
 
 async function saveInventory(){
   try { await window.storage.set('dpia-inventory', JSON.stringify({items:app.inventory})); }
   catch(e){ console.warn('Storage non disponibile'); }
+}
+
+function openVendorDetail(appId){
+  const a = app.inventory.find(x => x.id === appId);
+  if (!a) return;
+  const dpaLabels = {
+    'standard-scolastico': {text:'DPA scolastico standard firmato', cls:'ok'},
+    'standard-education': {text:'DPA Education standard (Workspace/similare)', cls:'ok'},
+    'standard': {text:'DPA standard disponibile', cls:'ok'},
+    'nativo-GDPR': {text:'Sede EU — GDPR nativo (no trasferimento extra-UE)', cls:'ok'},
+    'coperto-da-workspace': {text:'Coperto dal DPA Google Workspace in essere', cls:'ok'},
+    'su-richiesta': {text:'DPA disponibile su richiesta — da firmare', cls:'warn'},
+    'NON-firmato-versione-consumer': {text:'DPA NON in essere (versione consumer) — uso a rischio istituto', cls:'warn'}
+  };
+  const dpa = dpaLabels[a.dpa] || {text:a.dpa || 'non specificato', cls:''};
+  const activeStatus = a.active ? 'Attivo nell\'istituto' : 'Non ancora attivato / catalogo';
+
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Dettagli fornitore — ${escapeHtml(a.name)}</h3>
+    <p style="font-size:13px;color:var(--ink-soft)">Metadati di conformità per il responsabile esterno del trattamento (art. 28 GDPR).</p>
+
+    <div class="vendor-panel">
+      <dl>
+        <dt>Fornitore</dt><dd>${escapeHtml(a.vendor || 'non specificato')}</dd>
+        <dt>Sede</dt><dd>${escapeHtml(a.country || 'non specificato')}</dd>
+        <dt>Localizzazione dati</dt><dd>${escapeHtml(a.dataLocation || 'non specificato')}</dd>
+        <dt>Data Privacy Framework</dt><dd class="${a.dpfAdherent ? 'ok' : ''}">${a.dpfAdherent ? 'Aderente al DPF EU-USA' : 'Non applicabile o non aderente'}</dd>
+        <dt>DPA status</dt><dd class="${dpa.cls}">${dpa.text}</dd>
+        <dt>Privacy policy</dt><dd>${a.policyUrl ? `<a href="${escapeHtml(a.policyUrl)}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline">apri policy ufficiale ↗</a>` : 'non specificata'}</dd>
+        <dt>Stato</dt><dd class="${a.active ? 'ok' : 'warn'}">${activeStatus}</dd>
+        ${a.individualUse ? '<dt>Modalità d\'uso</dt><dd class="warn">Uso individuale docenti — NO dati studenti nei prompt</dd>' : ''}
+        <div class="note">${escapeHtml(a.note || '')}</div>
+      </dl>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn ${a.active ? 'secondary' : ''}" onclick="toggleVendorActive('${a.id}')">
+        ${a.active ? 'Disattiva nell\'istituto' : 'Attiva nell\'istituto'}
+      </button>
+      <button class="btn secondary" onclick="closeModal()">Chiudi</button>
+    </div>
+  `;
+  document.getElementById('modalBack').classList.add('active');
+}
+
+function toggleVendorActive(appId){
+  const a = app.inventory.find(x => x.id === appId);
+  if (!a) return;
+  a.active = !a.active;
+  saveInventory();
+  showToast(a.active ? 'Servizio attivato nell\'istituto' : 'Servizio disattivato');
+  closeModal();
+  renderInventory();
+}
+
+function filterBySource(src, btn){
+  app.filterSource = src;
+  document.querySelectorAll('.inv-source-toggle button').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderInventory();
 }
 
 function renderInventory(){
@@ -2737,6 +2955,9 @@ function renderInventory(){
   const sort = document.getElementById('invSort')?.value || 'cat';
 
   let items = [...app.inventory];
+  // Filtro per source (interne/terzi/tutte)
+  if (app.filterSource === 'internal') items = items.filter(a => (a.source || 'internal') === 'internal');
+  else if (app.filterSource === 'thirdparty') items = items.filter(a => a.source === 'thirdparty');
   if (filter === 'unclassified') items = items.filter(a => !a.cluster);
   else if (filter === 'classified') items = items.filter(a => a.cluster);
   else if (['A','B','C','D','E'].includes(filter)) items = items.filter(a => a.cluster === filter);
@@ -2761,8 +2982,8 @@ function renderInventory(){
       <td><input type="checkbox" class="inv-checkbox" ${sel?'checked':''} onchange="toggleInvSel('${a.id}')"></td>
       <td>
         <div class="inv-app-cell">
-          <span class="inv-app-name">${escapeHtml(a.name)}</span>
-          <span class="inv-app-cat">${escapeHtml(a.cat)}</span>
+          <span class="inv-app-name">${escapeHtml(a.name)}${a.source === 'thirdparty' ? `<span class="inv-source-badge thirdparty" title="Servizio di terze parti">3P</span>` : ''}${a.individualUse ? `<span class="inv-individual-flag" title="Uso individuale docente — DPA non in essere a livello istituto">USO INDIVIDUALE</span>` : ''}</span>
+          <span class="inv-app-cat">${escapeHtml(a.cat)}${a.source === 'thirdparty' ? ` · <a href="#" onclick="event.preventDefault(); openVendorDetail('${a.id}')" style="color:var(--blue-mid);text-decoration:underline;font-size:11px">info fornitore</a>` : ''}</span>
         </div>
       </td>
       <td class="inv-url-cell"><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url.replace(/^https?:\/\//,''))}</a></td>
@@ -2788,10 +3009,14 @@ function renderInventory(){
 }
 
 function renderInventoryStats(){
-  const stats = {total: app.inventory.length, A:0, B:0, C:0, D:0, E:0, F:0, unc:0};
+  const stats = {total: app.inventory.length, A:0, B:0, C:0, D:0, E:0, F:0, unc:0, thirdTotal:0, thirdActive:0};
   app.inventory.forEach(a => {
     if (a.cluster) stats[a.cluster] = (stats[a.cluster]||0) + 1;
     else stats.unc++;
+    if (a.source === 'thirdparty'){
+      stats.thirdTotal++;
+      if (a.active) stats.thirdActive++;
+    }
   });
   const classified = stats.total - stats.unc;
   const pct = stats.total ? Math.round(classified/stats.total*100) : 0;
@@ -2836,6 +3061,11 @@ function renderInventoryStats(){
       <div class="inv-stat-label">Cluster F</div>
       <div class="inv-stat-value">${stats.F}</div>
       <div class="inv-stat-sub">Area docenti · BASSO</div>
+    </div>
+    <div class="inv-stat" style="border-left:3px solid #B8860B">
+      <div class="inv-stat-label">Servizi terzi</div>
+      <div class="inv-stat-value">${stats.thirdActive}/${stats.thirdTotal}</div>
+      <div class="inv-stat-sub">attivi su totale catalogo</div>
     </div>
   `;
 }
@@ -3061,7 +3291,9 @@ async function applyTriage(cluster){
 
 // ========== GENERATE PUBLIC PAGE (governance-ia.html) ==========
 function generatePublicPage(){
-  const apps = (app.inventory || []).filter(a => a.name && a.url);
+  const allApps = (app.inventory || []).filter(a => a.name && a.url);
+  const apps = allApps.filter(a => (a.source || 'internal') === 'internal');
+  const thirdpartyActive = allApps.filter(a => a.source === 'thirdparty' && a.active);
   if (!apps.length){ showToast('Inventario vuoto', true); return; }
 
   // Raggruppa per cluster
@@ -3274,7 +3506,7 @@ footer a{color:rgba(255,255,255,.9);text-decoration:underline;text-underline-off
     <div class="kicker">Trasparenza algoritmica · Registro pubblico</div>
     <h1>Le applicazioni IA della nostra scuola</h1>
     <p>Questa pagina raccoglie in forma aperta tutte le applicazioni didattiche dell'ecosistema Sacra Famiglia, ciascuna classificata secondo il livello di rischio per la protezione dei dati e dei diritti fondamentali. È uno strumento di trasparenza per genitori, studenti, docenti e ispettori.</p>
-    <div class="update">Ultima revisione: ${today} · ${counts.total} applicazioni censite · ${classified} classificate (${pct}%)</div>
+    <div class="update">Ultima revisione: ${today} · ${counts.total} applicazioni interne · ${thirdpartyActive.length} servizi terzi attivi · ${classified} classificate (${pct}%)</div>
   </section>
 
   <div class="intro-box">
@@ -3384,6 +3616,42 @@ ${sorted.map(a => {
       </table>
     </div>
   </section>
+
+${thirdpartyActive.length > 0 ? `
+  <section class="section">
+    <h2>Servizi di terze parti utilizzati</h2>
+    <p>Oltre agli strumenti sviluppati internamente, la scuola utilizza i seguenti servizi forniti da responsabili esterni del trattamento (art. 28 GDPR). Per ciascuno è verificata la presenza di Data Processing Agreement (DPA), localizzazione dei dati e adesione al Data Privacy Framework EU-USA dove applicabile.</p>
+
+    <div class="inv-table-wrap" style="margin-top:16px">
+      <table class="inv-table">
+        <thead>
+          <tr><th>Servizio</th><th>Fornitore</th><th>Sede dati</th><th>DPA</th><th>Cluster</th></tr>
+        </thead>
+        <tbody>
+${thirdpartyActive.map(a => {
+  const dpaMap = {
+    'standard-scolastico':'Standard scolastico',
+    'standard-education':'Standard Education',
+    'standard':'Standard',
+    'nativo-GDPR':'GDPR nativo (sede EU)',
+    'coperto-da-workspace':'Copertura Workspace',
+    'su-richiesta':'Su richiesta',
+    'NON-firmato-versione-consumer':'Uso individuale docenti'
+  };
+  const c = a.cluster || 'N';
+  return `          <tr data-cluster="${c}">
+            <td><span class="app-name">${escapeHtmlPub(a.name)}</span>${a.individualUse ? '<br><small style="color:#8B4A3C;font-weight:600;font-size:10px">USO INDIVIDUALE DOCENTI</small>' : ''}</td>
+            <td>${escapeHtmlPub(a.vendor || '—')}</td>
+            <td>${escapeHtmlPub(a.dataLocation || '—')}${a.dpfAdherent ? '<br><small style="color:#2C5F8D;font-size:10px">DPF EU-USA</small>' : ''}</td>
+            <td>${escapeHtmlPub(dpaMap[a.dpa] || a.dpa || '—')}</td>
+            <td><span class="cluster-badge ${c}">${c}</span></td>
+          </tr>`;
+}).join('\n')}
+        </tbody>
+      </table>
+    </div>
+  </section>
+` : ''}
 
 ${docs.length > 0 ? `
   <section class="section">
