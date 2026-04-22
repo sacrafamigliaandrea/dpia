@@ -3432,6 +3432,30 @@ async function loadInventory(){
         app.inventory = app.inventory.concat(JSON.parse(JSON.stringify(missing)));
         await saveInventory();
       }
+      // MIGRAZIONE: per ogni servizio thirdparty già presente, aggiunge campi mancanti
+      // dalla versione aggiornata del seed (preservando active/cluster se modificati)
+      let migrated = 0;
+      app.inventory.forEach(a => {
+        if (a.source !== 'thirdparty') return;
+        const seed = THIRDPARTY_SEED.find(s => s.id === a.id);
+        if (!seed) return;
+        const preserveKeys = ['active','cluster','source'];
+        Object.keys(seed).forEach(k => {
+          if (preserveKeys.includes(k)) return;
+          const current = a[k];
+          const isEmpty = current === undefined || current === null || current === ''
+            || (Array.isArray(current) && current.length === 0)
+            || (typeof current === 'object' && !Array.isArray(current) && current !== null && Object.keys(current).length === 0);
+          if (isEmpty){
+            a[k] = JSON.parse(JSON.stringify(seed[k]));
+            migrated++;
+          }
+        });
+      });
+      if (migrated > 0){
+        await saveInventory();
+        console.log('[DPIA] Migrati ' + migrated + ' campi mancanti dal seed aggiornato');
+      }
     } else {
       // Prima volta: carico seed interno + seed terze parti
       const internal = INVENTORY_SEED.map(a => ({...a, source:'internal'}));
