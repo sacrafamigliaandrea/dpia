@@ -1472,25 +1472,6 @@ async function loadApp(){
     const r3 = await window.storage.get('dpia-drive-token');
     if (r3 && r3.value) app.driveToken = r3.value;
   } catch(e){}
-  // Carica inventario (o inizializza con seed)
-  try {
-    const r3 = await window.storage.get('dpia-inventory');
-    if (r3 && r3.value){
-      app.inventory = JSON.parse(r3.value) || [];
-    }
-  } catch(e){ app.inventory = []; }
-  if (!Array.isArray(app.inventory) || app.inventory.length === 0){
-    // Prima volta: pre-carica seed
-    app.inventory = INVENTORY_SEED.map((a, i) => ({
-      id: 'inv_seed_' + i,
-      name: a.name,
-      url: a.url,
-      category: a.category,
-      suggested: a.suggested,
-      cluster: null
-    }));
-    saveInventory();
-  }
 }
 async function saveApp(){
   try { await window.storage.set('dpia-studio', JSON.stringify({dossiers:app.dossiers})); }
