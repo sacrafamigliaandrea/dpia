@@ -1001,6 +1001,46 @@ button{font-family:inherit}
 
 <script>
 /* ======================================================================
+   STORAGE POLYFILL — window.storage non esiste nei browser normali,
+   è un'API degli artifacts di Claude.ai. Uso localStorage come backend.
+   ====================================================================== */
+if (!window.storage) {
+  window.storage = {
+    async get(key) {
+      try {
+        const v = localStorage.getItem(key);
+        return v !== null ? {key, value: v, shared: false} : null;
+      } catch(e) { return null; }
+    },
+    async set(key, value) {
+      try {
+        localStorage.setItem(key, value);
+        return {key, value, shared: false};
+      } catch(e) {
+        console.error('localStorage.setItem failed:', e);
+        return null;
+      }
+    },
+    async delete(key) {
+      try {
+        localStorage.removeItem(key);
+        return {key, deleted: true, shared: false};
+      } catch(e) { return null; }
+    },
+    async list(prefix) {
+      const keys = [];
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (!prefix || (k && k.startsWith(prefix))) keys.push(k);
+        }
+      } catch(e) {}
+      return {keys, prefix, shared: false};
+    }
+  };
+}
+
+/* ======================================================================
    DPIA STUDIO — Scuola Sacra Famiglia Orzinuovi
    v2.0 — Con autenticazione SHA-256, palette blu istituzionale,
    switch cluster/singola app, dati scuola, integrazione Drive via Apps Script.
