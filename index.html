@@ -1206,138 +1206,292 @@ const INVENTORY_SEED = [
 
 // ========== SEED SERVIZI TERZI ==========
 const THIRDPARTY_SEED = [
-  // --- Registro e gestione amministrativa ---
+  // --- REGISTRO E GESTIONE AMMINISTRATIVA ---
   {id:'tp-mastercom', name:'Mastercom', url:'https://www.registroelettronico.com/', cat:'Registro elettronico',
-    source:'thirdparty', cluster:'F',
-    vendor:'Master Training S.r.l.', country:'Italia', dataLocation:'Italia (EU)',
+    source:'thirdparty', cluster:'F', active:false, individualUse:false,
+    vendor:'Master Training S.r.l.', country:'Italia (Correggio RE)', dataLocation:'Italia (EU)',
     dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://www.registroelettronico.com/privacy',
-    individualUse:false, active:false,
-    note:'Registro elettronico ufficiale della scuola. Tratta anagrafica studenti, voti, assenze, comunicazioni famiglie. DPA scolastico standard firmato all\'adozione del servizio. Sede legale Correggio (RE).'},
+    minAge:'Nessuna (strumento istituzionale)', consentUnder14:'Coperto da iscrizione scolastica',
+    dataCollected:'Anagrafica studenti, voti, assenze, comunicazioni famiglie, pagamenti',
+    contentDestination:'Database Master Training — accesso solo segreteria/docenti autorizzati',
+    transferLegalBasis:'Nessun trasferimento extra-UE (server in Italia)',
+    recommendation:'recommended', 
+    recommendationText:'Strumento istituzionale. Uso obbligatorio per registro, valutazioni, comunicazioni. Coperto da DPA scolastico firmato all\'adozione del servizio.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Accesso famiglie con credenziali dedicate','Backup periodici gestiti dal fornitore','Verificare annualmente policy e DPA aggiornati'],
+    internalAlternatives:[]},
 
-  // --- Google ecosystem ---
-  {id:'tp-gws', name:'Google Workspace for Education Core', url:'https://workspace.google.com/edu/', cat:'Ecosistema cloud',
-    source:'thirdparty', cluster:'F',
-    vendor:'Google Ireland Limited', country:'Irlanda (sede EU)', dataLocation:'EU/USA con SCC',
+  // --- GOOGLE ECOSYSTEM ---
+  {id:'tp-gws', name:'Google Workspace for Education', url:'https://workspace.google.com/edu/', cat:'Ecosistema cloud',
+    source:'thirdparty', cluster:'F', active:false, individualUse:false,
+    vendor:'Google Ireland Limited', country:'Irlanda (sede EU)', dataLocation:'EU/USA con SCC + DPF',
     dpa:'standard-education', dpfAdherent:true, policyUrl:'https://workspace.google.com/terms/education_privacy.html',
-    individualUse:false, active:false,
-    note:'Gmail istituzionale, Classroom, Drive, Meet, Calendar. DPA Education esclude training modelli AI. Copre autenticazione di tutti gli utenti Workspace.'},
+    minAge:'Gestita dall\'amministratore Workspace scolastico', consentUnder14:'Scuola agisce come agente del genitore',
+    dataCollected:'Email istituzionale, nome, contenuti prodotti in Drive/Classroom/Gmail',
+    contentDestination:'Account Workspace scuola — non usati per training modelli AI (clausola esplicita DPA Education)',
+    transferLegalBasis:'SCC + DPF EU-USA + DPA Education',
+    recommendation:'recommended',
+    recommendationText:'Infrastruttura di base della scuola. DPA Education è il più solido standard per il settore educativo. Google dichiara esplicitamente che i dati Education non sono usati per addestrare modelli AI.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Verificare che "Additional Services" non Education siano disabilitati per under-18','Profilo studente H24 con restrizioni','Informativa famiglie nel patto digitale'],
+    internalAlternatives:[]},
 
   {id:'tp-notebooklm', name:'Google NotebookLM', url:'https://notebooklm.google.com/', cat:'IA generativa',
-    source:'thirdparty', cluster:'C',
-    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
-    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://notebooklm.google.com/notebooks',
-    individualUse:false, active:false,
-    note:'Assistente IA basato su Gemini che opera solo su fonti caricate dal docente. Già coperto dal DPA Workspace for Education in essere. Fonti pre-configurate dal docente, studenti non caricano documenti propri. Sperimentazione classi 3ª secondaria.'},
+    source:'thirdparty', cluster:'C', active:false, individualUse:false,
+    vendor:'Google LLC', country:'USA (coperto da Google Ireland per EU)', dataLocation:'EU/USA con SCC',
+    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://notebooklm.google.com/',
+    minAge:'Eredita minima Workspace', consentUnder14:'Coperto da consenso Workspace in essere',
+    dataCollected:'Prompt studente, risposte AI, fonti caricate dal docente',
+    contentDestination:'Account Workspace — NON usati per training modelli (clausola DPA Education esplicita)',
+    transferLegalBasis:'Coperto da DPA Workspace for Education già firmato',
+    recommendation:'conditional-age',
+    recommendationText:'Prima scelta per IA generativa in contesto scolastico. Zero training sui dati, fonti controllate dal docente, output verificabile. Raccomandato solo per 3ª secondaria — non per Primaria e 1ª-2ª secondaria per ragioni evolutive (maturità critica rispetto a hallucination).',
+    ageTargets:{primaria:'no', secondaria12:'caution', secondaria13:'ok'},
+    mitigations:['Fonti caricate SEMPRE dal docente, mai dallo studente','Notebook pre-configurato con obiettivi precisi','Ambiente laboratorio con supervisione','Formazione studenti: "no dati personali nei prompt" (Reg. Sez. 4.5)','Documentare estensione ad altre classi con aggiornamento DPIA'],
+    internalAlternatives:[]},
 
   {id:'tp-youtube', name:'YouTube (embed)', url:'https://www.youtube.com/', cat:'Video',
-    source:'thirdparty', cluster:'D',
+    source:'thirdparty', cluster:'D', active:false, individualUse:false,
     vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
     dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://policies.google.com/privacy',
-    individualUse:false, active:false,
-    note:'Embed di video YouTube nelle app didattiche. Uso senza login studente → tracking ridotto. Da valutare passaggio a youtube-nocookie.com per eliminare cookie Google dagli embed (nota: causa Error 153 su alcune app).'},
+    minAge:'13 per account; uso embed anonimo senza minima', consentUnder14:'Non applicabile in modalità embed',
+    dataCollected:'Nessun dato se embed senza login; se studente loggato con account Workspace, coperto',
+    contentDestination:'Tracking ridotto in modalità embed; uso youtube-nocookie.com elimina cookie Google',
+    transferLegalBasis:'Coperto da DPA Workspace',
+    recommendation:'recommended',
+    recommendationText:'Embed video nelle app didattiche senza login studente. Il tracking è minimo. Usare youtube-nocookie.com dove possibile, anche se può causare Error 153 su alcune configurazioni (documentato nella vostra base tecnica).',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Parametri embed: rel=0, modestbranding=1','Controllo preventivo video correlati (rel=0)','Mai chiedere login Google durante attività didattica'],
+    internalAlternatives:[]},
 
-  // --- Creazione contenuti ---
+  // --- CREAZIONE CONTENUTI ---
   {id:'tp-canva', name:'Canva for Education', url:'https://www.canva.com/education/', cat:'Creazione contenuti',
-    source:'thirdparty', cluster:'F',
+    source:'thirdparty', cluster:'F', active:false, individualUse:false,
     vendor:'Canva Pty Ltd', country:'Australia', dataLocation:'AU/USA con SCC',
     dpa:'standard-education', dpfAdherent:true, policyUrl:'https://www.canva.com/trust/privacy/',
-    individualUse:false, active:false,
-    note:'Aderisce a Data Privacy Framework EU-USA. DPA GDPR-compliant incorporato automaticamente. FERPA e COPPA compliant. Se solo docenti usano Canva per preparare materiali, cluster F; se studenti hanno account individuali, riclassificare E.'},
+    minAge:'13 (per account individuali); con account gestiti dalla scuola nessuna minima',
+    consentUnder14:'Scuola in loco parentis tramite account amministrati',
+    dataCollected:'Email istituzionale, nome studente, contenuti creati (poster, video, presentazioni)',
+    contentDestination:'Account scuola — rischio se condivisione pubblica attiva o community sharing',
+    transferLegalBasis:'DPA Education GDPR-compliant + DPF EU-USA',
+    recommendation:'conditional',
+    recommendationText:'Strumento ricco di asset (template, immagini, font) non replicabile internamente. Accettabile per esigenze di creazione grafica e presentazioni. La modalità "account classe condiviso" è la più sicura per Primaria; account individuali istituzionali per Secondaria.',
+    ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Admin Canva disabilita condivisione pubblica + Canva Community a livello dominio','Primaria 1-3: account classe condiviso, lavoro a turno supervisionato','Primaria 4-5 + Secondaria: account individuali via Workspace SSO','Moderazione contenuti: verificare immagini prodotte prima della stampa/condivisione','Informativa specifica nel patto digitale'],
+    internalAlternatives:[]},
 
   {id:'tp-padlet', name:'Padlet', url:'https://padlet.com/', cat:'Creazione contenuti',
-    source:'thirdparty', cluster:'E',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
     vendor:'Padlet Inc.', country:'USA', dataLocation:'USA con SCC',
     dpa:'su-richiesta', dpfAdherent:true, policyUrl:'https://padlet.com/about/privacy',
-    individualUse:false, active:false,
-    note:'Bacheca collaborativa. Se studenti scrivono contributi nominativi → cluster E. Se bacheca di sola lettura del docente → cluster D.'},
+    minAge:'13 per account; senza account (link segreto) nessuna minima',
+    consentUnder14:'Modalità senza account evita il problema; modalità account richiede consenso genitore',
+    dataCollected:'Nickname scelto, contenuti pubblicati (testo, immagini, audio, video)',
+    contentDestination:'Bacheca su server Padlet — rischio concreto se bacheca pubblica indicizzabile',
+    transferLegalBasis:'DPF aderente; DPA su richiesta scuola (NON automatico)',
+    recommendation:'conditional',
+    recommendationText:'Occasionale. Usare solo in modalità bacheca privata senza account studenti. Se l\'uso diventa sistematico, richiedere DPA scritto al supporto Padlet. Valutabile la sostituzione con Jamboard/Canva già coperti da DPA esistente.',
+    ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Bacheche sempre in modalità "privata" o "link segreto"','NO account studenti — contributi con nickname (nome fantasia)','Attivare "approvazione moderatore" prima della visibilità','Mai caricare foto/video di studenti identificabili','Chiedere DPA esplicito se uso regolare'],
+    internalAlternatives:[]},
 
   {id:'tp-genially', name:'Genially', url:'https://genial.ly/', cat:'Creazione contenuti',
-    source:'thirdparty', cluster:'F',
+    source:'thirdparty', cluster:'F', active:false, individualUse:false,
     vendor:'Genially Web SL', country:'Spagna (EU)', dataLocation:'EU',
     dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://genial.ly/privacy-policy/',
-    individualUse:false, active:false,
-    note:'Piattaforma creazione presentazioni interattive. Sede Spagna, dati EU, GDPR nativo senza necessità di trasferimento extra-UE.'},
-
-  // --- Quiz e valutazione ---
-  {id:'tp-kahoot', name:'Kahoot!', url:'https://kahoot.com/schools/', cat:'Quiz e valutazione',
-    source:'thirdparty', cluster:'E',
-    vendor:'Kahoot! ASA', country:'Norvegia (EEA)', dataLocation:'EEA',
-    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://kahoot.com/privacy-policy/',
-    individualUse:false, active:false,
-    note:'Quiz gamificato. Sede Norvegia (paese EEA, decisione di adeguatezza UE). Raccoglie nickname studenti durante le sessioni.'},
-
-  {id:'tp-quizizz', name:'Quizizz', url:'https://quizizz.com/', cat:'Quiz e valutazione',
-    source:'thirdparty', cluster:'E',
-    vendor:'Quizizz Inc.', country:'USA', dataLocation:'USA con SCC',
-    dpa:'standard-scolastico', dpfAdherent:true, policyUrl:'https://quizizz.com/privacy',
-    individualUse:false, active:false,
-    note:'Quiz gamificato. DPF aderente. DPA scolastico disponibile su richiesta. Raccolta nickname e risultati durante sessioni.'},
-
-  {id:'tp-mentimeter', name:'Mentimeter', url:'https://www.mentimeter.com/', cat:'Quiz e valutazione',
-    source:'thirdparty', cluster:'E',
-    vendor:'Mentimeter AB', country:'Svezia (EU)', dataLocation:'EU',
-    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.mentimeter.com/privacy-policy',
-    individualUse:false, active:false,
-    note:'Sondaggi e quiz interattivi. Sede Svezia, GDPR nativo. Può funzionare anonimo (cluster D) oppure con identificatori (cluster E).'},
-
-  {id:'tp-wordwall', name:'Wordwall', url:'https://wordwall.net/', cat:'Quiz e valutazione',
-    source:'thirdparty', cluster:'D',
-    vendor:'Visual Education Ltd', country:'Regno Unito', dataLocation:'UK',
-    dpa:'standard', dpfAdherent:false, policyUrl:'https://wordwall.net/privacy',
-    individualUse:false, active:false,
-    note:'Giochi didattici pronti e personalizzabili. UK con decisione di adeguatezza UE post-Brexit. Giochi tipicamente anonimi senza raccolta dati.'},
-
-  // --- IA generativa — USO INDIVIDUALE DOCENTI (senza DPA istituto) ---
-  {id:'tp-chatgpt', name:'ChatGPT (OpenAI)', url:'https://chat.openai.com/', cat:'IA generativa',
-    source:'thirdparty', cluster:'C',
-    vendor:'OpenAI OpCo LLC', country:'USA', dataLocation:'USA',
-    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://openai.com/policies/privacy-policy',
-    individualUse:true, active:false,
-    note:'USO INDIVIDUALE docenti — versione consumer senza DPA istituzionale. DPA disponibile solo per ChatGPT Edu/Team/Enterprise. I dati inseriti in versione free/Plus possono essere usati per training. Direttiva interna: docenti non inseriscono dati personali di studenti nei prompt.'},
-
-  {id:'tp-claude', name:'Claude (Anthropic)', url:'https://claude.ai/', cat:'IA generativa',
-    source:'thirdparty', cluster:'C',
-    vendor:'Anthropic PBC', country:'USA', dataLocation:'USA',
-    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://www.anthropic.com/legal/privacy',
-    individualUse:true, active:false,
-    note:'USO INDIVIDUALE docenti — versione consumer senza DPA istituzionale. DPA disponibile solo per Claude Team/Enterprise/API. Anthropic dichiara di non usare i prompt consumer per training di default. Usato da Animatore Digitale per progettazione didattica.'},
-
-  {id:'tp-perplexity', name:'Perplexity', url:'https://www.perplexity.ai/', cat:'IA generativa',
-    source:'thirdparty', cluster:'C',
-    vendor:'Perplexity AI Inc.', country:'USA', dataLocation:'USA',
-    dpa:'NON-firmato-versione-consumer', dpfAdherent:false, policyUrl:'https://www.perplexity.ai/hub/legal/privacy-policy',
-    individualUse:true, active:false,
-    note:'USO INDIVIDUALE docenti — versione Free/Pro senza DPA istituzionale. DPA con SCC GDPR disponibile solo per Perplexity Enterprise Pro. SOC 2 Type II attestato. Versione consumer archivia prompt per analytics; i dati enterprise non usati per training.'},
-
-  {id:'tp-gemini', name:'Gemini (Google)', url:'https://gemini.google.com/', cat:'IA generativa',
-    source:'thirdparty', cluster:'C',
-    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
-    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://policies.google.com/privacy',
-    individualUse:false, active:false,
-    note:'Se utilizzato dentro Workspace for Education con account istituzionale, coperto dal DPA Workspace. In quel caso: no training sui dati Education. Uso con account personali = individuale senza DPA istituto.'},
-
-  // --- Chatbot didattici ---
-  {id:'tp-mizou', name:'Mizou', url:'https://mizou.com/', cat:'Chatbot didattico',
-    source:'thirdparty', cluster:'C',
-    vendor:'Mizou Ltd', country:'USA', dataLocation:'USA con SCC',
-    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://mizou.com/privacy',
-    individualUse:false, active:false,
-    note:'Marketplace chatbot didattici. Dichiara conformità GDPR/FERPA/COPPA. Dichiara "no student PII required": fattore positivo che abbassa rischio rispetto a chatbot generalisti. Usato raramente. Fonte LLM sottostante: GPT-4.'},
-
-  // --- Collaborazione ---
-  {id:'tp-wooclap', name:'Wooclap', url:'https://www.wooclap.com/', cat:'Interazione classe',
-    source:'thirdparty', cluster:'E',
-    vendor:'Wooclap SA', country:'Belgio (EU)', dataLocation:'EU',
-    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.wooclap.com/privacy/',
-    individualUse:false, active:false,
-    note:'Sondaggi e domande live in classe. Sede Belgio, GDPR nativo. Partecipazione anonima possibile (cluster D) o nominativa (E).'},
+    minAge:'14 per account', consentUnder14:'Con account docente e studenti come viewer, nessun problema',
+    dataCollected:'Se solo docente crea: email docente + contenuti. Se studenti creano: email + contenuti',
+    contentDestination:'Server EU — nessun trasferimento extra-UE',
+    transferLegalBasis:'GDPR nativo (sede EU), nessun trasferimento',
+    recommendation:'recommended',
+    recommendationText:'Strumento presentazioni interattive solido sul piano normativo per sede EU. Adatto se docente crea e studenti fruiscono come viewer, oppure per lavori di classe Secondaria 3ª con account supervisionato.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Primaria: solo docente crea, studenti vedono','Secondaria: possibile lavoro produttivo con account docente condiviso'],
+    internalAlternatives:[]},
 
   {id:'tp-bookcreator', name:'Book Creator', url:'https://bookcreator.com/', cat:'Creazione contenuti',
-    source:'thirdparty', cluster:'E',
-    vendor:'Red Jumper Ltd', country:'Regno Unito', dataLocation:'UK',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Red Jumper Ltd', country:'Regno Unito', dataLocation:'UK (adeguatezza UE)',
     dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://bookcreator.com/privacy/',
-    individualUse:false, active:false,
-    note:'Creazione libri digitali da parte degli studenti. UK con adeguatezza UE. Gli studenti creano contenuti propri, potenzialmente dati personali nei libri realizzati.'}
+    minAge:'Gestito dall\'insegnante tramite account classe',
+    consentUnder14:'Account classe del docente bypassa il problema',
+    dataCollected:'Nome studente (opzionale), libri digitali prodotti',
+    contentDestination:'Cloud Book Creator — libri restano privati all\'account docente',
+    transferLegalBasis:'UK ha decisione di adeguatezza UE post-Brexit',
+    recommendation:'conditional',
+    recommendationText:'Occasionale. Account classe gestito dal docente, studenti scrivono i libri senza creare account propri. I prodotti restano privati.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Account classe + codice accesso studenti','Libri in modalità "privata" salvo pubblicazione consapevole','Verificare immagini caricate (filtri parentali attivi)'],
+    internalAlternatives:[]},
+
+  // --- QUIZ E VALUTAZIONE (categoria con forti alternative interne) ---
+  {id:'tp-kahoot', name:'Kahoot!', url:'https://kahoot.com/schools/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Kahoot! ASA', country:'Norvegia (EEA)', dataLocation:'EEA',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://kahoot.com/privacy-policy/',
+    minAge:'16 per account; modalità live senza account nessuna minima',
+    consentUnder14:'Usare solo modalità live (nickname temporanei)',
+    dataCollected:'Modalità live: nickname + risposte. Modalità account: email + progressi',
+    contentDestination:'Leaderboard temporanea (live) o archivio account docente (self-paced)',
+    transferLegalBasis:'Sede EEA con decisione di adeguatezza',
+    recommendation:'conditional-occasional',
+    recommendationText:'Uso occasionale accettabile solo in modalità live, mai con account studenti under-14. Esistono alternative interne già pronte nell\'ecosistema scolastico che offrono maggior controllo.',
+    ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
+    mitigations:['SOLO modalità live (docente proietta)','Formazione "come si sceglie il nickname" a inizio anno','Docente pulisce nickname palesemente identificativi prima dell\'avvio','Mai modalità self-paced con under-14'],
+    internalAlternatives:['Word Games','Sfida tra Casate','Fatto o Opinione?','Sei un Piccione?']},
+
+  {id:'tp-quizizz', name:'Quizizz', url:'https://quizizz.com/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Quizizz Inc.', country:'USA', dataLocation:'USA con SCC',
+    dpa:'standard-scolastico', dpfAdherent:true, policyUrl:'https://quizizz.com/privacy',
+    minAge:'13 per account',
+    consentUnder14:'Modalità live senza account evita problema',
+    dataCollected:'Nickname + risposte; con account: email + storico',
+    contentDestination:'Archivio docente nell\'account Quizizz',
+    transferLegalBasis:'DPF aderente + SCC',
+    recommendation:'conditional-occasional',
+    recommendationText:'Uso occasionale accettabile. Alternative interne già disponibili per quiz didattici standard.',
+    ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
+    mitigations:['Modalità live + nickname puliti','Evitare storicizzazione performance individuali con under-14'],
+    internalAlternatives:['Mattoncini Magici','Sbagliando s\'Impara','Word Games']},
+
+  {id:'tp-wayground', name:'Wayground', url:'https://wayground.com/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Wayground Inc.', country:'USA', dataLocation:'USA',
+    dpa:'standard', dpfAdherent:false, policyUrl:'https://wayground.com/privacy',
+    minAge:'13 (standard COPPA)',
+    consentUnder14:'Modalità guest senza account consigliata',
+    dataCollected:'Nickname + risposte; account: dati standard',
+    contentDestination:'Server USA — verificare DPA e SCC in essere',
+    transferLegalBasis:'Da verificare: richiedere DPA prima di adozione sistematica',
+    recommendation:'conditional-occasional',
+    recommendationText:'Uso occasionale accettabile. Meno documentato rispetto a Kahoot/Quizizz sul piano GDPR — se diventa strumento abituale, richiedere DPA esplicito.',
+    ageTargets:{primaria:'caution', secondaria12:'caution', secondaria13:'ok'},
+    mitigations:['Modalità guest/live preferibile','Verificare clausole DPA prima di uso regolare','Monitorare aggiornamenti policy del fornitore'],
+    internalAlternatives:['Word Games','Sfida tra Casate','Mattoncini Magici']},
+
+  {id:'tp-mentimeter', name:'Mentimeter', url:'https://www.mentimeter.com/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Mentimeter AB', country:'Svezia (EU)', dataLocation:'EU',
+    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.mentimeter.com/privacy-policy',
+    minAge:'13 per account; risposte anonime nessuna minima',
+    consentUnder14:'Modalità anonima evita il problema',
+    dataCollected:'Risposte anonime (default) o nickname se abilitato',
+    contentDestination:'Server EU — nessun trasferimento extra-UE',
+    transferLegalBasis:'GDPR nativo (sede EU)',
+    recommendation:'recommended-occasional',
+    recommendationText:'Solido sul piano normativo (sede EU). Modalità anonima default. Occasionale per sondaggi rapidi in classe.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Usare in modalità anonima sondaggi','Solo docente crea, studenti rispondono senza account'],
+    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione']},
+
+  {id:'tp-wordwall', name:'Wordwall', url:'https://wordwall.net/', cat:'Quiz e valutazione',
+    source:'thirdparty', cluster:'D', active:false, individualUse:false,
+    vendor:'Visual Education Ltd', country:'Regno Unito (adeguatezza UE)', dataLocation:'UK',
+    dpa:'standard', dpfAdherent:false, policyUrl:'https://wordwall.net/privacy',
+    minAge:'Nessuna in modalità gioco anonimo',
+    consentUnder14:'Modalità senza account nessun problema',
+    dataCollected:'Nessuno in modalità gioco locale; con account: email docente',
+    contentDestination:'Giochi anonimi senza raccolta dati studente',
+    transferLegalBasis:'UK adeguatezza UE',
+    recommendation:'recommended-occasional',
+    recommendationText:'Giochi didattici pronti senza raccolta dati studenti. Occasionale.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Usare solo in modalità "gioca" (no registrazione risultati individuali)'],
+    internalAlternatives:['I Mattoncini del Testo','Sbagliando s\'Impara','Word Games']},
+
+  // --- IA GENERATIVA - USO INDIVIDUALE DOCENTI ---
+  {id:'tp-chatgpt', name:'ChatGPT (OpenAI)', url:'https://chat.openai.com/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C', active:false, individualUse:true,
+    vendor:'OpenAI OpCo LLC', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://openai.com/policies/privacy-policy',
+    minAge:'13 (con consenso genitore fino a 18) - versione consumer',
+    consentUnder14:'NON USARE con studenti under-14 in versione consumer',
+    dataCollected:'Prompt del docente, cronologia conversazioni',
+    contentDestination:'Server OpenAI USA — i prompt possono essere usati per training in versione free/Plus (opt-out parziale disponibile)',
+    transferLegalBasis:'DPF aderente ma DPA istituzionale NON firmato dalla scuola',
+    recommendation:'individual-only',
+    recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Non utilizzabile come strumento istituzionale senza sottoscrizione ChatGPT Edu/Team/Enterprise (DPA dedicato). Docenti lo usano a titolo personale per preparazione didattica, mai con studenti e mai inserendo dati personali nei prompt.',
+    ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
+    mitigations:['Docente: disattivare "Improve model for everyone" nelle impostazioni','MAI inserire nome/cognome/classe di studenti nei prompt','MAI condividere schermo ChatGPT con studenti durante la lezione','Per uso con studenti: migrare a NotebookLM (DPA Workspace esistente)'],
+    internalAlternatives:[]},
+
+  {id:'tp-claude', name:'Claude (Anthropic)', url:'https://claude.ai/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C', active:false, individualUse:true,
+    vendor:'Anthropic PBC', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:true, policyUrl:'https://www.anthropic.com/legal/privacy',
+    minAge:'18 per account consumer',
+    consentUnder14:'NON USARE con studenti under-14',
+    dataCollected:'Prompt del docente, cronologia conversazioni',
+    contentDestination:'Server Anthropic USA — Anthropic dichiara di non usare prompt consumer per training di default',
+    transferLegalBasis:'DPF aderente ma DPA istituzionale NON firmato',
+    recommendation:'individual-only',
+    recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Claude consumer non è strumento istituzionale. Usato da Animatore Digitale per progettazione didattica, sviluppo web app, redazione documenti. Mai con studenti.',
+    ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
+    mitigations:['Docente: non condividere prompt con dati studenti identificabili','Per uso con studenti: migrare a NotebookLM'],
+    internalAlternatives:[]},
+
+  {id:'tp-perplexity', name:'Perplexity', url:'https://www.perplexity.ai/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C', active:false, individualUse:true,
+    vendor:'Perplexity AI Inc.', country:'USA', dataLocation:'USA',
+    dpa:'NON-firmato-versione-consumer', dpfAdherent:false, policyUrl:'https://www.perplexity.ai/hub/legal/privacy-policy',
+    minAge:'13 per account consumer',
+    consentUnder14:'NON USARE con studenti under-14',
+    dataCollected:'Prompt del docente, cronologia query',
+    contentDestination:'Server Perplexity USA — versione Free/Pro archivia prompt per analytics',
+    transferLegalBasis:'DPA con SCC disponibile solo per Enterprise Pro',
+    recommendation:'individual-only',
+    recommendationText:'USO INDIVIDUALE DOCENTI soltanto. Utile come motore di ricerca con citazioni per preparazione materiale didattico. SOC 2 Type II attestato. Mai con studenti.',
+    ageTargets:{primaria:'no', secondaria12:'no', secondaria13:'no'},
+    mitigations:['Docente: privacy controls per opt-out da non-essential uses','MAI inserire dati personali di studenti nei prompt','Per uso con studenti: migrare a NotebookLM'],
+    internalAlternatives:[]},
+
+  {id:'tp-gemini', name:'Gemini (Google)', url:'https://gemini.google.com/', cat:'IA generativa',
+    source:'thirdparty', cluster:'C', active:false, individualUse:false,
+    vendor:'Google LLC', country:'USA', dataLocation:'EU/USA con SCC',
+    dpa:'coperto-da-workspace', dpfAdherent:true, policyUrl:'https://policies.google.com/privacy',
+    minAge:'Eredita Workspace',
+    consentUnder14:'Se dentro Workspace for Education: coperto',
+    dataCollected:'Prompt del docente/studente se usato dentro Workspace',
+    contentDestination:'Se Workspace Education: non usati per training',
+    transferLegalBasis:'Coperto da DPA Workspace (in contesto Workspace); individuale se personale',
+    recommendation:'conditional-age',
+    recommendationText:'Se usato dentro Workspace for Education con account istituzionale, coperto dal DPA Workspace (no training). Se account personale docente, diventa uso individuale senza DPA istituto. Per studenti, preferire NotebookLM che è più controllabile.',
+    ageTargets:{primaria:'no', secondaria12:'caution', secondaria13:'ok'},
+    mitigations:['Verificare uso con account @sacrafamiglia.education','Preferire NotebookLM per attività con studenti'],
+    internalAlternatives:[]},
+
+  // --- CHATBOT DIDATTICI ---
+  {id:'tp-mizou', name:'Mizou', url:'https://mizou.com/', cat:'Chatbot didattico',
+    source:'thirdparty', cluster:'C', active:false, individualUse:false,
+    vendor:'Mizou Ltd', country:'USA', dataLocation:'USA con SCC',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://mizou.com/security',
+    minAge:'Nessuna se docente pre-configura (no PII required)',
+    consentUnder14:'Progettato per non richiedere dati studenti — accettabile con informativa famiglie',
+    dataCollected:'Conversazioni studente-chatbot (visibili solo al docente)',
+    contentDestination:'Dashboard docente Mizou; LLM sottostante (GPT-4) su infrastruttura OpenAI',
+    transferLegalBasis:'DPA scolastico + SCC',
+    recommendation:'conditional',
+    recommendationText:'Raccomandato per attività specifiche pre-configurate dal docente. Mizou dichiara conformità GDPR/FERPA/COPPA e "no student PII required" — fattore positivo che abbassa il rischio rispetto a chatbot generalisti. Usato raramente nella vostra scuola.',
+    ageTargets:{primaria:'caution', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Chatbot SEMPRE pre-configurato dal docente con prompt di sistema e fonti','MAI "chat libera" senza vincoli','Istruire chatbot a rifiutare richieste fuori tema didattico','Formazione studenti: no dati personali nei prompt','Mai per supporto emotivo/counseling'],
+    internalAlternatives:[]},
+
+  // --- INTERAZIONE CLASSE ---
+  {id:'tp-wooclap', name:'Wooclap', url:'https://www.wooclap.com/', cat:'Interazione classe',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Wooclap SA', country:'Belgio (EU)', dataLocation:'EU',
+    dpa:'nativo-GDPR', dpfAdherent:false, policyUrl:'https://www.wooclap.com/privacy/',
+    minAge:'Modalità anonima nessuna minima',
+    consentUnder14:'Modalità anonima evita problema',
+    dataCollected:'Risposte; opzionalmente nickname',
+    contentDestination:'Server EU',
+    transferLegalBasis:'GDPR nativo (sede EU)',
+    recommendation:'recommended-occasional',
+    recommendationText:'Solido sul piano normativo (sede EU). Occasionale per interazioni rapide in classe.',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Modalità anonima preferibile'],
+    internalAlternatives:['TI ASCOLTO!','Autovalutazione Lezione']}
 ];
 
 
@@ -2887,34 +3041,98 @@ async function saveInventory(){
 function openVendorDetail(appId){
   const a = app.inventory.find(x => x.id === appId);
   if (!a) return;
+  document.getElementById('modal').classList.add('wide');
+
+  // Mappature per la visualizzazione
+  const recColors = {
+    'recommended': {label:'RACCOMANDATO', color:'#1E4A8A', bg:'#E4EAF3', icon:'✓'},
+    'recommended-occasional': {label:'RACCOMANDATO — USO OCCASIONALE', color:'#1E4A8A', bg:'#E4EAF3', icon:'✓'},
+    'conditional': {label:'CONDIZIONATO — USABILE CON VINCOLI', color:'#B8860B', bg:'#FBF3DC', icon:'!'},
+    'conditional-age': {label:'CONDIZIONATO SU ETÀ', color:'#B8860B', bg:'#FBF3DC', icon:'!'},
+    'conditional-occasional': {label:'CONDIZIONATO — USO OCCASIONALE', color:'#B8860B', bg:'#FBF3DC', icon:'!'},
+    'discouraged': {label:'SCONSIGLIATO CON MINORI', color:'#8B4A3C', bg:'#F4E6E2', icon:'✕'},
+    'individual-only': {label:'SOLO USO INDIVIDUALE DOCENTE', color:'#8B4A3C', bg:'#F4E6E2', icon:'◉'}
+  };
+  const ageLabels = {
+    'ok': {label:'OK', color:'#1E4A8A', bg:'#E4EAF3'},
+    'caution': {label:'CAUTELA', color:'#B8860B', bg:'#FBF3DC'},
+    'no': {label:'NO', color:'#8B4A3C', bg:'#F4E6E2'}
+  };
   const dpaLabels = {
     'standard-scolastico': {text:'DPA scolastico standard firmato', cls:'ok'},
-    'standard-education': {text:'DPA Education standard (Workspace/similare)', cls:'ok'},
+    'standard-education': {text:'DPA Education standard', cls:'ok'},
     'standard': {text:'DPA standard disponibile', cls:'ok'},
-    'nativo-GDPR': {text:'Sede EU — GDPR nativo (no trasferimento extra-UE)', cls:'ok'},
-    'coperto-da-workspace': {text:'Coperto dal DPA Google Workspace in essere', cls:'ok'},
-    'su-richiesta': {text:'DPA disponibile su richiesta — da firmare', cls:'warn'},
-    'NON-firmato-versione-consumer': {text:'DPA NON in essere (versione consumer) — uso a rischio istituto', cls:'warn'}
+    'nativo-GDPR': {text:'GDPR nativo (sede EU, no trasferimento extra-UE)', cls:'ok'},
+    'coperto-da-workspace': {text:'Coperto da DPA Workspace in essere', cls:'ok'},
+    'su-richiesta': {text:'DPA disponibile su richiesta — non ancora firmato', cls:'warn'},
+    'NON-firmato-versione-consumer': {text:'DPA NON in essere (versione consumer)', cls:'warn'}
   };
+
+  const rec = recColors[a.recommendation] || recColors['conditional'];
+  const ageT = a.ageTargets || {};
   const dpa = dpaLabels[a.dpa] || {text:a.dpa || 'non specificato', cls:''};
-  const activeStatus = a.active ? 'Attivo nell\'istituto' : 'Non ancora attivato / catalogo';
+
+  const ageBadge = (stage, label) => {
+    const v = ageT[stage] || 'caution';
+    const style = ageLabels[v];
+    return `<div class="age-stage"><span class="age-stage-label">${label}</span><span class="age-badge" style="background:${style.bg};color:${style.color}">${style.label}</span></div>`;
+  };
+
+  const mitList = (a.mitigations || []).map(m => `<li>${escapeHtml(m)}</li>`).join('');
+  const altList = (a.internalAlternatives || []).map(alt => `<span class="internal-alt-chip">${escapeHtml(alt)}</span>`).join('');
 
   document.getElementById('modalContent').innerHTML = `
-    <h3>Dettagli fornitore — ${escapeHtml(a.name)}</h3>
-    <p style="font-size:13px;color:var(--ink-soft)">Metadati di conformità per il responsabile esterno del trattamento (art. 28 GDPR).</p>
+    <h3>Scheda decisionale — ${escapeHtml(a.name)}</h3>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-bottom:16px">Valutazione di conformità e raccomandazione d'uso per scuola di minori. Fonti: policy del fornitore + Linee guida MIM 2025 + GDPR/AI Act.</p>
 
-    <div class="vendor-panel">
-      <dl>
-        <dt>Fornitore</dt><dd>${escapeHtml(a.vendor || 'non specificato')}</dd>
-        <dt>Sede</dt><dd>${escapeHtml(a.country || 'non specificato')}</dd>
-        <dt>Localizzazione dati</dt><dd>${escapeHtml(a.dataLocation || 'non specificato')}</dd>
-        <dt>Data Privacy Framework</dt><dd class="${a.dpfAdherent ? 'ok' : ''}">${a.dpfAdherent ? 'Aderente al DPF EU-USA' : 'Non applicabile o non aderente'}</dd>
+    <!-- Raccomandazione d'uso -->
+    <div class="rec-banner" style="background:${rec.bg};border-left:4px solid ${rec.color};padding:14px 18px;margin-bottom:18px;border-radius:3px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:${rec.color};font-weight:600;margin-bottom:5px">Raccomandazione d'uso</div>
+      <div style="font-size:15px;font-weight:600;color:${rec.color};font-family:'IBM Plex Sans Condensed',sans-serif;margin-bottom:8px">${rec.icon} ${rec.label}</div>
+      <div style="font-size:13px;line-height:1.55;color:var(--ink)">${escapeHtml(a.recommendationText || '')}</div>
+    </div>
+
+    <!-- Target età -->
+    <div class="vendor-section">
+      <div class="vendor-section-title">Adeguatezza per fasce d'età</div>
+      <div class="age-targets">
+        ${ageBadge('primaria', 'Primaria (6-10)')}
+        ${ageBadge('secondaria12', 'Secondaria 1ª-2ª (11-12)')}
+        ${ageBadge('secondaria13', 'Secondaria 3ª (13-14)')}
+      </div>
+    </div>
+
+    <!-- 6 dimensioni di conformità -->
+    <div class="vendor-section">
+      <div class="vendor-section-title">Dettagli di conformità</div>
+      <dl class="vendor-dl">
+        <dt>Fornitore</dt><dd>${escapeHtml(a.vendor || '—')}</dd>
+        <dt>Sede</dt><dd>${escapeHtml(a.country || '—')}</dd>
+        <dt>Dati trattati</dt><dd>${escapeHtml(a.dataCollected || '—')}</dd>
+        <dt>Destinazione contenuti</dt><dd>${escapeHtml(a.contentDestination || '—')}</dd>
+        <dt>Localizzazione dati</dt><dd>${escapeHtml(a.dataLocation || '—')}</dd>
+        <dt>Base giuridica trasferimento</dt><dd>${escapeHtml(a.transferLegalBasis || '—')}</dd>
         <dt>DPA status</dt><dd class="${dpa.cls}">${dpa.text}</dd>
-        <dt>Privacy policy</dt><dd>${a.policyUrl ? `<a href="${escapeHtml(a.policyUrl)}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline">apri policy ufficiale ↗</a>` : 'non specificata'}</dd>
-        <dt>Stato</dt><dd class="${a.active ? 'ok' : 'warn'}">${activeStatus}</dd>
-        ${a.individualUse ? '<dt>Modalità d\'uso</dt><dd class="warn">Uso individuale docenti — NO dati studenti nei prompt</dd>' : ''}
-        <div class="note">${escapeHtml(a.note || '')}</div>
+        <dt>Data Privacy Framework</dt><dd class="${a.dpfAdherent ? 'ok' : ''}">${a.dpfAdherent ? 'Aderente DPF EU-USA' : 'Non applicabile o non aderente'}</dd>
+        <dt>Età minima piattaforma</dt><dd>${escapeHtml(a.minAge || '—')}</dd>
+        <dt>Consenso under-14 IT</dt><dd>${escapeHtml(a.consentUnder14 || '—')}</dd>
+        <dt>Privacy policy</dt><dd>${a.policyUrl ? `<a href="${escapeHtml(a.policyUrl)}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline">apri policy ufficiale ↗</a>` : '—'}</dd>
       </dl>
+    </div>
+
+    ${mitList ? `<div class="vendor-section">
+      <div class="vendor-section-title">Mitigazioni operative</div>
+      <ul class="vendor-mit-list">${mitList}</ul>
+    </div>` : ''}
+
+    ${altList ? `<div class="vendor-section">
+      <div class="vendor-section-title">Alternative interne disponibili nell'ecosistema</div>
+      <div class="internal-alts">${altList}</div>
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:8px;font-style:italic">Strumenti equivalenti sviluppati internamente con architettura zero-backend e nessuna raccolta dati personali.</p>
+    </div>` : ''}
+
+    <div class="vendor-status-line" style="margin-top:18px;padding:12px 14px;background:var(--cream);border-radius:2px;font-size:13px">
+      <strong style="color:var(--blue-dark)">Stato nell'istituto:</strong> ${a.active ? '<span style="color:#1E4A8A;font-weight:600">ATTIVO</span> — incluso nelle statistiche e nella pagina pubblica di governance.' : '<span style="color:var(--ink-soft)">Non ancora attivato</span> — in catalogo per eventuale adozione.'}
     </div>
 
     <div style="display:flex;gap:8px;margin-top:16px">
@@ -2925,7 +3143,11 @@ function openVendorDetail(appId){
     </div>
   `;
   document.getElementById('modalBack').classList.add('active');
+  // Scroll al top del modal
+  const modal = document.getElementById('modalContent');
+  if (modal) modal.scrollTop = 0;
 }
+
 
 function toggleVendorActive(appId){
   const a = app.inventory.find(x => x.id === appId);
