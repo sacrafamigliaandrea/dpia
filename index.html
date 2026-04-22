@@ -1335,6 +1335,48 @@ const THIRDPARTY_SEED = [
       'Policy password con scadenza per account segreteria'
     ]},
 
+  {id:'tp-myzanichelli', name:'myZanichelli', url:'https://my.zanichelli.it/', cat:'Libri digitali',
+    source:'thirdparty', cluster:'E', active:false, individualUse:false,
+    vendor:'Zanichelli editore S.p.A.', country:'Italia (Bologna)', dataLocation:'Italia (EU)',
+    dpa:'standard-scolastico', dpfAdherent:false, policyUrl:'https://my.zanichelli.it/privacy/',
+    minAge:'Gestita tramite iscrizione in classe virtuale (docente)',
+    consentUnder14:'Coperto da obbligo scolastico per l\'uso dei libri di testo; informativa famiglie',
+    dataCollected:'Nome, cognome, email studente, risultati esercizi, classe virtuale di appartenenza',
+    contentDestination:'Database Zanichelli (server Italia) \u2014 dati conservati fino al termine anno scolastico successivo',
+    transferLegalBasis:'Nessun trasferimento extra-UE (server in Italia)',
+    recommendation:'recommended',
+    recommendationText:'Servizio istituzionale per i libri digitali Zanichelli in adozione. Il docente crea la classe virtuale e gli studenti si iscrivono con codice. Dati trattati in Italia con base giuridica dell\'obbligo scolastico. I contenuti prodotti dagli studenti sono visibili solo al docente creatore della classe (non ad altri docenti n\u00E9 ad altri studenti).',
+    ageTargets:{primaria:'ok', secondaria12:'ok', secondaria13:'ok'},
+    mitigations:['Iscrizione studenti sempre mediata dal docente (codice classe)','Ritiro studente da classe virtuale \u00E8 sempre possibile','Cancellazione dati a richiesta tramite registrazione@zanichelli.it','Precedenza del nome inserito dal docente sui nomi scelti dagli studenti'],
+    internalAlternatives:[],
+    risks:[
+      {level:'BASSO', text:'Studente sceglie nickname inappropriato per l\'iscrizione'},
+      {level:'BASSO', text:'Docente non autorizzato accede accidentalmente a classi di altri'},
+      {level:'BASSO', text:'Conservazione prolungata oltre il termine didattico utile'},
+      {level:'BASSO', text:'Email studente inserita dal docente senza consenso esplicito famiglia'}
+    ],
+    requiredDocs:[
+      'DPA scolastico Zanichelli (firmato all\'adozione libri di testo)',
+      'Voce nel Registro dei Trattamenti art. 30 GDPR',
+      'Informativa famiglie all\'iscrizione \u2014 menzione dei libri digitali',
+      'Procedura interna per la gestione account classe virtuale',
+      'Modalit\u00E0 di cancellazione a fine anno scolastico'
+    ],
+    authorizations:[
+      {role:'Dirigente Scolastico', action:'Sottoscrizione DPA con Zanichelli'},
+      {role:'DPO', action:'Verifica periodica adeguatezza trattamento'},
+      {role:'Docente', action:'Creazione classe virtuale e gestione inviti'},
+      {role:'Famiglie', action:'Presa visione informativa libri digitali'}
+    ],
+    technicalChecklist:[
+      'Docente crea classe con codice univoco per anno scolastico',
+      'Invito studenti tramite codice (non via email non istituzionale)',
+      'Precedenza nome docente sul nickname studente',
+      'Cancellazione classe a termine anno scolastico',
+      'Verifica periodica link studenti attivi',
+      'Password forti account docente'
+    ]},
+
   // --- GOOGLE WORKSPACE ---
   {id:'tp-gws', name:'Google Workspace for Education', url:'https://workspace.google.com/edu/', cat:'Ecosistema cloud',
     source:'thirdparty', cluster:'F', active:false, individualUse:false,
