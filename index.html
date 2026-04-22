@@ -4546,16 +4546,14 @@ ${docs.map(d => `      <div class="doc-item">
   </div>
 </footer>
 
-<script>
-function filterCluster(c, btn){
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.inv-table tbody tr').forEach(row => {
-    if (c === 'all') row.style.display = '';
-    else row.style.display = row.dataset.cluster === c ? '' : 'none';
-  });
-}
-<\/script>
+</body>
+</html>`;
 
+  return doc;
+}
+
+// ========== INIT ==========
+window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
+</script>
 </body>
 </html>
