@@ -674,6 +674,14 @@ button{font-family:inherit}
     <button class="btn secondary sm" onclick="importInventoryJSON()">Importa JSON</button>
     <input type="file" id="invImportInput" accept=".json" style="display:none">
     <button class="btn secondary sm" onclick="resetInventory()">Reset inventario</button>
+    <button class="btn sm" onclick="generatePublicPage()" style="background:var(--blue-dark);border-color:var(--blue-dark)">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 3 H10 L13 6 V13 H3 Z M10 3 V6 H13 M5 9 H11 M5 11 H9" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg>
+      Pagina pubblica
+    </button>
+    <button class="btn sm" onclick="openBadgesModal()" style="background:var(--blue-dark);border-color:var(--blue-dark)">
+      <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M5.5 8 L7.2 9.5 L10.5 6.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Bollini portale
+    </button>
     <div class="spacer"></div>
     <div class="inv-filter-group">
       <label>Filtra:</label>
@@ -2995,6 +3003,668 @@ async function applyTriage(cluster){
   renderInventory();
   if (cluster) showToast(`"${a.name}" → Cluster ${cluster}`);
   else showToast(`"${a.name}" rimane da classificare`);
+}
+
+
+// ========== GENERATE PUBLIC PAGE (governance-ia.html) ==========
+function generatePublicPage(){
+  const apps = (app.inventory || []).filter(a => a.name && a.url);
+  if (!apps.length){ showToast('Inventario vuoto', true); return; }
+
+  // Raggruppa per cluster
+  const byCluster = {A:[], B:[], C:[], D:[], E:[], N:[]};
+  apps.forEach(a => {
+    const c = a.cluster || 'N';
+    byCluster[c].push(a);
+  });
+
+  // Raggruppa per categoria portale (per la tabella ordinata)
+  const sorted = [...apps].sort((a,b) => {
+    const ca = a.cat || 'Altro';
+    const cb = b.cat || 'Altro';
+    return ca.localeCompare(cb) || a.name.localeCompare(b.name);
+  });
+
+  // Conteggi
+  const counts = {
+    total: apps.length,
+    A: byCluster.A.length, B: byCluster.B.length, C: byCluster.C.length,
+    D: byCluster.D.length, E: byCluster.E.length, N: byCluster.N.length
+  };
+  const classified = counts.total - counts.N;
+  const pct = counts.total ? Math.round(classified/counts.total*100) : 0;
+
+  // Data corrente
+  const today = new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'});
+
+  // DPIA/documenti prodotti (solo metadati, senza dati sensibili)
+  const docs = Object.values(app.dossiers || {})
+    .filter(d => d.meta && d.meta.name)
+    .map(d => ({
+      name: d.meta.name,
+      cluster: d.cluster,
+      type: d.meta.type || 'single',
+      version: d.meta.version || 'v1.0',
+      date: d.meta.date || '',
+      status: countDone(d) === countTotal() ? 'Completato' : 'In lavorazione'
+    }));
+
+  // Costruisco HTML pagina pubblica
+  const page = `<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Governance IA — Scuola Paritaria Sacra Famiglia Orzinuovi</title>
+<meta name="description" content="Mappatura trasparente delle applicazioni IA e valutazioni di impatto (DPIA/FRIA) — Scuola Sacra Famiglia Orzinuovi, conforme a GDPR, AI Act UE 2024/1689 e Linee guida MIM 2025.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="https://acerio.vercel.app/logo_petrolio.jpg">
+<style>
+:root{
+  --blue:#1E4A8A; --blue-dark:#142E5A; --blue-mid:#2C5F8D;
+  --blue-soft:#E4EAF3; --blue-faint:#F3F6FB;
+  --amber:#B8860B; --amber-soft:#FBF3DC;
+  --neutral:#6B7280; --neutral-soft:#EDEFF2;
+  --terracotta:#8B4A3C; --terracotta-soft:#F4E6E2;
+  --ink:#1A1F2B; --ink-soft:#4A5160;
+  --line:#D4D9E0; --paper:#FCFCFD; --cream:#F1F3F7;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:15px;line-height:1.6}
+h1,h2,h3,h4{font-family:'IBM Plex Sans Condensed',sans-serif;letter-spacing:-.01em}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.topbar{background:var(--blue-dark);color:var(--paper);padding:18px 36px;display:flex;align-items:center;gap:16px}
+.topbar img{width:44px;height:44px;object-fit:contain;background:var(--paper);border-radius:50%;padding:3px}
+.topbar-text h1{font-size:18px;font-weight:600;color:var(--paper);line-height:1.1}
+.topbar-text p{font-size:11.5px;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.7);margin-top:3px}
+.topbar .spacer{flex:1}
+.topbar .back{padding:7px 14px;font-size:12px;background:transparent;border:1px solid rgba(255,255,255,.3);color:var(--paper);border-radius:2px;display:inline-flex;align-items:center;gap:6px}
+.topbar .back:hover{background:rgba(255,255,255,.1)}
+
+.strip{background:var(--cream);border-bottom:1px solid var(--line);padding:10px 36px;font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.strip strong{color:var(--blue-dark);font-weight:600}
+.strip .meta{display:flex;gap:18px;flex-wrap:wrap}
+
+.container{max-width:1180px;margin:0 auto;padding:48px 36px 60px}
+
+.hero{margin-bottom:44px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.hero .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);font-weight:600;margin-bottom:10px}
+.hero h1{font-size:46px;font-weight:700;color:var(--blue-dark);letter-spacing:-.015em;line-height:1.05;margin-bottom:14px}
+.hero p{font-size:17px;color:var(--ink-soft);max-width:820px;line-height:1.55}
+.hero .update{margin-top:18px;font-size:13px;color:var(--ink-soft);font-style:italic}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:40px 0}
+.stat{padding:18px 20px;background:var(--paper);border:1px solid var(--line);border-radius:2px}
+.stat-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:600;margin-bottom:6px}
+.stat-value{font-size:32px;font-weight:700;color:var(--blue-dark);font-family:'IBM Plex Sans Condensed',sans-serif;line-height:1}
+.stat-sub{font-size:11.5px;color:var(--ink-soft);margin-top:3px}
+
+.section{margin:48px 0}
+.section h2{font-size:26px;font-weight:600;color:var(--blue-dark);margin-bottom:12px;letter-spacing:-.01em}
+.section p{font-size:15px;color:var(--ink-soft);line-height:1.65;max-width:820px;margin-bottom:16px}
+
+.intro-box{background:var(--blue-faint);border-left:4px solid var(--blue);padding:22px 26px;margin-bottom:36px;border-radius:2px}
+.intro-box h3{font-size:16px;font-weight:600;color:var(--blue-dark);margin-bottom:10px}
+.intro-box p{font-size:14.5px;line-height:1.65;color:var(--ink);margin:0}
+
+.cluster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:22px}
+.cluster-card{padding:18px 20px;background:var(--paper);border:1px solid var(--line);border-radius:2px;border-top:4px solid var(--neutral)}
+.cluster-card.A{border-top-color:var(--terracotta)}
+.cluster-card.B{border-top-color:var(--amber)}
+.cluster-card.C{border-top-color:var(--blue)}
+.cluster-card.D{border-top-color:var(--neutral)}
+.cluster-card.E{border-top-color:var(--ink-soft)}
+.cluster-card h3{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:6px}
+.cluster-card .cluster-code{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);font-weight:700;margin-right:8px}
+.cluster-card .cluster-risk{display:inline-block;padding:2px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-radius:2px;margin-top:4px}
+.cluster-card.A .cluster-risk{background:var(--terracotta-soft);color:var(--terracotta)}
+.cluster-card.B .cluster-risk{background:var(--amber-soft);color:var(--amber)}
+.cluster-card.C .cluster-risk{background:var(--blue-soft);color:var(--blue)}
+.cluster-card.D .cluster-risk{background:var(--neutral-soft);color:var(--neutral)}
+.cluster-card.E .cluster-risk{background:var(--cream);color:var(--ink-soft)}
+.cluster-card p{font-size:13px;color:var(--ink-soft);line-height:1.55;margin:10px 0 8px}
+.cluster-card .count{font-size:13px;color:var(--blue-dark);font-weight:600}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:24px 0 16px;padding:12px;background:var(--cream);border:1px solid var(--line);border-radius:2px}
+.filter-btn{padding:7px 14px;font-size:12.5px;background:var(--paper);border:1px solid var(--line);color:var(--ink);cursor:pointer;border-radius:2px;font-family:inherit;transition:all .15s;font-weight:500}
+.filter-btn:hover{border-color:var(--blue);color:var(--blue-dark)}
+.filter-btn.active{background:var(--blue-dark);color:var(--paper);border-color:var(--blue-dark)}
+.filter-btn .num{font-size:10.5px;margin-left:6px;opacity:.7;font-variant-numeric:tabular-nums}
+
+.inv-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:2px}
+.inv-table{width:100%;border-collapse:collapse;background:var(--paper);font-size:13.5px}
+.inv-table thead{background:var(--cream)}
+.inv-table th{padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
+.inv-table td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+.inv-table tr:last-child td{border-bottom:none}
+.inv-table tr:hover td{background:var(--blue-faint)}
+.app-name{font-weight:500;color:var(--ink)}
+.app-cat{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;display:block}
+.app-url a{color:var(--blue-mid);font-size:12px;font-family:'IBM Plex Sans',monospace}
+.app-url a:hover{color:var(--blue);text-decoration:underline}
+.cluster-badge{padding:3px 10px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:2px;display:inline-block;font-family:'IBM Plex Sans Condensed',sans-serif}
+.cluster-badge.A{background:var(--terracotta-soft);color:var(--terracotta)}
+.cluster-badge.B{background:var(--amber-soft);color:var(--amber)}
+.cluster-badge.C{background:var(--blue-soft);color:var(--blue)}
+.cluster-badge.D{background:var(--neutral-soft);color:var(--neutral)}
+.cluster-badge.E{background:var(--cream);color:var(--ink-soft)}
+.cluster-badge.N{background:#FEF9E5;color:#B8860B}
+
+.docs-list{display:grid;grid-template-columns:1fr;gap:10px;margin-top:20px}
+.doc-item{padding:14px 18px;background:var(--paper);border:1px solid var(--line);border-radius:2px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.doc-item .doc-info strong{font-size:14.5px;color:var(--ink);display:block;margin-bottom:2px}
+.doc-item .doc-info .doc-meta{font-size:12px;color:var(--ink-soft)}
+.doc-item .doc-status{font-size:11px;padding:3px 10px;background:var(--blue-soft);color:var(--blue-dark);border-radius:2px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.doc-item .doc-status.wip{background:var(--amber-soft);color:var(--amber)}
+
+.normative{background:var(--blue-faint);padding:24px 28px;border-radius:2px;margin-top:24px}
+.normative h3{font-size:16px;font-weight:600;color:var(--blue-dark);margin-bottom:12px}
+.normative ul{list-style:none;padding:0}
+.normative li{padding:7px 0;font-size:13.5px;color:var(--ink);border-bottom:1px dotted var(--line);display:flex;gap:12px;align-items:baseline}
+.normative li:last-child{border-bottom:none}
+.normative li strong{color:var(--blue-dark);font-weight:600;flex-shrink:0;min-width:90px}
+.normative li span{flex:1}
+
+.contact-box{padding:22px 26px;background:var(--paper);border:1px solid var(--line);border-radius:2px;margin-top:24px}
+.contact-box h3{font-size:16px;font-weight:600;color:var(--blue-dark);margin-bottom:10px}
+.contact-box p{font-size:13.5px;color:var(--ink-soft);margin-bottom:8px;line-height:1.6}
+.contact-box a{color:var(--blue);font-weight:500}
+
+footer{background:var(--blue-dark);color:rgba(255,255,255,.8);padding:32px 36px;margin-top:60px;font-size:12.5px;line-height:1.6}
+footer .foot-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+footer strong{color:var(--paper);font-family:'IBM Plex Sans Condensed',sans-serif;font-size:13px}
+footer a{color:rgba(255,255,255,.9);text-decoration:underline;text-underline-offset:2px}
+
+@media (max-width:720px){
+  .topbar{padding:14px 20px}
+  .strip{padding:10px 20px}
+  .container{padding:32px 20px 40px}
+  .hero h1{font-size:34px}
+  .hero p{font-size:15px}
+  .section h2{font-size:22px}
+  .inv-table th:nth-child(2),.inv-table td:nth-child(2){display:none}
+  footer .foot-grid{grid-template-columns:1fr;gap:20px}
+  footer{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://acerio.vercel.app/logo_petrolio.jpg" alt="Sacra Famiglia">
+  <div class="topbar-text">
+    <h1>Governance IA</h1>
+    <p>Scuola Paritaria Sacra Famiglia · Orzinuovi</p>
+  </div>
+  <div class="spacer"></div>
+  <a class="back" href="https://acerio.vercel.app/">← Portale didattico</a>
+</div>
+
+<div class="strip">
+  <div><strong>Via Milano 75, 25034 Orzinuovi (BS)</strong></div>
+  <div class="meta">
+    <span>Tel. 030 941036</span>
+    <span><a href="mailto:segreteria@sacrafamiglia.edu.it">segreteria@sacrafamiglia.edu.it</a></span>
+    <span>Cod. mecc. BS1E02000V</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <section class="hero">
+    <div class="kicker">Trasparenza algoritmica · Registro pubblico</div>
+    <h1>Le applicazioni IA della nostra scuola</h1>
+    <p>Questa pagina raccoglie in forma aperta tutte le applicazioni didattiche dell'ecosistema Sacra Famiglia, ciascuna classificata secondo il livello di rischio per la protezione dei dati e dei diritti fondamentali. È uno strumento di trasparenza per genitori, studenti, docenti e ispettori.</p>
+    <div class="update">Ultima revisione: ${today} · ${counts.total} applicazioni censite · ${classified} classificate (${pct}%)</div>
+  </section>
+
+  <div class="intro-box">
+    <h3>Perché pubblichiamo questa pagina</h3>
+    <p>Le Linee guida del Ministero dell'Istruzione e del Merito per l'introduzione dell'intelligenza artificiale nelle scuole (v1.0, 2025), il Regolamento UE 2024/1689 (AI Act, art. 50) e il GDPR (art. 13) chiedono che l'utilizzo di sistemi IA in ambito scolastico sia dichiarato in modo chiaro e accessibile. La nostra scuola ha mappato tutte le applicazioni del proprio ecosistema, classificandole in cinque cluster di rischio secondo la metodologia WP248 del Gruppo ex-Art. 29 (oggi European Data Protection Board). Per ciascun cluster è stata prodotta — o è in produzione — la documentazione di conformità prevista (DPIA ex art. 35 GDPR, FRIA ex art. 27 AI Act, Registro ex art. 30 GDPR).</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Applicazioni totali</div>
+      <div class="stat-value">${counts.total}</div>
+      <div class="stat-sub">censite nell'inventario</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Classificate</div>
+      <div class="stat-value">${classified}</div>
+      <div class="stat-sub">${pct}% del totale</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Ad alto rischio</div>
+      <div class="stat-value">${counts.A + counts.B}</div>
+      <div class="stat-sub">con DPIA + FRIA</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Senza dati personali</div>
+      <div class="stat-value">${counts.D}</div>
+      <div class="stat-sub">registro semplificato</div>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>I cinque cluster di rischio</h2>
+    <p>Ogni applicazione è stata classificata in uno dei cinque cluster in base alla natura del trattamento dei dati e al grado di impatto sui diritti degli studenti. La classificazione segue l'Allegato III dell'AI Act e i criteri del GDPR.</p>
+
+    <div class="cluster-grid">
+      <div class="cluster-card A">
+        <h3><span class="cluster-code">A</span>Profilazione studenti</h3>
+        <div class="cluster-risk">Rischio ALTO · FRIA obbligatoria</div>
+        <p>Sistemi che costruiscono profili persistenti di studenti (competenze, soft skills, comportamenti) usati per valutazione o orientamento. Rientrano nell'Allegato III AI Act.</p>
+        <div class="count">${counts.A} applicazion${counts.A===1?'e':'i'}</div>
+      </div>
+      <div class="cluster-card B">
+        <h3><span class="cluster-code">B</span>Monitoraggio comportamentale</h3>
+        <div class="cluster-risk">Rischio ALTO-MEDIO</div>
+        <p>Sistemi che rilevano in tempo reale comportamenti osservabili durante l'uso (click, tempi, pattern). Rischio alto se usati durante verifiche formali.</p>
+        <div class="count">${counts.B} applicazion${counts.B===1?'e':'i'}</div>
+      </div>
+      <div class="cluster-card C">
+        <h3><span class="cluster-code">C</span>Chatbot / IA generativa</h3>
+        <div class="cluster-risk">Rischio MEDIO</div>
+        <p>Sistemi con funzionalità di IA generativa o chatbot basati su LLM. Soggetti a obblighi di trasparenza ex art. 50 AI Act e DPA specifici.</p>
+        <div class="count">${counts.C} applicazion${counts.C===1?'e':'i'}</div>
+      </div>
+      <div class="cluster-card D">
+        <h3><span class="cluster-code">D</span>Senza dati personali</h3>
+        <div class="cluster-risk">Rischio MINIMO</div>
+        <p>Contenuti informativi, simulatori, giochi educativi che non raccolgono alcun dato personale riconducibile a studente. Coperti da Registro semplificato ex art. 30 GDPR.</p>
+        <div class="count">${counts.D} applicazion${counts.D===1?'e':'i'}</div>
+      </div>
+      <div class="cluster-card E">
+        <h3><span class="cluster-code">E</span>Raccolta occasionale</h3>
+        <div class="cluster-risk">Rischio BASSO-MEDIO</div>
+        <p>Sistemi che raccolgono dati personali una tantum (sondaggi, quiz, leaderboard one-shot). DPIA semplificata con focus su minimizzazione.</p>
+        <div class="count">${counts.E} applicazion${counts.E===1?'e':'i'}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Inventario completo</h2>
+    <p>Tutte le ${counts.total} applicazioni censite. Usa i filtri per esplorare per cluster. Clicca su ciascun nome per accedere direttamente all'applicazione.</p>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterCluster('all',this)">Tutte <span class="num">${counts.total}</span></button>
+      <button class="filter-btn" onclick="filterCluster('A',this)">Cluster A <span class="num">${counts.A}</span></button>
+      <button class="filter-btn" onclick="filterCluster('B',this)">Cluster B <span class="num">${counts.B}</span></button>
+      <button class="filter-btn" onclick="filterCluster('C',this)">Cluster C <span class="num">${counts.C}</span></button>
+      <button class="filter-btn" onclick="filterCluster('D',this)">Cluster D <span class="num">${counts.D}</span></button>
+      <button class="filter-btn" onclick="filterCluster('E',this)">Cluster E <span class="num">${counts.E}</span></button>
+      ${counts.N > 0 ? `<button class="filter-btn" onclick="filterCluster('N',this)">Da classificare <span class="num">${counts.N}</span></button>` : ''}
+    </div>
+
+    <div class="inv-table-wrap">
+      <table class="inv-table">
+        <thead>
+          <tr><th>Applicazione</th><th>Categoria didattica</th><th>Cluster</th><th>Accesso</th></tr>
+        </thead>
+        <tbody>
+${sorted.map(a => {
+  const c = a.cluster || 'N';
+  const clusterLabel = c === 'N' ? 'Da classificare' : c;
+  return `          <tr data-cluster="${c}">
+            <td><span class="app-name">${escapeHtmlPub(a.name)}</span></td>
+            <td>${escapeHtmlPub(a.cat || 'Altro')}</td>
+            <td><span class="cluster-badge ${c}">${clusterLabel}</span></td>
+            <td class="app-url"><a href="${escapeHtmlPub(a.url)}" target="_blank" rel="noopener">apri →</a></td>
+          </tr>`;
+}).join('\n')}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+${docs.length > 0 ? `
+  <section class="section">
+    <h2>Documentazione di conformità prodotta</h2>
+    <p>Valutazioni d'impatto, registri e FRIA redatti a partire dall'inventario. La versione integrale dei documenti è custodita dal Titolare del Trattamento ed è disponibile per ispezioni, verifiche del Garante e consultazione del DPO.</p>
+    <div class="docs-list">
+${docs.map(d => `      <div class="doc-item">
+        <div class="doc-info">
+          <strong>${escapeHtmlPub(d.name)}</strong>
+          <div class="doc-meta">${d.type === 'cluster' ? 'DPIA di cluster' : 'DPIA singola applicazione'} · Cluster ${d.cluster || '?'} · ${escapeHtmlPub(d.version)}${d.date ? ' · ' + d.date : ''}</div>
+        </div>
+        <div class="doc-status ${d.status === 'Completato' ? '' : 'wip'}">${d.status}</div>
+      </div>`).join('\n')}
+    </div>
+  </section>
+` : ''}
+
+  <section class="section">
+    <h2>Riferimenti normativi</h2>
+    <div class="normative">
+      <ul>
+        <li><strong>GDPR</strong><span>Regolamento UE 2016/679 — artt. 5, 6, 13, 25, 28, 30, 32, 35, 36 (protezione dati, DPIA)</span></li>
+        <li><strong>AI Act</strong><span>Regolamento UE 2024/1689 — artt. 4, 5, 6, 27, 50 e Allegato III (classificazione rischio, FRIA, trasparenza)</span></li>
+        <li><strong>MIM</strong><span>Linee guida per l'introduzione dell'IA nelle Istituzioni scolastiche — v1.0, 2025</span></li>
+        <li><strong>HUDERIA</strong><span>Metodologia del Consiglio d'Europa per la valutazione d'impatto dei sistemi IA (2024)</span></li>
+        <li><strong>WP248</strong><span>Linee guida Gruppo ex-Art. 29 (EDPB) sulla DPIA — ammissibilità DPIA di cluster per trattamenti analoghi</span></li>
+        <li><strong>Norme nazionali</strong><span>D.Lgs. 196/2003 (Codice Privacy) · L. 92/2019 (Educazione civica) · D.Lgs. 297/1994 (T.U. scuola)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Richieste di informazioni</h2>
+    <div class="contact-box">
+      <h3>Come esercitare i diritti e richiedere documentazione</h3>
+      <p>Le famiglie e gli studenti possono richiedere in qualsiasi momento l'accesso integrale alla documentazione di conformità, esercitare i diritti di cui agli artt. 15-22 GDPR (accesso, rettifica, cancellazione, limitazione, portabilità, opposizione) e ricevere chiarimenti sul funzionamento delle applicazioni IA in uso.</p>
+      <p><strong>Canali di contatto:</strong> Segreteria della scuola — <a href="mailto:segreteria@sacrafamiglia.edu.it">segreteria@sacrafamiglia.edu.it</a> · Tel. 030 941036</p>
+      <p><strong>Reclami:</strong> è possibile presentare reclamo all'Autorità Garante per la Protezione dei Dati Personali tramite il portale <a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it</a>.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="foot-grid">
+    <div>
+      <strong>Scuola Paritaria Sacra Famiglia</strong><br>
+      Via Milano 75, 25034 Orzinuovi (BS)<br>
+      Tel. 030 941036 · <a href="mailto:segreteria@sacrafamiglia.edu.it">segreteria@sacrafamiglia.edu.it</a><br>
+      Cod. mecc. BS1E02000V · Parità Decreto 2658/147 del 27/02/2003
+    </div>
+    <div>
+      <strong>Governance IA</strong><br>
+      Titolare del trattamento: Dirigente Scolastico<br>
+      Referente operativo: Andrea Cerioli — Animatore Digitale<br>
+      Ultima revisione: ${today}<br>
+      <a href="https://acerio.vercel.app/">← Torna al portale didattico</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function filterCluster(c, btn){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.inv-table tbody tr').forEach(row => {
+    if (c === 'all') row.style.display = '';
+    else row.style.display = row.dataset.cluster === c ? '' : 'none';
+  });
+}
+<\/script>
+
+</body>
+</html>`;
+
+  const blob = new Blob([page], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'governance-ia.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Pagina pubblica scaricata: governance-ia.html');
+}
+
+function escapeHtmlPub(s){
+  return (s||'').replace(/[&<>"\']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+
+// ========== BADGE INTEGRATION PER PORTALE ==========
+function openBadgesModal(){
+  const apps = (app.inventory || []).filter(a => a.name && a.url && a.cluster);
+  const total = (app.inventory || []).length;
+
+  document.getElementById('modal').classList.add('wide');
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Integrazione portale — bollini di conformità</h3>
+    <p>Genera un file JavaScript che, aggiunto al tuo portale <code>acerio.vercel.app</code>, aggiunge automaticamente un <strong>bollino colorato</strong> accanto al nome di ogni applicazione classificata, indicando il cluster di rischio e lo stato di conformità DPIA. Zero modifiche al markup del portale.</p>
+
+    <div class="inv-app-info">
+      <strong>${apps.length} app classificate · ${total - apps.length} ancora da classificare</strong>
+      <span>Solo le app classificate riceveranno il bollino — le altre restano senza modifiche</span>
+    </div>
+
+    <div class="steps">
+      <strong style="display:block;margin-bottom:8px;font-size:13px;color:var(--blue-dark);font-family:'IBM Plex Sans Condensed',sans-serif">Come integrarlo nel portale:</strong>
+      <ol>
+        <li>Clicca <strong>Scarica dpia-badges.js</strong> qui sotto</li>
+        <li>Carica il file nella root del progetto Vercel <code>acerio</code> (accanto a <code>index.html</code>)</li>
+        <li>Apri <code>index.html</code> e aggiungi questa riga prima di <code>&lt;/body&gt;</code>:<br>
+          <code style="display:block;margin-top:6px;padding:8px 12px;background:var(--blue-dark);color:#d4e5ff;border-radius:2px;font-size:11.5px">&lt;script src="dpia-badges.js" defer&gt;&lt;/script&gt;</code>
+        </li>
+        <li>Fai il deploy (push su GitHub o redeploy da Vercel dashboard)</li>
+      </ol>
+    </div>
+
+    <p style="font-size:12.5px;color:var(--ink-soft);margin-top:14px"><strong style="color:var(--blue-dark)">Nota:</strong> ogni volta che classifichi nuove app o aggiorni i cluster, rigenera il file e sostituiscilo su Vercel. La data di generazione è visibile nel tooltip dei bollini.</p>
+
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal()">Chiudi</button>
+      <button class="btn" onclick="generateBadgesJS(); closeModal()">
+        <svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px"><path d="M8 2 V10 M4 7 L8 11 L12 7 M2 13 H14" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Scarica dpia-badges.js
+      </button>
+    </div>`;
+  document.getElementById('modalBack').classList.add('active');
+}
+
+function generateBadgesJS(){
+  const apps = (app.inventory || []).filter(a => a.name && a.url && a.cluster);
+  if (!apps.length){ showToast('Nessuna app classificata da esportare', true); return; }
+
+  // Costruisci mappa url -> cluster
+  const appsMap = {};
+  apps.forEach(a => {
+    const normalized = a.url.replace(/^https?:\/\//i, '').replace(/\/$/, '').replace(/^www\./i, '').toLowerCase();
+    appsMap[normalized] = {c: a.cluster, n: a.name};
+  });
+
+  const today = new Date().toISOString().slice(0,10);
+
+  // Dati cluster (con colori per il tooltip)
+  const clusterInfo = {
+    A: {name:'Profilazione studenti', risk:'ALTO', color:'#8B4A3C', status:'DPIA + FRIA'},
+    B: {name:'Monitoraggio comportamentale', risk:'ALTO-MEDIO', color:'#B8860B', status:'DPIA + FRIA'},
+    C: {name:'Chatbot / IA generativa', risk:'MEDIO', color:'#1E4A8A', status:'DPIA + DPA'},
+    D: {name:'Senza dati personali', risk:'MINIMO', color:'#6B7280', status:'Registro art. 30'},
+    E: {name:'Raccolta occasionale', risk:'BASSO-MEDIO', color:'#4A5160', status:'DPIA semplificata'}
+  };
+
+  const js = `/* ======================================================================
+   DPIA Badges — Integrazione portale Scuola Sacra Famiglia
+   Generato automaticamente da DPIA Studio il ${today}
+   Aggiunge bollini di conformità alle applicazioni classificate.
+   ====================================================================== */
+(function(){
+  'use strict';
+
+  const DPIA_DATA = {
+    updated: '${today}',
+    apps: ${JSON.stringify(appsMap, null, 2)},
+    clusters: ${JSON.stringify(clusterInfo, null, 2)}
+  };
+
+  // CSS iniettato una volta sola
+  const STYLE_ID = 'dpia-badges-style';
+  if (!document.getElementById(STYLE_ID)){
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = \`
+      .dpia-badge{
+        display:inline-flex;align-items:center;justify-content:center;
+        min-width:18px;height:18px;padding:0 5px;
+        font-size:10.5px;font-weight:700;letter-spacing:.04em;
+        color:#fff;margin-left:6px;vertical-align:1px;
+        border-radius:9px;cursor:help;position:relative;
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+        box-shadow:0 1px 2px rgba(0,0,0,.12);
+        transition:transform .15s;
+      }
+      .dpia-badge:hover{transform:scale(1.15)}
+      .dpia-A{background:#8B4A3C}
+      .dpia-B{background:#B8860B}
+      .dpia-C{background:#1E4A8A}
+      .dpia-D{background:#6B7280}
+      .dpia-E{background:#4A5160}
+
+      .dpia-tooltip{
+        position:absolute;bottom:100%;left:50%;transform:translateX(-50%) translateY(-4px);
+        background:#142E5A;color:#fff;padding:8px 12px;border-radius:4px;
+        font-size:11.5px;font-weight:400;letter-spacing:0;line-height:1.4;
+        white-space:nowrap;pointer-events:none;opacity:0;
+        transition:opacity .15s;z-index:9999;
+        box-shadow:0 4px 12px rgba(0,0,0,.2);
+        min-width:200px;white-space:normal;text-align:left;
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      }
+      .dpia-tooltip strong{display:block;font-weight:600;margin-bottom:3px;font-size:12px}
+      .dpia-tooltip .risk{font-size:10px;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+      .dpia-tooltip::after{
+        content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+        border:4px solid transparent;border-top-color:#142E5A;
+      }
+      .dpia-badge:hover .dpia-tooltip{opacity:1}
+
+      .dpia-footer-note{
+        max-width:1100px;margin:40px auto 20px;padding:16px 20px;
+        background:#F3F6FB;border-left:3px solid #1E4A8A;border-radius:2px;
+        font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+        font-size:12.5px;color:#4A5160;line-height:1.6;
+      }
+      .dpia-footer-note strong{color:#142E5A;font-weight:600}
+      .dpia-footer-note a{color:#1E4A8A;text-decoration:underline}
+      .dpia-footer-note .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px}
+      .dpia-footer-note .legend span{display:inline-flex;align-items:center;gap:5px}
+      .dpia-footer-note .legend .dpia-badge{margin-left:0;cursor:default}
+    \`;
+    document.head.appendChild(style);
+  }
+
+  function normalizeUrl(url){
+    if (!url) return '';
+    return url.replace(/^https?:\\/\\//i, '').replace(/\\/$/, '').replace(/^www\\./i, '').toLowerCase().split(/[?#]/)[0];
+  }
+
+  function createBadge(cluster){
+    const info = DPIA_DATA.clusters[cluster];
+    if (!info) return null;
+    const span = document.createElement('span');
+    span.className = 'dpia-badge dpia-' + cluster;
+    span.textContent = cluster;
+    span.setAttribute('data-dpia', cluster);
+
+    const tip = document.createElement('span');
+    tip.className = 'dpia-tooltip';
+    tip.innerHTML = '<strong>Cluster ' + cluster + ' — ' + info.name + '</strong>' +
+      'Copertura: ' + info.status +
+      '<div class="risk">Rischio ' + info.risk + '</div>';
+    span.appendChild(tip);
+
+    return span;
+  }
+
+  function processLinks(){
+    const links = document.querySelectorAll('a[href]');
+    let added = 0;
+    links.forEach(link => {
+      // Evita duplicati
+      if (link.dataset.dpiaProcessed) return;
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      // Risolvi URL assoluto
+      let absolute;
+      try {
+        absolute = new URL(href, window.location.href).href;
+      } catch(e) { return; }
+
+      const norm = normalizeUrl(absolute);
+      if (!norm) return;
+
+      // Match esatto
+      let match = DPIA_DATA.apps[norm];
+
+      // Fallback: match per hostname principale
+      if (!match){
+        const host = norm.split('/')[0];
+        for (const key in DPIA_DATA.apps){
+          if (key.split('/')[0] === host){ match = DPIA_DATA.apps[key]; break; }
+        }
+      }
+
+      if (match){
+        const badge = createBadge(match.c);
+        if (badge){
+          link.appendChild(badge);
+          link.dataset.dpiaProcessed = '1';
+          added++;
+        }
+      }
+    });
+    return added;
+  }
+
+  function addFooterNote(){
+    if (document.getElementById('dpia-footer-note')) return;
+    const note = document.createElement('aside');
+    note.id = 'dpia-footer-note';
+    note.className = 'dpia-footer-note';
+    const counts = {A:0,B:0,C:0,D:0,E:0};
+    Object.values(DPIA_DATA.apps).forEach(a => counts[a.c]++);
+    const total = Object.keys(DPIA_DATA.apps).length;
+
+    const legendItems = ['A','B','C','D','E'].filter(c => counts[c] > 0).map(c => {
+      const info = DPIA_DATA.clusters[c];
+      return '<span><span class="dpia-badge dpia-' + c + '">' + c + '</span> ' + info.name + ' (' + counts[c] + ')</span>';
+    }).join('');
+
+    note.innerHTML =
+      '<strong>Trasparenza IA — bollini di conformità</strong><br>' +
+      'Le applicazioni contrassegnate dai bollini colorati sono state classificate e valutate secondo il <strong>GDPR</strong>, l\\'<strong>AI Act (UE) 2024/1689</strong> e le <strong>Linee guida MIM 2025</strong>. ' +
+      'Ogni bollino indica il cluster di rischio e il tipo di documentazione di conformità prodotta. ' +
+      'Totale applicazioni classificate: <strong>' + total + '</strong>. Ultima revisione: <strong>' + DPIA_DATA.updated + '</strong>.' +
+      '<div class="legend">' + legendItems + '</div>';
+
+    document.body.appendChild(note);
+  }
+
+  function init(){
+    const added = processLinks();
+    addFooterNote();
+    console.log('[DPIA Badges] ' + added + ' bollini aggiunti · ' + Object.keys(DPIA_DATA.apps).length + ' app classificate · aggiornato ' + DPIA_DATA.updated);
+
+    // Observer per contenuti caricati dinamicamente
+    if (window.MutationObserver){
+      const obs = new MutationObserver(muts => {
+        let shouldProcess = false;
+        muts.forEach(m => {
+          m.addedNodes.forEach(n => {
+            if (n.nodeType === 1 && (n.tagName === 'A' || n.querySelector && n.querySelector('a'))) shouldProcess = true;
+          });
+        });
+        if (shouldProcess) processLinks();
+      });
+      obs.observe(document.body, {childList:true, subtree:true});
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+`;
+
+  const blob = new Blob([js], {type:'application/javascript;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'dpia-badges.js';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('dpia-badges.js scaricato — carica su Vercel accanto a index.html');
 }
 
 // ========== GENERATE DPIA DI CLUSTER ==========
