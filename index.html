@@ -445,6 +445,94 @@ button{font-family:inherit}
 .module-tile-count{font-size:11px;color:var(--blue-dark);font-weight:600;margin-top:6px;text-transform:uppercase;letter-spacing:.08em}
 .module-tile-arrow{color:var(--blue-dark);font-size:20px;flex-shrink:0}
 
+
+/* ——— INVENTORY ——— */
+.inv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.inv-stat{padding:14px 16px;background:var(--paper);border:1px solid var(--line);border-radius:2px;text-align:left}
+.inv-stat .inv-stat-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);font-weight:600;margin-bottom:4px}
+.inv-stat .inv-stat-value{font-size:22px;font-weight:600;color:var(--blue-dark);font-family:'IBM Plex Sans Condensed',sans-serif;line-height:1}
+.inv-stat .inv-stat-sub{font-size:11px;color:var(--ink-soft);margin-top:2px}
+.inv-stat.cluster-A{border-left:3px solid var(--terracotta)}
+.inv-stat.cluster-A .inv-stat-value{color:var(--terracotta)}
+.inv-stat.cluster-B{border-left:3px solid var(--amber)}
+.inv-stat.cluster-B .inv-stat-value{color:var(--amber)}
+.inv-stat.cluster-C{border-left:3px solid var(--blue)}
+.inv-stat.cluster-C .inv-stat-value{color:var(--blue)}
+.inv-stat.cluster-D{border-left:3px solid var(--neutral)}
+.inv-stat.cluster-D .inv-stat-value{color:var(--neutral)}
+.inv-stat.cluster-E{border-left:3px solid var(--ink-soft)}
+.inv-stat.cluster-E .inv-stat-value{color:var(--ink-soft)}
+.inv-stat.cluster-N{border-left:3px solid #C8A415;background:#FEF9E5}
+.inv-stat.cluster-N .inv-stat-value{color:#B8860B}
+
+.inv-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:18px;padding:12px;background:var(--cream);border:1px solid var(--line);border-radius:2px}
+.inv-toolbar .spacer{flex:1}
+.inv-toolbar select{padding:7px 10px;background:var(--paper);border:1px solid var(--line);font-family:inherit;font-size:12.5px;color:var(--ink);border-radius:2px}
+.inv-toolbar select:focus{outline:none;border-color:var(--blue)}
+.inv-filter-group{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-soft)}
+
+.inv-batch{background:var(--blue-soft);border:1px solid var(--blue);padding:14px 16px;margin-bottom:18px;border-radius:2px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.inv-batch-label{font-size:12px;color:var(--blue-dark);font-weight:600;margin-right:auto}
+.inv-batch-label strong{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:var(--blue-dark)}
+.inv-batch-btn{padding:7px 13px;font-size:12px;background:var(--paper);border:1px solid var(--blue);color:var(--blue-dark);cursor:pointer;border-radius:2px;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.inv-batch-btn:hover{background:var(--blue);color:var(--paper)}
+.inv-batch-btn svg{width:12px;height:12px}
+
+.inv-gen-section{margin-top:24px;padding:18px;background:var(--blue-faint);border:1px solid var(--blue);border-radius:2px}
+.inv-gen-head{font-size:15px;font-weight:600;color:var(--blue-dark);margin-bottom:8px;font-family:'IBM Plex Sans Condensed',sans-serif}
+.inv-gen-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5}
+.inv-gen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.inv-gen-card{padding:14px;background:var(--paper);border:1px solid var(--line);border-radius:2px;display:flex;flex-direction:column;gap:8px}
+.inv-gen-card h4{font-size:13.5px;font-weight:600;color:var(--ink);font-family:'IBM Plex Sans Condensed',sans-serif;display:flex;align-items:center;gap:8px}
+.inv-gen-card .gc-tag{padding:2px 8px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-radius:2px}
+.inv-gen-card p{font-size:11.5px;color:var(--ink-soft);line-height:1.45;flex:1}
+.inv-gen-card button{padding:8px 12px;font-size:12px;background:var(--blue);color:var(--paper);border:none;cursor:pointer;border-radius:2px;font-family:inherit;transition:background .15s}
+.inv-gen-card button:hover{background:var(--blue-dark)}
+.inv-gen-card button:disabled{background:var(--line);color:var(--ink-soft);cursor:not-allowed}
+.inv-gen-card.D button{background:var(--neutral)}
+.inv-gen-card.D button:hover{background:#4b5360}
+
+.inv-table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);font-size:13px}
+.inv-table thead{background:var(--cream)}
+.inv-table th{padding:10px 12px;text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
+.inv-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.inv-table tr:hover td{background:var(--blue-faint)}
+.inv-table tr.sel td{background:var(--blue-soft)}
+.inv-table tr.sel:hover td{background:var(--blue-soft)}
+.inv-table tr.sub-sel td{background:var(--blue-soft)}
+.inv-table td:last-child{text-align:right}
+.inv-checkbox{width:14px;height:14px;accent-color:var(--blue);cursor:pointer}
+.inv-app-cell{display:flex;flex-direction:column;gap:2px}
+.inv-app-name{font-weight:500;color:var(--ink)}
+.inv-app-cat{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.05em}
+.inv-url-cell a{color:var(--blue-mid);text-decoration:none;font-size:11.5px;font-family:'IBM Plex Sans',monospace}
+.inv-url-cell a:hover{color:var(--blue);text-decoration:underline}
+.inv-cluster-cell{white-space:nowrap}
+.inv-cluster-badge{padding:3px 10px;font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border-radius:2px;display:inline-block;font-family:'IBM Plex Sans Condensed',sans-serif}
+.inv-cluster-N{background:#FEF9E5;color:#B8860B}
+.inv-cluster-A{background:var(--terracotta-soft);color:var(--terracotta)}
+.inv-cluster-B{background:var(--amber-soft);color:var(--amber)}
+.inv-cluster-C{background:var(--blue-soft);color:var(--blue)}
+.inv-cluster-D{background:var(--neutral-soft);color:var(--neutral)}
+.inv-cluster-E{background:var(--cream);color:var(--ink-soft)}
+.inv-actions-cell{display:flex;gap:4px;justify-content:flex-end;white-space:nowrap}
+.inv-btn-sm{padding:5px 9px;font-size:11px;background:transparent;border:1px solid var(--line);color:var(--ink-soft);cursor:pointer;border-radius:2px;font-family:inherit;transition:all .15s}
+.inv-btn-sm:hover{border-color:var(--blue);color:var(--blue-dark);background:var(--blue-faint)}
+.inv-btn-sm.danger:hover{border-color:var(--terracotta);color:var(--terracotta);background:var(--terracotta-soft)}
+
+/* Triage modal */
+.triage-q{margin-bottom:18px}
+.triage-q-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:10px;font-family:'IBM Plex Sans Condensed',sans-serif}
+.triage-opts{display:grid;grid-template-columns:1fr;gap:6px}
+.triage-opt{padding:11px 14px;border:1px solid var(--line);background:var(--paper);cursor:pointer;border-radius:2px;transition:all .15s;font-size:13px;text-align:left;font-family:inherit;color:var(--ink)}
+.triage-opt:hover{border-color:var(--blue);background:var(--blue-faint)}
+.triage-opt.selected{border-color:var(--blue);background:var(--blue-soft);font-weight:500}
+.triage-opt .opt-cluster{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;margin-top:3px;display:block}
+
+.inv-app-info{background:var(--blue-faint);padding:12px 14px;border-left:3px solid var(--blue);margin-bottom:18px;border-radius:2px}
+.inv-app-info strong{font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--blue-dark);font-size:14px;display:block;margin-bottom:3px}
+.inv-app-info span{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Sans',monospace}
+
 </style>
 </head>
 <body>
@@ -537,6 +625,10 @@ button{font-family:inherit}
       <svg viewBox="0 0 16 16" fill="none"><path d="M8 3 V13 M3 8 H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Nuova valutazione
     </button>
+    <button class="btn large" onclick="goTo('inventory')" style="background:var(--blue-dark);border-color:var(--blue-dark)">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4" fill="none"/><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4" fill="none"/><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4" fill="none"/><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      Inventario IA
+    </button>
     <button class="btn large secondary" onclick="importJSON()">
       <svg viewBox="0 0 16 16" fill="none"><path d="M8 10 V2 M4 6 L8 2 L12 6 M2 11 V13 H14 V11" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Importa JSON
@@ -547,6 +639,95 @@ button{font-family:inherit}
   <div class="dash-list">
     <h2>Fascicoli archiviati <span class="count" id="dashCount">0 valutazioni</span></h2>
     <div id="dossierList"></div>
+  </div>
+</div>
+
+
+<!-- ============ VIEW: INVENTORY ============ -->
+<div class="view" id="viewInventory">
+  <div class="editor-head">
+    <div>
+      <h1>Inventario IA</h1>
+      <div class="meta">Mappatura delle applicazioni dell'ecosistema didattico · classificazione per cluster DPIA</div>
+    </div>
+    <div class="editor-actions">
+      <button class="btn secondary sm" onclick="goTo('dash')">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 4 L4 8 L10 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        Archivio DPIA
+      </button>
+    </div>
+  </div>
+
+  <div class="intro-box">
+    <h3>Come funziona</h3>
+    <p>L'inventario raccoglie le applicazioni del portale didattico e le classifica in 5 cluster di rischio. Per ciascuna app, usa il bottone <strong>Classifica</strong> per un triage rapido a 2 domande (assegna automaticamente il cluster) oppure assegna direttamente il cluster dal menù a tendina. Per le app del cluster D (senza dati personali) produci un unico Registro semplificato ex art. 30 GDPR; per gli altri cluster, genera una DPIA di cluster con la lista applicazioni già popolata. Basato su WP248 del Gruppo ex-Art. 29 (EDPB) e Linee guida MIM 2025.</p>
+  </div>
+
+  <div class="inv-stats" id="invStats"></div>
+
+  <div class="inv-toolbar">
+    <button class="btn sm" onclick="addInventoryApp()">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 3 V13 M3 8 H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Aggiungi app
+    </button>
+    <button class="btn secondary sm" onclick="exportInventory()">Esporta JSON</button>
+    <button class="btn secondary sm" onclick="importInventoryJSON()">Importa JSON</button>
+    <input type="file" id="invImportInput" accept=".json" style="display:none">
+    <button class="btn secondary sm" onclick="resetInventory()">Reset inventario</button>
+    <div class="spacer"></div>
+    <div class="inv-filter-group">
+      <label>Filtra:</label>
+      <select id="invFilter" onchange="renderInventory()">
+        <option value="all">Tutte</option>
+        <option value="unclassified">Da classificare</option>
+        <option value="classified">Classificate</option>
+        <option value="A">Cluster A</option>
+        <option value="B">Cluster B</option>
+        <option value="C">Cluster C</option>
+        <option value="D">Cluster D</option>
+        <option value="E">Cluster E</option>
+      </select>
+    </div>
+    <div class="inv-filter-group">
+      <label>Ordina:</label>
+      <select id="invSort" onchange="renderInventory()">
+        <option value="cat">Per categoria</option>
+        <option value="name">Per nome</option>
+        <option value="cluster">Per cluster</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="invBatchBar" class="inv-batch" style="display:none">
+    <span class="inv-batch-label"><strong id="invSelCount">0</strong> app selezionate</span>
+    <button class="inv-batch-btn" onclick="bulkAssign('A')"><span class="inv-cluster-badge inv-cluster-A">A</span> Assegna</button>
+    <button class="inv-batch-btn" onclick="bulkAssign('B')"><span class="inv-cluster-badge inv-cluster-B">B</span> Assegna</button>
+    <button class="inv-batch-btn" onclick="bulkAssign('C')"><span class="inv-cluster-badge inv-cluster-C">C</span> Assegna</button>
+    <button class="inv-batch-btn" onclick="bulkAssign('D')"><span class="inv-cluster-badge inv-cluster-D">D</span> Assegna</button>
+    <button class="inv-batch-btn" onclick="bulkAssign('E')"><span class="inv-cluster-badge inv-cluster-E">E</span> Assegna</button>
+    <button class="inv-batch-btn" onclick="bulkAssign(null)">Reset cluster</button>
+    <button class="inv-batch-btn" onclick="bulkDelete()" style="color:var(--terracotta);border-color:var(--terracotta)">Elimina</button>
+  </div>
+
+  <div style="overflow-x:auto;border:1px solid var(--line);border-radius:2px">
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th style="width:30px"><input type="checkbox" class="inv-checkbox" id="invSelAll" onchange="toggleAllInv(this.checked)"></th>
+          <th>App / Attività</th>
+          <th>URL</th>
+          <th>Cluster</th>
+          <th style="width:180px"></th>
+        </tr>
+      </thead>
+      <tbody id="invTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="inv-gen-section">
+    <div class="inv-gen-head">Genera documenti di conformità</div>
+    <div class="inv-gen-sub">A valle della classificazione, produci i documenti di governance IA per l'intero ecosistema. Ogni cluster ha un pulsante dedicato: per A, B, C, E crea una <strong>DPIA di cluster</strong> con la lista applicazioni pre-popolata (apri il wizard e la compili come una DPIA normale); per D, crea un <strong>Registro semplificato ex art. 30 GDPR</strong> — un unico PDF tabellare 2-3 pagine con tutte le app senza dati personali.</div>
+    <div class="inv-gen-grid" id="invGenGrid"></div>
   </div>
 </div>
 
@@ -807,58 +988,6 @@ button{font-family:inherit}
 </div>
 
 
-<!-- ============ VIEW: INVENTORY ============ -->
-<div class="view" id="viewInventory">
-  <div class="editor-head">
-    <div>
-      <h1>Modulo Inventario</h1>
-      <div class="meta">Classificazione rapida delle applicazioni</div>
-    </div>
-    <div class="editor-actions">
-      <button class="btn secondary sm" onclick="goTo('dash')">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M10 4 L4 8 L10 12" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-        Archivio
-      </button>
-    </div>
-  </div>
-
-  <div class="intro-box">
-    <h3>Triage multi-app con generazione batch</h3>
-    <p>Classifica ogni applicazione in un cluster di rischio con un click. Il bottone evidenziato è il suggerimento automatico basato sul nome e sulla natura dell'app. Al termine della classificazione potrai generare le DPIA di cluster (per A, B, C, E) e il Registro semplificato ex art. 30 GDPR (per le D senza dati personali).</p>
-  </div>
-
-  <div class="inv-progress" id="invProgress"></div>
-
-  <div class="inv-toolbar">
-    <button class="btn sm" onclick="applyAllSuggestions()">
-      <svg viewBox="0 0 16 16" fill="none"><path d="M4 8.5 L7 11.5 L12 5.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Applica tutti i suggerimenti
-    </button>
-    <button class="btn secondary sm" onclick="toggleAddAppForm()">+ Aggiungi app</button>
-    <div class="spacer"></div>
-    <button class="btn secondary sm" onclick="resetInventoryConfirm()">Reset inventario</button>
-  </div>
-
-  <div class="add-app-form" id="addAppForm">
-    <div class="row">
-      <div><label>Nome</label><input type="text" id="newAppName" placeholder="Nome app"></div>
-      <div><label>URL</label><input type="text" id="newAppUrl" placeholder="https://..."></div>
-      <div><label>Categoria</label><input type="text" id="newAppCategory" placeholder="Categoria"></div>
-      <div><button onclick="addNewApp()">Aggiungi</button></div>
-    </div>
-  </div>
-
-  <div class="inv-filters" id="invFilters"></div>
-
-  <div id="invList"></div>
-
-  <div class="inv-generate">
-    <h2>Genera documenti di copertura</h2>
-    <p class="inv-generate-sub">Per ogni cluster con app classificate puoi creare il documento dedicato. Le DPIA di cluster aprono il wizard con le app già pre-popolate come "Applicazioni coperte dal cluster". Il Registro ex art. 30 è un PDF istituzionale compatto con la tabella di tutte le app D.</p>
-    <div class="cluster-docs" id="clusterDocs"></div>
-  </div>
-</div>
-
 </div><!-- /.app-shell -->
 
 <!-- ============ MODAL ============ -->
@@ -885,6 +1014,98 @@ const LOGO_PDF_DATA = 'data:image/jpeg;base64,' + '/9j/4AAQSkZJRgABAQAAAQABAAD/2
 // ========== CLASSI SCUOLA ORZINUOVI ==========
 const CLASSI_PRIMARIA = ['1A','1B','2A','2B','3A','3B','4A','4B','5A','5B'];
 const CLASSI_SECONDARIA = ['1A','1B','1C','2A','2B','2C','3A','3B','3C'];
+
+// ========== INVENTORY SEED (app dal portale acerio.vercel.app) ==========
+// cluster: null = da classificare, A/B/C/D/E = classificazione suggerita
+const INVENTORY_SEED = [
+  // --- PORTALE (top) ---
+  {id:'inv-001', name:'TI ASCOLTO!', url:'https://sondaggiostudenti.vercel.app/', cat:'Portale', cluster:'A'},
+  {id:'inv-002', name:'Calibro', url:'https://calibro.neocities.org/', cat:'Portale', cluster:'A'},
+  {id:'inv-003', name:'Patto Digitale di Famiglia', url:'https://pattodigitale.neocities.org/', cat:'Portale', cluster:null},
+  {id:'inv-004', name:'Guida per Genitori', url:'https://genitori.neocities.org/', cat:'Portale', cluster:'D'},
+  {id:'inv-005', name:'Scuola Digitale', url:'https://scuolaipad.neocities.org/', cat:'Portale', cluster:'D'},
+  {id:'inv-006', name:'Didattica e AI', url:'https://chatbotai.neocities.org/', cat:'Portale', cluster:'D'},
+  {id:'inv-007', name:'IN + IA', url:'https://ineai.neocities.org/', cat:'Portale', cluster:'D'},
+  // --- CITTADINANZA DIGITALE ---
+  {id:'inv-008', name:"L'Occhio Critico", url:'https://guglielmoildentone.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-009', name:'Riconosci la Manipolazione', url:'https://manipolazione.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-010', name:'Social sotto la Lente', url:'https://socialschool.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-011', name:'Sei un Piccione?', url:'https://comportamentismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-012', name:"Quanto consuma l'AI?", url:'https://aiconsumi.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-013', name:'Il Sicofante Digitale', url:'https://sicofante.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-014', name:'Famiglia Accorti', url:'https://famigliaaccorti.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-015', name:'Navigare Sicuri', url:'https://socialguide.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-016', name:'Pizzeria Google', url:'https://pizzeriagoogle.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-017', name:'Generatore di Password', url:'https://securepassword.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-018', name:'Stop Cyberbullismo', url:'https://cyberbullismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-019', name:'Indagine Digitale 2026', url:'https://missionedigitale.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-020', name:'CyberEscape', url:'https://cyberescape.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-021', name:'Il Voto che Ruba', url:'https://truffa-ballerina.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-022', name:'Cyber Sentinel', url:'https://attacchinformatici.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-023', name:'Commissariato Digitale', url:'https://polizia-postale.vercel.app/', cat:'Cittadinanza Digitale', cluster:'B'},
+  // --- LAB. SCRITTURA ---
+  {id:'inv-024', name:'I Mattoncini del Testo', url:'https://mattoncini.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-025', name:"Impara dall'Errore", url:'https://errore.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-026', name:'Fatto o Opinione?', url:'https://fattopinione.vercel.app/', cat:'Lab. Scrittura', cluster:null},
+  {id:'inv-027', name:'Le 3 Forme del Testo', url:'https://scrivere.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-028', name:'Testo Descrittivo', url:'https://laboratorioscrittura2.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-029', name:'Scrivere con le Immagini', url:'https://immagine.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-030', name:"La Bottega dell'Argomentazione", url:'https://insegnareapensare.vercel.app/', cat:'Lab. Scrittura', cluster:null},
+  {id:'inv-031', name:'Testo Argomentativo', url:'https://laboratorioscrittura.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-032', name:'ArgoMentor', url:'https://argomentor.vercel.app/', cat:'Lab. Scrittura', cluster:'B'},
+  {id:'inv-033', name:"Scrivere dall'Ascolto", url:'https://ascolto.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-034', name:'Mental Coaching', url:'https://mentalcoach.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-035', name:'Video Shorts', url:'https://videoshorts.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-036', name:'Debate in Classe', url:'https://schooldebate.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
+  {id:'inv-037', name:'BottegaScrivi', url:'https://laboscrittura.vercel.app/', cat:'Lab. Scrittura', cluster:'B'},
+  {id:'inv-038', name:'ScriviMeglio', url:'https://tracciatema.neocities.org/', cat:'Lab. Scrittura', cluster:null},
+  // --- INFORMATICA & TECH ---
+  {id:'inv-039', name:'Fake Hunter', url:'https://fakehunter.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-040', name:'Truffe & Phishing', url:'https://truffe.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-041', name:'Stampa 3D', url:'https://stampa3d.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-042', name:'Scorciatoie Mac', url:'https://keyboardmac.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-043', name:'Glossario Digitale', url:'https://glossarioinfo.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-044', name:'Sfida di Videoscrittura', url:'https://typegame.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-045', name:'Allenamento Tastiera', url:'https://tastiera.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-046', name:'La Scala Digitale', url:'https://pesodigitale.neocities.org/', cat:'Informatica & Tech', cluster:null},
+  {id:'inv-047', name:'Bar della Scuola', url:'https://barscuola.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-048', name:'Algoritmi e Reti Neurali', url:'https://genalfa.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
+  {id:'inv-049', name:'Guarda Due Volte', url:'https://escapecity.vercel.app/', cat:'Informatica & Tech', cluster:'D'},
+  // --- APPROFONDIMENTI E RICERCHE ---
+  {id:'inv-050', name:'Gite Virtuali', url:'https://geografiamaps.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-051', name:'Ciro il Dinosauro', url:'https://sacrafamiglialabinfo.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-052', name:'Il Mondo dei Dinosauri', url:'https://dinosauri.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-053', name:'Il Corpo Umano', url:'https://apparati.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-054', name:'Pontremoli - Tesina', url:'https://pontremoli.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:null},
+  {id:'inv-055', name:'Esame di Stato', url:'https://esame.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-056', name:'Missione INVALSI 2026', url:'https://invalsi.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-057', name:"Trasformiamo l'Errore in Opportunita", url:'https://errore.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-058', name:"Debate sull'Errore", url:'https://debaterrore.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-059', name:'Infografiche con Notebook LM', url:'https://notebooklmstyle.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-060', name:'Arena del Pensiero', url:'https://teamdebate.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:null},
+  {id:'inv-061', name:'Canto III - Divina Commedia', url:'https://labinfo.my.canva.site/canto3', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-062', name:'I Geni della Tecnologia', url:'https://garagevalley.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-063', name:'Laboratorio Scientifico', url:'https://labscienze.vercel.app/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  {id:'inv-064', name:'Sintesi Proteica', url:'https://sintesiproteica.vercel.app/', cat:'Approfondimenti e Ricerche', cluster:'D'},
+  // --- SACRA FAMIGLIA ---
+  {id:'inv-065', name:'100 Anni di Storia in Musica', url:'https://100anni.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  {id:'inv-066', name:'Il Gioco delle Case', url:'https://sfida.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  {id:'inv-067', name:'Autovalutazione Lezione', url:'https://autovalutazione.neocities.org/', cat:'Sacra Famiglia', cluster:'E'},
+  {id:'inv-068', name:'Le Mascotte delle Case', url:'https://sacrafamiglia.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  {id:'inv-069', name:'S. Paola Elisabetta', url:'https://santapaola.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  {id:'inv-070', name:'Quizzone S. Paola', url:'https://quizzonespaola.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  {id:'inv-071', name:'Consegna alle Case', url:'https://randomecase.neocities.org/', cat:'Sacra Famiglia', cluster:'D'},
+  // --- SPORT E GIOCHI ---
+  {id:'inv-072', name:'Studio Musicale', url:'https://studiomusicale.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-073', name:'Cool Runnings', url:'https://giamaica.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-074', name:'Milano Cortina', url:'https://labinfo.my.canva.site/c17sxqtedy2jyaw7', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-075', name:'Tech & Olimpiadi', url:'https://olimpictech.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-076', name:'Milano-Cortina 2026', url:'https://milanocortina.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-077', name:'Gestione Tornei', url:'https://sacrafamigliatornei.neocities.org/', cat:'Sport e Giochi', cluster:'E'},
+  {id:'inv-078', name:'Word Games', url:'https://sacrafamigliagames.neocities.org/', cat:'Sport e Giochi', cluster:'D'},
+  {id:'inv-079', name:'Profemon', url:'https://profemon.neocities.org/', cat:'Sport e Giochi', cluster:'D'}
+];
+
 
 const SCUOLA = {
   nome: 'Scuola Paritaria Sacra Famiglia',
@@ -1063,501 +1284,6 @@ const STATUS_SVG = {
 };
 const STATUS_LABEL = {done:'Completato',wip:'In corso',todo:'Da fare',na:'Non applicabile'};
 
-// ========== INVENTORY SEED — 82 app dal portale acerio.vercel.app ==========
-const INVENTORY_SEED = [
-  {
-    "name": "TI ASCOLTO!",
-    "url": "https://sondaggiostudenti.vercel.app/",
-    "category": "Strumenti didattici",
-    "suggested": "A"
-  },
-  {
-    "name": "Calibro",
-    "url": "https://calibro.neocities.org/",
-    "category": "Strumenti didattici",
-    "suggested": "A"
-  },
-  {
-    "name": "Patto Digitale di Famiglia",
-    "url": "https://pattodigitale.neocities.org/",
-    "category": "Area Genitori",
-    "suggested": "D"
-  },
-  {
-    "name": "Guida per Genitori",
-    "url": "https://genitori.neocities.org/",
-    "category": "Area Genitori",
-    "suggested": "D"
-  },
-  {
-    "name": "Scuola Digitale",
-    "url": "https://scuolaipad.neocities.org/",
-    "category": "Area Genitori",
-    "suggested": "D"
-  },
-  {
-    "name": "Didattica e AI",
-    "url": "https://chatbotai.neocities.org/",
-    "category": "Area Genitori",
-    "suggested": "D"
-  },
-  {
-    "name": "Metodologie",
-    "url": "https://acerio.vercel.app/metodologie.html",
-    "category": "Portale",
-    "suggested": "D"
-  },
-  {
-    "name": "Laboratorio",
-    "url": "https://acerio.vercel.app/laboratorio.html",
-    "category": "Portale",
-    "suggested": "D"
-  },
-  {
-    "name": "Percorsi Scuola Futura",
-    "url": "https://acerio.vercel.app/scuolafutura.html",
-    "category": "Portale",
-    "suggested": "D"
-  },
-  {
-    "name": "IN + IA",
-    "url": "https://ineai.neocities.org/",
-    "category": "Area Genitori",
-    "suggested": "D"
-  },
-  {
-    "name": "L'Occhio Critico",
-    "url": "https://guglielmoildentone.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Riconosci la Manipolazione",
-    "url": "https://manipolazione.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Social sotto la Lente",
-    "url": "https://socialschool.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Sei un Piccione?",
-    "url": "https://comportamentismo.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "Quanto consuma l'AI?",
-    "url": "https://aiconsumi.vercel.app/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "Il Sicofante Digitale",
-    "url": "https://sicofante.vercel.app/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Famiglia Accorti",
-    "url": "https://famigliaaccorti.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Navigare Sicuri",
-    "url": "https://socialguide.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Pizzeria Google",
-    "url": "https://pizzeriagoogle.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Generatore di Password",
-    "url": "https://securepassword.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Stop Cyberbullismo",
-    "url": "https://cyberbullismo.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "D"
-  },
-  {
-    "name": "Indagine Digitale 2026",
-    "url": "https://missionedigitale.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "CyberEscape",
-    "url": "https://cyberescape.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "Il Voto che Ruba",
-    "url": "https://truffa-ballerina.vercel.app/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "Cyber Sentinel",
-    "url": "https://attacchinformatici.neocities.org/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "E"
-  },
-  {
-    "name": "Commissariato Digitale",
-    "url": "https://polizia-postale.vercel.app/",
-    "category": "Cittadinanza Digitale",
-    "suggested": "B"
-  },
-  {
-    "name": "I Mattoncini del Testo",
-    "url": "https://mattoncini.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Impara dall'Errore",
-    "url": "https://errore.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Fatto o Opinione?",
-    "url": "https://fattopinione.vercel.app/",
-    "category": "Lab. Scrittura",
-    "suggested": "E"
-  },
-  {
-    "name": "Le 3 Forme del Testo",
-    "url": "https://scrivere.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Testo Descrittivo",
-    "url": "https://laboratorioscrittura2.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Scrivere con le Immagini",
-    "url": "https://immagine.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "La Bottega dell'Argomentazione",
-    "url": "https://insegnareapensare.vercel.app/",
-    "category": "Lab. Scrittura",
-    "suggested": "E"
-  },
-  {
-    "name": "Testo Argomentativo",
-    "url": "https://laboratorioscrittura.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "ArgoMentor",
-    "url": "https://argomentor.vercel.app/",
-    "category": "Lab. Scrittura",
-    "suggested": "B"
-  },
-  {
-    "name": "Scrivere dall'Ascolto",
-    "url": "https://ascolto.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Mental Coaching",
-    "url": "https://mentalcoach.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Video Shorts",
-    "url": "https://videoshorts.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "Debate in Classe",
-    "url": "https://schooldebate.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "D"
-  },
-  {
-    "name": "BottegaScrivi",
-    "url": "https://laboscrittura.vercel.app/",
-    "category": "Lab. Scrittura",
-    "suggested": "B"
-  },
-  {
-    "name": "ScriviMeglio",
-    "url": "https://tracciatema.neocities.org/",
-    "category": "Lab. Scrittura",
-    "suggested": "E"
-  },
-  {
-    "name": "Fake Hunter",
-    "url": "https://fakehunter.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Truffe & Phishing",
-    "url": "https://truffe.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Stampa 3D",
-    "url": "https://stampa3d.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Scorciatoie Mac",
-    "url": "https://keyboardmac.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Glossario Digitale",
-    "url": "https://glossarioinfo.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Sfida di Videoscrittura",
-    "url": "https://typegame.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Allenamento Tastiera",
-    "url": "https://tastiera.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "La Scala Digitale",
-    "url": "https://pesodigitale.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "E"
-  },
-  {
-    "name": "Bar della Scuola",
-    "url": "https://barscuola.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Algoritmi e Reti Neurali",
-    "url": "https://genalfa.neocities.org/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Guarda Due Volte",
-    "url": "https://escapecity.vercel.app/",
-    "category": "Informatica & Tech",
-    "suggested": "D"
-  },
-  {
-    "name": "Gite Virtuali",
-    "url": "https://geografiamaps.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Ciro il Dinosauro",
-    "url": "https://sacrafamiglialabinfo.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Il Mondo dei Dinosauri",
-    "url": "https://dinosauri.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Il Corpo Umano",
-    "url": "https://apparati.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Pontremoli — Tesina d'Esame",
-    "url": "https://pontremoli.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Esame di Stato",
-    "url": "https://esame.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Missione INVALSI 2026",
-    "url": "https://invalsi.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "E"
-  },
-  {
-    "name": "Trasformiamo l'Errore",
-    "url": "https://errore.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Debate sull'Errore",
-    "url": "https://debaterrore.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Infografiche Notebook LM",
-    "url": "https://notebooklmstyle.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Arena del Pensiero",
-    "url": "https://teamdebate.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Canto III Divina Commedia",
-    "url": "https://labinfo.my.canva.site/canto3",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "I Geni della Tecnologia",
-    "url": "https://garagevalley.neocities.org/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Laboratorio Scientifico",
-    "url": "https://labscienze.vercel.app/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "Sintesi Proteica",
-    "url": "https://sintesiproteica.vercel.app/",
-    "category": "Approfondimenti",
-    "suggested": "D"
-  },
-  {
-    "name": "100 Anni di Storia",
-    "url": "https://100anni.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "D"
-  },
-  {
-    "name": "Il Gioco delle Case",
-    "url": "https://sfida.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "D"
-  },
-  {
-    "name": "Autovalutazione Lezione",
-    "url": "https://autovalutazione.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "E"
-  },
-  {
-    "name": "Le Mascotte delle Case",
-    "url": "https://sacrafamiglia.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "D"
-  },
-  {
-    "name": "S. Paola Elisabetta",
-    "url": "https://santapaola.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "D"
-  },
-  {
-    "name": "Quizzone S. Paola",
-    "url": "https://quizzonespaola.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "E"
-  },
-  {
-    "name": "Consegna alle Case",
-    "url": "https://randomecase.neocities.org/",
-    "category": "Sacra Famiglia",
-    "suggested": "D"
-  },
-  {
-    "name": "Studio Musicale",
-    "url": "https://studiomusicale.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Cool Runnings",
-    "url": "https://giamaica.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Milano Cortina",
-    "url": "https://labinfo.my.canva.site/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Tech & Olimpiadi",
-    "url": "https://olimpictech.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Milano-Cortina 2026",
-    "url": "https://milanocortina.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Gestione Tornei",
-    "url": "https://sacrafamigliatornei.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "E"
-  },
-  {
-    "name": "Word Games",
-    "url": "https://sacrafamigliagames.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  },
-  {
-    "name": "Profemon",
-    "url": "https://profemon.neocities.org/",
-    "category": "Sport e Giochi",
-    "suggested": "D"
-  }
-];
 
 const CLUSTER_DESC_SHORT = {
   A: 'Profilazione — ALTO RISCHIO',
@@ -1655,11 +1381,13 @@ async function doAuth(){
 }
 
 async function resetAuth(){
-  if (!confirm('Vuoi davvero resettare? Verranno cancellati la password e TUTTI i fascicoli locali. Esporta prima in JSON se vuoi conservarli.')) return;
+  if (!confirm('Vuoi davvero resettare? Verranno cancellati la password, TUTTI i fascicoli e l\'inventario locale. Esporta prima in JSON se vuoi conservarli.')) return;
   try {
     await window.storage.delete('dpia-pwd-hash');
     await window.storage.delete('dpia-studio');
     await window.storage.delete('dpia-drive-url');
+    await window.storage.delete('dpia-drive-token');
+    await window.storage.delete('dpia-inventory');
   } catch(e){}
   location.reload();
 }
@@ -1669,6 +1397,7 @@ async function enterApp(){
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appShell').classList.add('active');
   await loadApp();
+  await loadInventory();
   goTo('dash');
 }
 
@@ -1698,6 +1427,10 @@ async function loadApp(){
   try {
     const r2 = await window.storage.get('dpia-drive-url');
     if (r2 && r2.value) app.driveUrl = r2.value;
+  } catch(e){}
+  try {
+    const r3 = await window.storage.get('dpia-drive-token');
+    if (r3 && r3.value) app.driveToken = r3.value;
   } catch(e){}
   // Carica inventario (o inizializza con seed)
   try {
@@ -1737,6 +1470,7 @@ function goTo(view){
   if (target) target.classList.add('active');
   renderStepNav();
   if (view === 'dash') renderDashboard();
+  if (view === 'inventory') renderInventory();
   if (view === 'wizard') renderWizard();
   if (view === 'checklist') renderChecklist();
   if (view === 'preview') renderPreview();
@@ -2232,9 +1966,12 @@ function renderPreview(){
   `;
 
   const ds = document.getElementById('driveStatus');
-  if (app.driveUrl){
+  if (app.driveUrl && app.driveToken){
     ds.className = 'drive-status ok';
-    ds.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 8.5 L7 11.5 L12 5.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Endpoint Drive configurato: <code>${app.driveUrl.slice(0,60)}…</code>`;
+    ds.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 8.5 L7 11.5 L12 5.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg> Drive configurato con autenticazione token: <code>${app.driveUrl.slice(0,55)}…</code>`;
+  } else if (app.driveUrl && !app.driveToken){
+    ds.className = 'drive-status no';
+    ds.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M12 3 L22 20 H2 Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg> URL presente ma manca il token di sicurezza. <a onclick="openDriveConfig()" style="cursor:pointer;text-decoration:underline;margin-left:4px">Aggiungi token</a>`;
   } else {
     ds.className = 'drive-status no';
     ds.innerHTML = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 4 V9 M8 11 V12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Drive non ancora configurato. <a onclick="openDriveConfig()" style="cursor:pointer;text-decoration:underline;margin-left:4px">Configura ora</a>`;
@@ -2310,506 +2047,6 @@ document.getElementById('importInput').onchange = e => {
   reader.readAsText(file);
 };
 
-// ========== INVENTORY MANAGEMENT ==========
-async function saveInventory(){
-  try { await window.storage.set('dpia-inventory', JSON.stringify(app.inventory)); }
-  catch(e){ console.warn('Inventario non salvato'); }
-}
-
-function renderInventory(){
-  renderInvProgress();
-  renderInvFilters();
-  renderInvList();
-  renderInvClusterDocs();
-  updateInventoryTileCount();
-}
-
-function renderInvProgress(){
-  const total = app.inventory.length;
-  const classified = app.inventory.filter(a => a.cluster).length;
-  const pending = total - classified;
-  const byCluster = {A:0,B:0,C:0,D:0,E:0};
-  app.inventory.forEach(a => { if (a.cluster) byCluster[a.cluster]++; });
-  const pct = total ? Math.round(classified/total*100) : 0;
-
-  document.getElementById('invProgress').innerHTML = `
-    <div class="inv-progress-info">
-      <div class="inv-stat"><span class="inv-stat-label">Totale</span><span class="inv-stat-value">${total}</span></div>
-      <div class="inv-stat done"><span class="inv-stat-label">Classificate</span><span class="inv-stat-value">${classified}</span></div>
-      <div class="inv-stat pending"><span class="inv-stat-label">Da classificare</span><span class="inv-stat-value">${pending}</span></div>
-      <div class="inv-stat"><span class="inv-stat-label">Progresso</span><span class="inv-stat-value">${pct}%</span></div>
-      <div style="width:1px;height:34px;background:var(--line)"></div>
-      <div class="inv-stat"><span class="inv-stat-label">A</span><span class="inv-stat-value">${byCluster.A}</span></div>
-      <div class="inv-stat"><span class="inv-stat-label">B</span><span class="inv-stat-value">${byCluster.B}</span></div>
-      <div class="inv-stat"><span class="inv-stat-label">C</span><span class="inv-stat-value">${byCluster.C}</span></div>
-      <div class="inv-stat"><span class="inv-stat-label">D</span><span class="inv-stat-value">${byCluster.D}</span></div>
-      <div class="inv-stat"><span class="inv-stat-label">E</span><span class="inv-stat-value">${byCluster.E}</span></div>
-    </div>
-    <div style="display:flex;gap:8px;flex-direction:column;align-items:flex-end">
-      <div style="width:240px;height:6px;background:var(--cream);border:1px solid var(--line);overflow:hidden">
-        <div style="height:100%;background:var(--blue);width:${pct}%;transition:width .3s"></div>
-      </div>
-      <div style="font-size:10.5px;color:var(--ink-soft)">${classified}/${total} completate</div>
-    </div>
-  `;
-}
-
-function renderInvFilters(){
-  const counts = {all: app.inventory.length, pending: 0, A:0, B:0, C:0, D:0, E:0};
-  app.inventory.forEach(a => {
-    if (!a.cluster) counts.pending++;
-    else counts[a.cluster]++;
-  });
-  const filters = [
-    {id:'all', label:'Tutte'},
-    {id:'pending', label:'Da classificare'},
-    {id:'A', label:'Cluster A'},
-    {id:'B', label:'Cluster B'},
-    {id:'C', label:'Cluster C'},
-    {id:'D', label:'Cluster D'},
-    {id:'E', label:'Cluster E'}
-  ];
-  document.getElementById('invFilters').innerHTML = filters.map(f => `
-    <button class="inv-filter ${app.invFilter === f.id ? 'active' : ''}" onclick="setInvFilter('${f.id}')">
-      ${f.label} <span class="inv-filter-count">${counts[f.id]}</span>
-    </button>
-  `).join('');
-}
-
-function setInvFilter(f){ app.invFilter = f; renderInvFilters(); renderInvList(); }
-
-function renderInvList(){
-  const filtered = app.inventory.filter(a => {
-    if (app.invFilter === 'all') return true;
-    if (app.invFilter === 'pending') return !a.cluster;
-    return a.cluster === app.invFilter;
-  });
-
-  if (!filtered.length){
-    document.getElementById('invList').innerHTML = '<div class="inv-empty-filter">Nessuna applicazione corrisponde al filtro attuale.</div>';
-    return;
-  }
-
-  // Raggruppa per categoria
-  const byCat = {};
-  filtered.forEach(a => {
-    const c = a.category || 'Senza categoria';
-    if (!byCat[c]) byCat[c] = [];
-    byCat[c].push(a);
-  });
-
-  let html = '';
-  Object.keys(byCat).forEach(cat => {
-    const apps = byCat[cat];
-    html += `<div class="inv-category">
-      <div class="inv-category-head">
-        <h3>${escapeHtml(cat)}</h3>
-        <span class="inv-category-count">${apps.length} app</span>
-      </div>`;
-    apps.forEach(a => {
-      const btns = ['A','B','C','D','E'].map(cl => {
-        const suggested = a.suggested === cl;
-        const selected = a.cluster === cl;
-        const clsBag = ['inv-cl-btn'];
-        if (suggested) clsBag.push('suggested');
-        if (selected) clsBag.push('selected', cl);
-        return `<button class="${clsBag.join(' ')}" onclick="classifyApp('${a.id}','${cl}')" title="${CLUSTER_DESC_SHORT[cl]}${suggested ? ' (suggerito)' : ''}">${cl}</button>`;
-      }).join('');
-      html += `<div class="inv-row">
-        <div class="inv-row-info">
-          <div class="inv-row-name">${escapeHtml(a.name)}${a.suggested && !a.cluster ? `<span class="inv-row-suggested">Suggerito ${a.suggested}</span>` : ''}</div>
-          <div class="inv-row-url"><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url)}</a></div>
-        </div>
-        <div class="inv-row-cluster-btns">${btns}</div>
-        <button class="inv-row-del" onclick="removeAppFromInventory('${a.id}')" title="Rimuovi dall'inventario">✕</button>
-      </div>`;
-    });
-    html += '</div>';
-  });
-  document.getElementById('invList').innerHTML = html;
-}
-
-function classifyApp(id, cluster){
-  const a = app.inventory.find(x => x.id === id);
-  if (!a) return;
-  // Toggle: se è già selezionato quel cluster, deseleziona
-  if (a.cluster === cluster) a.cluster = null;
-  else a.cluster = cluster;
-  saveInventory();
-  renderInvProgress();
-  renderInvFilters();
-  renderInvList();
-  renderInvClusterDocs();
-}
-
-function removeAppFromInventory(id){
-  const a = app.inventory.find(x => x.id === id);
-  if (!a) return;
-  openModalConfirm('Rimuovere l\'applicazione dall\'inventario?',
-    `"${a.name}" sarà rimossa dalla lista. Non verrà cancellata dal tuo portale — solo dall'inventario del DPIA Studio. Puoi sempre riaggiungerla manualmente.`,
-    () => {
-      app.inventory = app.inventory.filter(x => x.id !== id);
-      saveInventory();
-      renderInventory();
-      showToast('App rimossa');
-    });
-}
-
-function applyAllSuggestions(){
-  let changed = 0;
-  app.inventory.forEach(a => {
-    if (!a.cluster && a.suggested){
-      a.cluster = a.suggested;
-      changed++;
-    }
-  });
-  if (changed){
-    saveInventory();
-    renderInventory();
-    showToast(`${changed} applicazioni classificate secondo i suggerimenti`);
-  } else {
-    showToast('Nessun suggerimento da applicare — tutte le app sono già classificate');
-  }
-}
-
-function toggleAddAppForm(){
-  const f = document.getElementById('addAppForm');
-  f.classList.toggle('active');
-  if (f.classList.contains('active')) document.getElementById('newAppName').focus();
-}
-
-function addNewApp(){
-  const name = document.getElementById('newAppName').value.trim();
-  const url = document.getElementById('newAppUrl').value.trim();
-  const category = document.getElementById('newAppCategory').value.trim() || 'Aggiunte manuali';
-  if (!name){ showToast('Inserisci il nome dell\'app', true); return; }
-  app.inventory.push({
-    id: 'inv_manual_' + Date.now() + '_' + Math.random().toString(36).slice(2,6),
-    name, url, category, suggested: null, cluster: null
-  });
-  saveInventory();
-  document.getElementById('newAppName').value = '';
-  document.getElementById('newAppUrl').value = '';
-  document.getElementById('newAppCategory').value = '';
-  renderInventory();
-  showToast('Applicazione aggiunta all\'inventario');
-}
-
-function resetInventoryConfirm(){
-  openModalConfirm('Reset dell\'inventario',
-    'Stai per resettare l\'inventario alle 82 app pre-caricate dal portale. Tutte le classificazioni e le app aggiunte manualmente saranno perse. Vuoi continuare?',
-    () => {
-      app.inventory = INVENTORY_SEED.map((a, i) => ({
-        id: 'inv_seed_' + i,
-        name: a.name, url: a.url, category: a.category,
-        suggested: a.suggested, cluster: null
-      }));
-      saveInventory();
-      renderInventory();
-      showToast('Inventario ripristinato');
-    });
-}
-
-function renderInvClusterDocs(){
-  const byCluster = {A:[],B:[],C:[],D:[],E:[]};
-  app.inventory.forEach(a => { if (a.cluster) byCluster[a.cluster].push(a); });
-  const clOrder = ['A','B','C','E','D'];  // D per ultimo perché è il registro
-  const html = clOrder.map(cl => {
-    const apps = byCluster[cl];
-    const clusterInfo = CLUSTERS[cl];
-    const disabled = apps.length === 0;
-    let actionBtns = '';
-    if (cl === 'D'){
-      actionBtns = `<button onclick="generateArt30Register()" ${disabled?'disabled':''}>Genera Registro ex art. 30</button>`;
-    } else {
-      actionBtns = `<button onclick="createClusterDpiaFromInventory('${cl}')" ${disabled?'disabled':''}>Crea DPIA cluster ${cl}</button>`;
-    }
-    return `<div class="cluster-doc ${cl} ${disabled?'empty':''}">
-      <div class="cluster-doc-badge">${cl}</div>
-      <div class="cluster-doc-info">
-        <h4>Cluster ${cl} — ${clusterInfo.name}</h4>
-        <p>${apps.length} applicazion${apps.length===1?'e':'i'} · rischio ${clusterInfo.risk}${clusterInfo.fria?' · FRIA obbligatoria':''}</p>
-      </div>
-      <div class="cluster-doc-actions">${actionBtns}</div>
-    </div>`;
-  }).join('');
-  document.getElementById('clusterDocs').innerHTML = html;
-}
-
-function updateInventoryTileCount(){
-  const tile = document.getElementById('inventoryTileCount');
-  if (!tile) return;
-  const total = app.inventory.length;
-  const classified = app.inventory.filter(a => a.cluster).length;
-  if (classified === 0){
-    tile.textContent = `${total} applicazioni pre-caricate · da classificare`;
-  } else if (classified === total){
-    tile.textContent = `${total} applicazioni tutte classificate · pronte per generare i documenti`;
-  } else {
-    tile.textContent = `${classified}/${total} applicazioni classificate · ${total-classified} da completare`;
-  }
-}
-
-// ========== CREA DPIA DI CLUSTER DA INVENTARIO ==========
-function createClusterDpiaFromInventory(clusterCode){
-  const apps = app.inventory.filter(a => a.cluster === clusterCode);
-  if (apps.length === 0){ showToast('Nessuna app classificata in questo cluster', true); return; }
-  const clInfo = CLUSTERS[clusterCode];
-
-  // Verifica se esiste già una DPIA di cluster con stesso codice
-  const existing = Object.values(app.dossiers).find(d =>
-    d.meta && d.meta.type === 'cluster' &&
-    d.cluster === clusterCode &&
-    d.meta.autoGeneratedFromInventory
-  );
-
-  if (existing){
-    openModalConfirm('DPIA cluster già esistente',
-      `Esiste già una DPIA cluster ${clusterCode} generata dall'inventario ("${existing.meta.name}"). Vuoi aprirla per completarla, o crearne una nuova aggiuntiva?`,
-      () => { app.current = existing.id; goTo('wizard'); });
-    // Cambio i testi dei pulsanti modal
-    document.getElementById('modalConfirmBtn').textContent = 'Apri esistente';
-    const modalActions = document.querySelector('.modal-actions');
-    const newBtn = document.createElement('button');
-    newBtn.className = 'btn';
-    newBtn.textContent = 'Crea nuova';
-    newBtn.onclick = () => { closeModal(); _createClusterDpia(clusterCode, apps); };
-    modalActions.insertBefore(newBtn, document.getElementById('modalConfirmBtn'));
-    return;
-  }
-  _createClusterDpia(clusterCode, apps);
-}
-
-function _createClusterDpia(clusterCode, apps){
-  const clInfo = CLUSTERS[clusterCode];
-  const id = 'd_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-  const clusterNameMap = {
-    A: 'Profilazione studenti',
-    B: 'Monitoraggio comportamentale',
-    C: 'Chatbot e IA generativa',
-    E: 'Raccolta dati occasionale'
-  };
-  const descMap = {
-    A: 'Cluster di applicazioni che costruiscono profili persistenti di studenti basati su valutazioni, soft skills o comportamenti longitudinali. Applicabile il regime di ALTO RISCHIO ex Allegato III AI Act con FRIA obbligatoria.',
-    B: 'Cluster di applicazioni che monitorano comportamenti in tempo reale durante l\'uso (click, tempi, pattern, rumore ambientale). Rischio elevato quando l\'uso avviene in contesti valutativi; rischio medio-alto altrimenti.',
-    C: 'Cluster di applicazioni basate su modelli di linguaggio o generativi (chatbot, LLM, generazione contenuti). Obblighi di trasparenza ex art. 50 AI Act e DPA specifici con i fornitori.',
-    E: 'Cluster di applicazioni che raccolgono dati personali in modo occasionale (sondaggi, quiz con leaderboard, gestione tornei, feedback). DPIA semplificata con focus su minimizzazione e limitazione della conservazione.'
-  };
-
-  app.dossiers[id] = {
-    id,
-    meta: {
-      type: 'cluster',
-      name: `Cluster ${clusterCode} — ${clusterNameMap[clusterCode] || clInfo.name}`,
-      url: '',
-      desc: descMap[clusterCode] || clInfo.desc,
-      classi: [],
-      period: 'a.s. 2025-26',
-      date: new Date().toISOString().slice(0,10),
-      prot: '',
-      version: 'v1.0',
-      titolare: 'Dirigente Scolastico — Prof.ssa L. Ferraboschi',
-      referente: 'Andrea Cerioli — Animatore Digitale',
-      dpo: '',
-      clusterApps: apps.map(a => ({name: a.name, url: a.url})),
-      autoGeneratedFromInventory: true
-    },
-    wizard: _prefillWizardForCluster(clusterCode),
-    cluster: clusterCode,
-    clusterAuto: clusterCode,
-    clusterReason: `Generato automaticamente dal Modulo Inventario con ${apps.length} applicazioni classificate in cluster ${clusterCode}.`,
-    checklist: {},
-    created: Date.now(),
-    updated: Date.now(),
-    _firstWizard: false
-  };
-  app.current = id;
-  saveApp();
-  goTo('wizard');
-  showToast(`DPIA cluster ${clusterCode} creata con ${apps.length} app`);
-}
-
-function _prefillWizardForCluster(cl){
-  const presets = {
-    A: { q1:'yes-substantial', q2:'yes-longitudinal', q3:'yes-tech', q4:'no', q5:'mixed' },
-    B: { q1:'yes-substantial', q2:'yes-oneshot', q3:'yes-systematic', q4:'no', q5:'mixed' },
-    C: { q1:'yes-marginal', q2:'no', q3:'no', q4:'yes-central', q5:'no' },
-    E: { q1:'yes-marginal', q2:'yes-oneshot', q3:'no', q4:'no', q5:'no' }
-  };
-  return presets[cl] || {};
-}
-
-// ========== GENERAZIONE REGISTRO EX ART. 30 ==========
-async function generateArt30Register(saveDrive = false){
-  const apps = app.inventory.filter(a => a.cluster === 'D');
-  if (apps.length === 0){ showToast('Nessuna app cluster D classificata', true); return; }
-
-  if (!window.jspdf || !window.jspdf.jsPDF){ showToast('Libreria PDF non caricata', true); return; }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({unit:'mm', format:'a4'});
-
-  const BLUE = [30, 74, 138];
-  const BLUE_DARK = [20, 46, 90];
-  const INK = [26, 31, 43];
-  const SOFT = [74, 81, 96];
-  const LINE = [212, 217, 224];
-  const W = 210, H = 297, ML = 22, MR = 22;
-  const CW = W - ML - MR;
-
-  // HEADER
-  try { doc.addImage(LOGO_PDF_DATA, 'JPEG', ML, 14, 22, 22); } catch(e){}
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...BLUE_DARK);
-  doc.text(SCUOLA.nome, ML+26, 19);
-  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...SOFT);
-  doc.text(SCUOLA.centro, ML+26, 24);
-  doc.text(`${SCUOLA.indirizzo} · Tel. ${SCUOLA.telefono} · ${SCUOLA.email}`, ML+26, 28);
-  doc.text(`Cod. mecc. ${SCUOLA.codMecc} · ${SCUOLA.parita}`, ML+26, 32);
-  doc.setDrawColor(...BLUE); doc.setLineWidth(.5); doc.line(ML, 42, W-MR, 42);
-  doc.setDrawColor(...LINE); doc.setLineWidth(.2); doc.line(ML, 44, W-MR, 44);
-
-  // TITOLO
-  let y = 56;
-  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...SOFT);
-  doc.text('REGISTRO DEI TRATTAMENTI', W/2, y, {align:'center'});
-  y += 6;
-  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK);
-  doc.text('Art. 30 GDPR', W/2, y, {align:'center'});
-  y += 5;
-  doc.setFont('helvetica','italic'); doc.setFontSize(9.5); doc.setTextColor(...SOFT);
-  doc.text('Sezione semplificata — Applicazioni didattiche senza trattamento di dati personali', W/2, y, {align:'center'});
-  y += 12;
-
-  // METADATI
-  const today = new Date().toLocaleDateString('it-IT');
-  doc.autoTable({
-    startY: y,
-    body: [
-      ['Titolare del trattamento', 'Dirigente Scolastico — Prof.ssa L. Ferraboschi'],
-      ['Referente operativo', 'Andrea Cerioli — Animatore Digitale'],
-      ['Data compilazione', today],
-      ['Applicazioni censite', apps.length + ' applicazioni · cluster D (senza dati personali)'],
-      ['Riferimento normativo', 'Regolamento (UE) 2016/679 — GDPR, art. 30']
-    ],
-    theme: 'plain',
-    styles: {font:'helvetica', fontSize:9, cellPadding:2, textColor:INK, lineColor:LINE, lineWidth:.15},
-    columnStyles: {0:{fontStyle:'bold', textColor:SOFT, cellWidth:50}, 1:{textColor:INK}},
-    margin: {left:ML, right:MR}
-  });
-  y = doc.lastAutoTable.finalY + 10;
-
-  // PREMESSA
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BLUE_DARK);
-  doc.text('Premessa metodologica', ML, y); y += 6;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...INK);
-  const premessa = 'Le applicazioni elencate nel presente registro sono state oggetto di triage di classificazione (cluster D) ed hanno rilevato assenza di trattamento di dati personali di studenti o personale scolastico. Si tratta di contenuti didattici statici, simulatori, giochi educativi, guide e strumenti che non raccolgono, archiviano o elaborano informazioni identificative. Per tali applicazioni non è richiesta DPIA ex art. 35 GDPR. Il presente documento è redatto a fini di diligenza documentale e per rispondere agli obblighi di tenuta del Registro dei trattamenti ai sensi dell\'art. 30 GDPR, anche nell\'ottica del futuro censimento sulla piattaforma Unica del MIM (Linee guida IA nella Scuola v1.0/2025).';
-  const lines = doc.splitTextToSize(premessa, CW);
-  doc.text(lines, ML, y); y += lines.length * 4.2 + 10;
-
-  // TABELLA APP
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BLUE_DARK);
-  doc.text(`Elenco applicazioni — cluster D (${apps.length})`, ML, y); y += 4;
-
-  // Raggruppa per categoria
-  const byCat = {};
-  apps.forEach(a => { const c = a.category || 'Altre'; if (!byCat[c]) byCat[c] = []; byCat[c].push(a); });
-
-  const allRows = [];
-  Object.keys(byCat).sort().forEach(cat => {
-    byCat[cat].forEach((a, idx) => {
-      allRows.push([String(allRows.length+1), a.name, a.url || '—', cat]);
-    });
-  });
-
-  doc.autoTable({
-    startY: y + 2,
-    head: [['#', 'Denominazione', 'URL', 'Categoria']],
-    body: allRows,
-    theme: 'striped',
-    styles: {font:'helvetica', fontSize:7.5, cellPadding:1.8, textColor:INK, lineColor:LINE, lineWidth:.1, valign:'top'},
-    headStyles: {fillColor:BLUE, textColor:[252,252,253], fontStyle:'bold', fontSize:8.5},
-    columnStyles: {
-      0: {cellWidth:10, fontStyle:'bold', textColor:SOFT, halign:'right'},
-      1: {cellWidth:55, fontStyle:'bold'},
-      2: {cellWidth:60, textColor:BLUE, fontSize:7},
-      3: {cellWidth:'auto', textColor:SOFT, fontSize:7.5}
-    },
-    margin: {left:ML, right:MR},
-    didDrawPage: function(data){
-      // Ripeto header nelle pagine successive
-      if (data.pageNumber > 1){
-        try { doc.addImage(LOGO_PDF_DATA, 'JPEG', ML, 14, 22, 22); } catch(e){}
-        doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...BLUE_DARK);
-        doc.text(SCUOLA.nome, ML+26, 19);
-        doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(...SOFT);
-        doc.text('Registro trattamenti art. 30 GDPR — cluster D', ML+26, 24);
-        doc.setDrawColor(...BLUE); doc.setLineWidth(.3); doc.line(ML, 42, W-MR, 42);
-      }
-    }
-  });
-  y = doc.lastAutoTable.finalY + 10;
-
-  // Se finisce la pagina, nuova pagina per la sezione finale
-  if (y > H - 60){ doc.addPage(); y = 50; }
-
-  // CARATTERISTICHE COMUNI
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...BLUE_DARK);
-  doc.text('Caratteristiche comuni delle applicazioni cluster D', ML, y); y += 6;
-  doc.autoTable({
-    startY: y,
-    body: [
-      ['Natura del trattamento', 'Nessun trattamento di dati personali. Contenuti didattici statici, interattivi o simulativi.'],
-      ['Categorie di interessati', 'Non applicabile (assenza di dati personali raccolti).'],
-      ['Finalità', 'Supporto didattico, educazione civica e digitale, approfondimento curricolare, gamification educativa.'],
-      ['Base giuridica', 'Non applicabile ex GDPR art. 6 (assenza di trattamento dati personali). Coerenza con PTOF, D.Lgs. 297/1994, L. 92/2019.'],
-      ['Retention', 'Non applicabile. I contenuti sono statici o generano output solo lato client (localStorage, PDF generati dall\'utente).'],
-      ['Misure di sicurezza', 'HTTPS obbligatorio (Vercel / GitHub Pages / Neocities). Codice versionato. Nessun backend di raccolta attivo.'],
-      ['Trasferimenti extra-SEE', 'Hosting: Vercel (USA, DPF) e Neocities (USA) per contenuti statici senza dati personali.'],
-      ['Classificazione AI Act', 'Sistemi non-IA o IA a rischio minimo ex art. 6 AI Act — nessun obbligo specifico.']
-    ],
-    theme: 'grid',
-    styles: {font:'helvetica', fontSize:8.5, cellPadding:2.2, textColor:INK, lineColor:LINE, lineWidth:.12, valign:'top'},
-    columnStyles: {0:{fontStyle:'bold', textColor:SOFT, cellWidth:55}, 1:{textColor:INK}},
-    margin: {left:ML, right:MR}
-  });
-  y = doc.lastAutoTable.finalY + 14;
-
-  // FIRME
-  if (y > H - 55){ doc.addPage(); y = 50; }
-  doc.setFont('helvetica','bold'); doc.setFontSize(9.5); doc.setTextColor(...BLUE);
-  doc.text('APPROVAZIONE E FIRME', ML, y); y += 8;
-  const firme = [
-    ['TITOLARE DEL TRATTAMENTO', 'Dirigente Scolastico — Prof.ssa L. Ferraboschi'],
-    ['REFERENTE OPERATIVO · AD', 'Andrea Cerioli — Animatore Digitale']
-  ];
-  const colW = (CW - 10) / 2;
-  firme.forEach((f, i) => {
-    const x = ML + i * (colW + 10);
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...SOFT);
-    doc.text(f[0], x, y);
-    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...INK);
-    doc.text(f[1], x, y+5);
-    doc.setDrawColor(...LINE); doc.setLineWidth(.3);
-    doc.line(x, y+20, x+colW-5, y+20);
-    doc.setFontSize(7.5); doc.setTextColor(...SOFT);
-    doc.text('firma e data', x, y+24);
-  });
-
-  // Numerazione pagine
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++){
-    doc.setPage(i);
-    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...SOFT);
-    doc.text(`Pagina ${i} di ${pageCount}`, W-MR, H-8, {align:'right'});
-    doc.text(SCUOLA.nome + ' · Registro ex art. 30 GDPR', ML, H-8);
-  }
-
-  const filename = `Registro_art30_cluster_D_${new Date().toISOString().slice(0,10)}.pdf`;
-
-  // Salva localmente
-  doc.save(filename);
-  showToast(`Registro ex art. 30 generato — ${apps.length} applicazioni`);
-}
-
 // ========== PDF GENERATION ==========
 async function generatePDFLocal(){
   const doc = await buildPDF();
@@ -2846,9 +2083,10 @@ async function buildPDF(){
   doc.setFont('helvetica','normal');
   doc.setFontSize(8.5);
   doc.setTextColor(...SOFT);
-  doc.text(SCUOLA.centro, ML+26, 24);
-  doc.text(`${SCUOLA.indirizzo} · Tel. ${SCUOLA.telefono} · ${SCUOLA.email}`, ML+26, 28);
-  doc.text(`Cod. mecc. ${SCUOLA.codMecc} · ${SCUOLA.parita}`, ML+26, 32);
+  doc.text(SCUOLA.ente, ML+26, 24);
+  doc.text(SCUOLA.centro, ML+26, 28);
+  doc.text(`${SCUOLA.indirizzo} · Tel. ${SCUOLA.telefono} · ${SCUOLA.email}`, ML+26, 32);
+  doc.text(`Cod. mecc. ${SCUOLA.codMecc} · ${SCUOLA.parita}`, ML+26, 36);
 
   // Linea separatrice
   doc.setDrawColor(...BLUE);
@@ -2907,14 +2145,14 @@ async function buildPDF(){
 
   // Info tabella
   const rows = [
+    ['Protocollo', d.meta.prot || '—'],
+    ['Data valutazione', d.meta.date ? new Date(d.meta.date).toLocaleDateString('it-IT') : '—'],
+    ['Versione documento', d.meta.version || 'v1.0'],
     ['Titolare del trattamento', d.meta.titolare || 'Dirigente Scolastico'],
     ['Referente operativo', d.meta.referente || 'Animatore Digitale'],
     ['DPO consultato', d.meta.dpo || '—'],
     ['Classi / utenti coinvolti', formatClassi(d.meta.classi)],
-    ['Periodo di utilizzo', d.meta.period || '—'],
-    ['Protocollo', d.meta.prot || '—'],
-    ['Versione documento', d.meta.version || 'v1.0'],
-    ['Data valutazione', d.meta.date ? new Date(d.meta.date).toLocaleDateString('it-IT') : '—'],
+    ['Periodo di utilizzo', formatPeriod(d.meta.period)],
     ['Cluster di rischio', `${cl.code} — ${cl.name} (${cl.risk})`]
   ];
   doc.autoTable({
@@ -2962,7 +2200,9 @@ async function buildPDF(){
   }
 
   addSubheading(doc, 'Categorie di interessati', y, ML, BLUE); y += 6;
-  addPara(doc, `Studentesse e studenti delle ${formatClassi(d.meta.classi)}, nel periodo ${d.meta.period || '[da specificare]'}. Gli interessati sono minori, qualificati come persone fisiche vulnerabili ai sensi del Considerando 75 GDPR.`, y, ML, CW, INK);
+  const classiText = formatClassi(d.meta.classi);
+  const periodoText = formatPeriod(d.meta.period);
+  addPara(doc, `Studentesse e studenti delle classi ${classiText !== '—' ? classiText : '[da specificare]'}, nel periodo ${periodoText !== '—' ? periodoText : '[da specificare]'}. Gli interessati sono minori, qualificati come persone fisiche vulnerabili ai sensi del Considerando 75 GDPR.`, y, ML, CW, INK);
   y = doc.lastTextY + 6;
 
   const finalitaNote = getNote(d, '2-3');
@@ -3076,8 +2316,8 @@ async function buildPDF(){
 
     const friaRows = [
       ['Processi di utilizzo', d.meta.desc || '[Da integrare: descrizione analitica dei processi.]'],
-      ['Periodo e frequenza', d.meta.period || '[Da integrare: arco temporale + frequenza d\'uso.]'],
-      ['Categorie di persone coinvolte', (d.meta.classi && d.meta.classi.length ? formatClassi(d.meta.classi) : '[Da integrare: studenti, insegnanti, famiglie.]')],
+      ['Periodo e frequenza', formatPeriod(d.meta.period) !== '—' ? formatPeriod(d.meta.period) : '[Da integrare: arco temporale + frequenza d\'uso.]'],
+      ['Categorie di persone coinvolte', formatClassi(d.meta.classi) !== '—' ? formatClassi(d.meta.classi) : '[Da integrare: studenti, insegnanti, famiglie.]'],
       ['Rischi specifici ai diritti fondamentali', getNote(d,'7-2') || getNote(d,'3-3') || '[Da integrare: rischi a dignità, non discriminazione, istruzione, riservatezza.]'],
       ['Misure di sorveglianza umana', getNote(d,'7-1') || 'Decisioni automatizzate escluse. Ogni output del sistema è supporto a decisione umana collegiale.'],
       ['Meccanismi di reclamo e ripristino', getNote(d,'9-2') || 'Procedura di segnalazione interna, notifica Garante 72h se data breach, comunicazione agli interessati ex art. 34 GDPR se rischio elevato.']
@@ -3149,6 +2389,58 @@ async function buildPDF(){
     y = doc.lastAutoTable.finalY + 5;
   });
 
+  // ---------- ALLEGATO B — BADGE DI CONFORMITÀ ----------
+  doc.addPage(); y = MT; pageHeader(doc, d, W, ML, MR, BLUE_DARK, SOFT, LINE);
+  chapterTitle(doc, 'Allegato B — Badge di conformità per la web app', y, ML, INK, BLUE); y += 12;
+
+  addPara(doc, 'Il riquadro seguente è il "sigillo" di conformità da inserire nel footer della web app valutata. Svolge la funzione di dichiarazione visibile — come un marchio CE — che la DPIA è stata condotta prima del deploy ai sensi dell\'art. 35.1 GDPR.', y, ML, CW, INK);
+  y = doc.lastTextY + 8;
+
+  // Riproduco visivamente il badge nel PDF
+  const cl2 = CLUSTERS[d.cluster] || CLUSTERS.E;
+  const frame = cl2.fria ? 'Valutato ex art. 35 GDPR + art. 27 AI Act' : 'Valutato ex art. 35 GDPR';
+  const protStr = d.meta.prot || '—';
+  const dateStr = d.meta.date ? new Date(d.meta.date).toLocaleDateString('it-IT') : '';
+
+  doc.setDrawColor(...BLUE); doc.setLineWidth(.4);
+  doc.setFillColor(243, 246, 251);
+  doc.rect(ML, y, 110, 18, 'FD');
+  // Scudo stilizzato
+  doc.setDrawColor(...BLUE); doc.setLineWidth(.8);
+  doc.line(ML+6, y+5, ML+11, y+3);
+  doc.line(ML+11, y+3, ML+16, y+5);
+  doc.line(ML+16, y+5, ML+16, y+10);
+  doc.line(ML+16, y+10, ML+11, y+14);
+  doc.line(ML+11, y+14, ML+6, y+10);
+  doc.line(ML+6, y+10, ML+6, y+5);
+  doc.setLineWidth(1);
+  doc.line(ML+8.5, y+8.5, ML+10.5, y+10.5);
+  doc.line(ML+10.5, y+10.5, ML+13.5, y+7);
+  // Testo badge
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...BLUE_DARK);
+  doc.text(protStr, ML+22, y+7);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...SOFT);
+  doc.text(`Scuola Sacra Famiglia — Orzinuovi${dateStr ? '  ·  ' + dateStr : ''}`, ML+22, y+11);
+  doc.text(frame, ML+22, y+14.5);
+  y += 24;
+
+  // Codice HTML del badge
+  addSubheading(doc, 'Codice HTML da incollare nel footer dell\'app', y, ML, BLUE); y += 6;
+  const badgeCode = generateBadgeHtml(d);
+  doc.setFont('courier','normal'); doc.setFontSize(7.5); doc.setTextColor(...INK);
+  doc.setFillColor(243, 246, 251);
+  const codeLines = doc.splitTextToSize(badgeCode, CW - 4);
+  const codeH = codeLines.length * 3.2 + 4;
+  doc.rect(ML, y, CW, codeH, 'F');
+  doc.text(codeLines, ML+2, y+4);
+  y += codeH + 10;
+
+  if (y < H - MB - 30){
+    doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor(...SOFT);
+    const note = doc.splitTextToSize('Il badge è progettato per essere neutro, leggero e accessibile: nessuna dipendenza esterna, font di sistema, link diretto all\'informativa. Può essere modificato nello stile purché protocollo, titolare e riferimenti normativi restino leggibili.', CW);
+    doc.text(note, ML, y);
+  }
+
   // Numerazione pagine
   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++){
@@ -3189,33 +2481,47 @@ function getNote(d, id){ return d.checklist[id]?.note || null; }
 function stripHtml(s){ return (s||'').replace(/<[^>]*>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"'); }
 
 // ========== DRIVE INTEGRATION ==========
+function generateRandomToken(){
+  const arr = new Uint8Array(24);
+  crypto.getRandomValues(arr);
+  return Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
 function openDriveConfig(){
-  const appsScriptCode = `function doPost(e) {
+  if (!app.suggestedToken) app.suggestedToken = generateRandomToken();
+  const displayToken = app.driveToken || app.suggestedToken;
+
+  const appsScriptCode = `// DPIA Studio — Drive relay endpoint con autenticazione token
+// Riceve POST dal DPIA Studio e salva PDF in Drive.
+// Verifica token ad ogni richiesta: senza token valido, rifiuta.
+
+const AUTH_TOKEN = '` + displayToken + `';
+const FOLDER_ID = '1fh4uzxizMd1RrNSieEpeHPPYjgfiG6eF';
+const MAX_PDF_SIZE = 10 * 1024 * 1024;
+
+function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    const folderId = '1fh4uzxizMd1RrNSieEpeHPPYjgfiG6eF';
-    const folder = DriveApp.getFolderById(folderId);
-    const blob = Utilities.newBlob(
-      Utilities.base64Decode(data.pdf),
-      'application/pdf',
-      data.filename
-    );
+    if (!data.token || data.token !== AUTH_TOKEN) return json({ok:false, error:'Unauthorized: token non valido'});
+    if (!data.pdf || data.pdf.length > MAX_PDF_SIZE) return json({ok:false, error:'PDF mancante o troppo grande'});
+
+    const safeFilename = (data.filename || 'documento.pdf').replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 150);
+    const folder = DriveApp.getFolderById(FOLDER_ID);
+    const blob = Utilities.newBlob(Utilities.base64Decode(data.pdf), 'application/pdf', safeFilename);
     const file = folder.createFile(blob);
-    file.setDescription('DPIA — ' + (data.meta || '') + ' — ' + new Date().toLocaleString('it-IT'));
-    return ContentService
-      .createTextOutput(JSON.stringify({ok: true, fileId: file.getId(), url: file.getUrl()}))
-      .setMimeType(ContentService.MimeType.JSON);
+    file.setDescription('DPIA Studio — ' + (data.meta || '') + ' — ' + new Date().toLocaleString('it-IT'));
+    return json({ok:true, fileId:file.getId(), url:file.getUrl(), name:file.getName()});
   } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ok: false, error: err.toString()}))
-      .setMimeType(ContentService.MimeType.JSON);
+    return json({ok:false, error:err.toString()});
   }
 }
 
 function doGet() {
-  return ContentService
-    .createTextOutput('DPIA Studio Drive endpoint — attivo')
-    .setMimeType(ContentService.MimeType.TEXT);
+  return ContentService.createTextOutput('DPIA Studio Drive endpoint attivo — richiede POST con token').setMimeType(ContentService.MimeType.TEXT);
+}
+
+function json(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }`;
 
   document.getElementById('modal').classList.add('wide');
@@ -3240,7 +2546,10 @@ function doGet() {
     <label>URL endpoint Apps Script</label>
     <input type="url" id="driveUrlInput" value="${escapeHtml(app.driveUrl)}" placeholder="https://script.google.com/macros/s/.../exec">
 
-    <p style="font-size:12px;margin-top:14px"><strong>Cartella Drive già configurata nel codice Apps Script:</strong> <code>1fh4uzxizMd1RrNSieEpeHPPYjgfiG6eF</code> — se vuoi cambiare cartella, modifica <code>folderId</code> nel codice prima di deployare.</p>
+    <label>Token di sicurezza <span style="color:var(--terracotta);font-weight:600">(deve coincidere con AUTH_TOKEN nel codice Apps Script)</span></label>
+    <input type="text" id="driveTokenInput" value="${escapeHtml(displayToken)}" placeholder="token segreto 48 caratteri esadecimali" style="font-family:monospace;font-size:12px">
+
+    <p style="font-size:12px;margin-top:14px;color:var(--ink)"><strong style="color:var(--blue-dark)">Come funziona:</strong> ogni POST include il token; Apps Script verifica che coincida prima di salvare. Senza token valido, chi scopre l'URL non può inviare nulla. <br><br><strong style="color:var(--blue-dark)">Cartella Drive:</strong> <code style="font-size:11px">1fh4uzxizMd1RrNSieEpeHPPYjgfiG6eF</code> — per cambiarla, modifica <code>FOLDER_ID</code> nel codice prima di deployare.</p>
 
     <div class="modal-actions">
       <button class="btn secondary" onclick="closeModal()">Annulla</button>
@@ -3254,12 +2563,20 @@ function copyAppsScript(){
 }
 async function saveDriveConfig(){
   const url = document.getElementById('driveUrlInput').value.trim();
+  const token = document.getElementById('driveTokenInput').value.trim();
   if (!url){ showToast('Inserisci un URL valido', true); return; }
   if (!url.startsWith('https://script.google.com/')){ showToast('URL deve iniziare con https://script.google.com/', true); return; }
+  if (!token || token.length < 16){ showToast('Inserisci un token di almeno 16 caratteri', true); return; }
   await saveDriveUrl(url);
+  await saveDriveToken(token);
   closeModal();
   showToast('Configurazione Drive salvata');
   if (app.view === 'preview') renderPreview();
+}
+
+async function saveDriveToken(token){
+  app.driveToken = token;
+  try { await window.storage.set('dpia-drive-token', token); } catch(e){}
 }
 
 async function saveToDrive(){
@@ -3288,7 +2605,8 @@ async function saveToDrive(){
       body: JSON.stringify({
         pdf: pdfBase64,
         filename: filename,
-        meta: d.meta.name
+        meta: d.meta.name,
+        token: app.driveToken || ''
       })
     });
 
@@ -3308,6 +2626,590 @@ async function saveToDrive(){
     showToast('Errore di connessione — ' + err.message, true);
   }
 }
+
+
+// ========== INVENTORY ==========
+async function loadInventory(){
+  try {
+    const r = await window.storage.get('dpia-inventory');
+    if (r && r.value){
+      const p = JSON.parse(r.value);
+      app.inventory = p.items || [];
+    } else {
+      // Prima volta: carico seed
+      app.inventory = JSON.parse(JSON.stringify(INVENTORY_SEED));
+      await saveInventory();
+    }
+  } catch(e){
+    app.inventory = JSON.parse(JSON.stringify(INVENTORY_SEED));
+  }
+  app.invSel = new Set();
+}
+
+async function saveInventory(){
+  try { await window.storage.set('dpia-inventory', JSON.stringify({items:app.inventory})); }
+  catch(e){ console.warn('Storage non disponibile'); }
+}
+
+function renderInventory(){
+  if (!app.inventory) app.inventory = [];
+  if (!app.invSel) app.invSel = new Set();
+
+  renderInventoryStats();
+  renderInventoryGenCards();
+
+  const filter = document.getElementById('invFilter')?.value || 'all';
+  const sort = document.getElementById('invSort')?.value || 'cat';
+
+  let items = [...app.inventory];
+  if (filter === 'unclassified') items = items.filter(a => !a.cluster);
+  else if (filter === 'classified') items = items.filter(a => a.cluster);
+  else if (['A','B','C','D','E'].includes(filter)) items = items.filter(a => a.cluster === filter);
+
+  if (sort === 'name') items.sort((a,b) => a.name.localeCompare(b.name));
+  else if (sort === 'cluster') items.sort((a,b) => (a.cluster||'Z').localeCompare(b.cluster||'Z') || a.name.localeCompare(b.name));
+  else items.sort((a,b) => a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+
+  const body = document.getElementById('invTableBody');
+  if (!body) return;
+
+  if (!items.length){
+    body.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--ink-soft);font-style:italic">Nessuna app corrisponde ai filtri selezionati</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = items.map(a => {
+    const sel = app.invSel.has(a.id);
+    const clusterCode = a.cluster || 'N';
+    const clusterLabel = a.cluster || 'Da classificare';
+    return `<tr class="${sel ? 'sel' : ''}" data-id="${a.id}">
+      <td><input type="checkbox" class="inv-checkbox" ${sel?'checked':''} onchange="toggleInvSel('${a.id}')"></td>
+      <td>
+        <div class="inv-app-cell">
+          <span class="inv-app-name">${escapeHtml(a.name)}</span>
+          <span class="inv-app-cat">${escapeHtml(a.cat)}</span>
+        </div>
+      </td>
+      <td class="inv-url-cell"><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url.replace(/^https?:\/\//,''))}</a></td>
+      <td class="inv-cluster-cell"><span class="inv-cluster-badge inv-cluster-${clusterCode}">${clusterCode === 'N' ? '?' : clusterCode} · ${escapeHtml(clusterLabel === 'Da classificare' ? clusterLabel : CLUSTERS[clusterCode].name)}</span></td>
+      <td class="inv-actions-cell">
+        <button class="inv-btn-sm" onclick="openTriage('${a.id}')">Classifica</button>
+        <select class="inv-btn-sm" onchange="quickAssign('${a.id}', this.value); this.value=''" style="padding:4px 8px">
+          <option value="">Assegna...</option>
+          <option value="A">Cluster A</option>
+          <option value="B">Cluster B</option>
+          <option value="C">Cluster C</option>
+          <option value="D">Cluster D</option>
+          <option value="E">Cluster E</option>
+          <option value="null">Reset</option>
+        </select>
+        <button class="inv-btn-sm danger" onclick="deleteInvApp('${a.id}')" title="Elimina">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  updateSelCount();
+}
+
+function renderInventoryStats(){
+  const stats = {total: app.inventory.length, A:0, B:0, C:0, D:0, E:0, unc:0};
+  app.inventory.forEach(a => {
+    if (a.cluster) stats[a.cluster] = (stats[a.cluster]||0) + 1;
+    else stats.unc++;
+  });
+  const classified = stats.total - stats.unc;
+  const pct = stats.total ? Math.round(classified/stats.total*100) : 0;
+
+  document.getElementById('invStats').innerHTML = `
+    <div class="inv-stat">
+      <div class="inv-stat-label">Totale app</div>
+      <div class="inv-stat-value">${stats.total}</div>
+      <div class="inv-stat-sub">${classified}/${stats.total} classificate · ${pct}%</div>
+    </div>
+    <div class="inv-stat cluster-N">
+      <div class="inv-stat-label">Da classificare</div>
+      <div class="inv-stat-value">${stats.unc}</div>
+      <div class="inv-stat-sub">triage necessario</div>
+    </div>
+    <div class="inv-stat cluster-A">
+      <div class="inv-stat-label">Cluster A</div>
+      <div class="inv-stat-value">${stats.A}</div>
+      <div class="inv-stat-sub">Profilazione · ALTO</div>
+    </div>
+    <div class="inv-stat cluster-B">
+      <div class="inv-stat-label">Cluster B</div>
+      <div class="inv-stat-value">${stats.B}</div>
+      <div class="inv-stat-sub">Monitoraggio · ALTO-MEDIO</div>
+    </div>
+    <div class="inv-stat cluster-C">
+      <div class="inv-stat-label">Cluster C</div>
+      <div class="inv-stat-value">${stats.C}</div>
+      <div class="inv-stat-sub">IA generativa · MEDIO</div>
+    </div>
+    <div class="inv-stat cluster-D">
+      <div class="inv-stat-label">Cluster D</div>
+      <div class="inv-stat-value">${stats.D}</div>
+      <div class="inv-stat-sub">No dati pers. · MIN.</div>
+    </div>
+    <div class="inv-stat cluster-E">
+      <div class="inv-stat-label">Cluster E</div>
+      <div class="inv-stat-value">${stats.E}</div>
+      <div class="inv-stat-sub">Occasionale · BASSO</div>
+    </div>
+  `;
+}
+
+function renderInventoryGenCards(){
+  const grid = document.getElementById('invGenGrid');
+  if (!grid) return;
+  const stats = {A:0, B:0, C:0, D:0, E:0};
+  app.inventory.forEach(a => { if (a.cluster) stats[a.cluster]++; });
+
+  const cards = [
+    {code:'A', cluster:CLUSTERS.A, action:'Crea DPIA cluster', desc:'Profilazione studenti (Allegato III AI Act, FRIA obbligatoria)'},
+    {code:'B', cluster:CLUSTERS.B, action:'Crea DPIA cluster', desc:'Monitoraggio comportamentale (alto rischio in contesti valutativi)'},
+    {code:'C', cluster:CLUSTERS.C, action:'Crea DPIA cluster', desc:'Chatbot e IA generativa (obblighi art. 50 AI Act + DPA)'},
+    {code:'D', cluster:CLUSTERS.D, action:'Crea Registro semplificato', desc:'Applicazioni senza dati personali — unico PDF ex art. 30 GDPR'},
+    {code:'E', cluster:CLUSTERS.E, action:'Crea DPIA cluster', desc:'Raccolta dati occasionale (sondaggi, quiz, leaderboard one-shot)'}
+  ];
+
+  grid.innerHTML = cards.map(c => {
+    const n = stats[c.code];
+    const enabled = n > 0;
+    const action = c.code === 'D' ? `generateRegistroD()` : `generateClusterDPIA('${c.code}')`;
+    return `<div class="inv-gen-card ${c.code}">
+      <h4><span class="gc-tag inv-cluster-${c.code}">${c.code}</span> ${escapeHtml(c.cluster.name)}</h4>
+      <p>${escapeHtml(c.desc)}</p>
+      <p style="font-size:11px;color:var(--blue-dark);font-weight:600">${n} applicazion${n===1?'e':'i'} assegnate</p>
+      <button ${enabled?'':'disabled'} onclick="${action}">${c.action}</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleInvSel(id){
+  if (app.invSel.has(id)) app.invSel.delete(id);
+  else app.invSel.add(id);
+  const row = document.querySelector(`.inv-table tr[data-id="${id}"]`);
+  if (row) row.classList.toggle('sel', app.invSel.has(id));
+  updateSelCount();
+}
+function toggleAllInv(checked){
+  const filter = document.getElementById('invFilter').value;
+  let items = [...app.inventory];
+  if (filter === 'unclassified') items = items.filter(a => !a.cluster);
+  else if (filter === 'classified') items = items.filter(a => a.cluster);
+  else if (['A','B','C','D','E'].includes(filter)) items = items.filter(a => a.cluster === filter);
+
+  if (checked) items.forEach(a => app.invSel.add(a.id));
+  else items.forEach(a => app.invSel.delete(a.id));
+  renderInventory();
+}
+function updateSelCount(){
+  const bar = document.getElementById('invBatchBar');
+  const cnt = document.getElementById('invSelCount');
+  if (!bar || !cnt) return;
+  cnt.textContent = app.invSel.size;
+  bar.style.display = app.invSel.size > 0 ? 'flex' : 'none';
+}
+
+async function quickAssign(id, val){
+  const a = app.inventory.find(x => x.id === id);
+  if (!a) return;
+  a.cluster = val === 'null' ? null : val;
+  await saveInventory();
+  renderInventory();
+  showToast(val === 'null' ? 'Cluster rimosso' : `Assegnato cluster ${val}`);
+}
+
+async function bulkAssign(cluster){
+  app.invSel.forEach(id => {
+    const a = app.inventory.find(x => x.id === id);
+    if (a) a.cluster = cluster;
+  });
+  await saveInventory();
+  const n = app.invSel.size;
+  app.invSel.clear();
+  renderInventory();
+  showToast(cluster ? `${n} app assegnate al cluster ${cluster}` : `${n} app reset`);
+}
+
+async function bulkDelete(){
+  const n = app.invSel.size;
+  if (!n) return;
+  if (!confirm(`Eliminare ${n} app dall'inventario? L'operazione non può essere annullata.`)) return;
+  const toDelete = new Set(app.invSel);
+  app.inventory = app.inventory.filter(a => !toDelete.has(a.id));
+  app.invSel.clear();
+  await saveInventory();
+  renderInventory();
+  showToast(`${n} app eliminate`);
+}
+
+async function deleteInvApp(id){
+  const a = app.inventory.find(x => x.id === id);
+  if (!a) return;
+  if (!confirm(`Eliminare "${a.name}" dall'inventario?`)) return;
+  app.inventory = app.inventory.filter(x => x.id !== id);
+  app.invSel.delete(id);
+  await saveInventory();
+  renderInventory();
+  showToast('App eliminata');
+}
+
+async function addInventoryApp(){
+  const name = prompt('Nome dell\'applicazione:');
+  if (!name || !name.trim()) return;
+  const url = prompt('URL dell\'applicazione:', 'https://');
+  if (!url || !url.trim()) return;
+  const cat = prompt('Categoria:', 'Altro') || 'Altro';
+  const newId = 'inv-' + Date.now().toString(36);
+  app.inventory.push({id:newId, name:name.trim(), url:url.trim(), cat:cat.trim(), cluster:null});
+  await saveInventory();
+  renderInventory();
+  showToast('App aggiunta');
+}
+
+async function resetInventory(){
+  if (!confirm('Resettare l\'inventario? Tutte le classificazioni attuali saranno perse e saranno ripristinate le 79 app del portale con classificazioni suggerite di default.')) return;
+  app.inventory = JSON.parse(JSON.stringify(INVENTORY_SEED));
+  app.invSel.clear();
+  await saveInventory();
+  renderInventory();
+  showToast('Inventario resettato');
+}
+
+function exportInventory(){
+  downloadJSON({items: app.inventory, exported: new Date().toISOString()}, `Inventario_IA_SacraFamiglia_${new Date().toISOString().slice(0,10)}.json`);
+  showToast('Inventario esportato');
+}
+function importInventoryJSON(){ document.getElementById('invImportInput').click(); }
+document.getElementById('invImportInput').onchange = e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (!data.items || !Array.isArray(data.items)) throw new Error('invalido');
+      app.inventory = data.items;
+      await saveInventory();
+      renderInventory();
+      showToast(`${data.items.length} app importate`);
+    } catch(err){ showToast('File JSON non valido', true); }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+};
+
+// ========== TRIAGE ==========
+let triageState = {id:null, q1:null, q2:null};
+
+function openTriage(id){
+  const a = app.inventory.find(x => x.id === id);
+  if (!a) return;
+  triageState = {id, q1:null, q2:null};
+
+  document.getElementById('modal').classList.remove('wide');
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Triage rapido</h3>
+    <div class="inv-app-info">
+      <strong>${escapeHtml(a.name)}</strong>
+      <span>${escapeHtml(a.url)}</span>
+    </div>
+    <div id="triageQ1Wrap">
+      <div class="triage-q">
+        <div class="triage-q-title">1 / 2 — L'app raccoglie, archivia o elabora dati personali di studenti?</div>
+        <div class="triage-opts">
+          <button class="triage-opt" onclick="triageAnswerQ1('no')">No — nessun dato personale (contenuto, simulatore, gioco didattico)<span class="opt-cluster">→ Cluster D</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ1('anon')">Solo metriche aggregate / anonime<span class="opt-cluster">→ Cluster D</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ1('occ')">Sì, raccolta occasionale (sondaggio, quiz, form feedback)<span class="opt-cluster">→ Cluster E</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ1('sub')">Sì, trattamento sostanziale (archivio persistente, dashboard)<span class="opt-cluster">→ domanda 2</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ1('dk')">Non saprei, classifichiamo come incerta<span class="opt-cluster">→ lascia non classificata</span></button>
+        </div>
+      </div>
+    </div>
+    <div id="triageQ2Wrap" style="display:none">
+      <div class="triage-q">
+        <div class="triage-q-title">2 / 2 — Che tipo di trattamento effettua?</div>
+        <div class="triage-opts">
+          <button class="triage-opt" onclick="triageAnswerQ2('A')">Profilazione o valutazione persistente (traccia competenze, soft skills nel tempo)<span class="opt-cluster">→ Cluster A — ALTO RISCHIO</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ2('B')">Monitoraggio comportamentale in tempo reale (click, tempi, pattern)<span class="opt-cluster">→ Cluster B — ALTO-MEDIO</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ2('C')">Funzionalità di IA generativa centrali (chatbot, LLM, generazione contenuti)<span class="opt-cluster">→ Cluster C — MEDIO</span></button>
+          <button class="triage-opt" onclick="triageAnswerQ2('E')">Trattamento one-shot (singola valutazione, non longitudinale)<span class="opt-cluster">→ Cluster E — BASSO-MEDIO</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" onclick="closeModal()">Annulla</button>
+    </div>`;
+  document.getElementById('modalBack').classList.add('active');
+}
+
+async function triageAnswerQ1(v){
+  triageState.q1 = v;
+  let cluster = null;
+  if (v === 'no' || v === 'anon') cluster = 'D';
+  else if (v === 'occ') cluster = 'E';
+  else if (v === 'sub'){
+    // Mostra Q2
+    document.getElementById('triageQ1Wrap').style.display = 'none';
+    document.getElementById('triageQ2Wrap').style.display = 'block';
+    return;
+  }
+  // dk = null (lascia non classificata)
+
+  await applyTriage(cluster);
+}
+
+async function triageAnswerQ2(cluster){
+  await applyTriage(cluster);
+}
+
+async function applyTriage(cluster){
+  const a = app.inventory.find(x => x.id === triageState.id);
+  if (a){
+    a.cluster = cluster;
+    await saveInventory();
+  }
+  closeModal();
+  renderInventory();
+  if (cluster) showToast(`"${a.name}" → Cluster ${cluster}`);
+  else showToast(`"${a.name}" rimane da classificare`);
+}
+
+// ========== GENERATE DPIA DI CLUSTER ==========
+async function generateClusterDPIA(clusterCode){
+  const cluster = CLUSTERS[clusterCode];
+  const apps = app.inventory.filter(a => a.cluster === clusterCode);
+  if (!apps.length){ showToast('Nessuna app in questo cluster', true); return; }
+
+  const id = 'd_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
+  const clusterApps = apps.map(a => ({name:a.name, url:a.url}));
+
+  app.dossiers[id] = {
+    id,
+    meta:{
+      type:'cluster',
+      name:`DPIA Cluster ${clusterCode} — ${cluster.name}`,
+      url:'',
+      desc:`Valutazione d'impatto per l'insieme di applicazioni dell'ecosistema didattico Sacra Famiglia classificate nel cluster ${clusterCode} (${cluster.name}). Rischio: ${cluster.risk}.`,
+      classi:[],
+      period:'a.s. 2025-26',
+      date: new Date().toISOString().slice(0,10),
+      prot:'',
+      version:'v1.0',
+      titolare:'Dirigente Scolastico — Prof.ssa L. Ferraboschi',
+      referente:'Andrea Cerioli — Animatore Digitale',
+      dpo:'',
+      clusterApps
+    },
+    wizard:{},
+    cluster: clusterCode,
+    clusterAuto: clusterCode,
+    clusterReason: `Cluster assegnato via classificazione inventario: ${apps.length} applicazioni raggruppate per analogia di trattamento (metodologia WP248 del Gruppo ex-Art. 29 / EDPB).`,
+    _firstWizard: false,
+    checklist:{},
+    created: Date.now(),
+    updated: Date.now()
+  };
+  app.current = id;
+  await saveApp();
+  showToast(`DPIA cluster ${clusterCode} creata con ${apps.length} app — compila metadati e checklist`);
+  goTo('wizard');
+}
+
+// ========== GENERATE REGISTRO SEMPLIFICATO EX ART. 30 (cluster D) ==========
+async function generateRegistroD(){
+  const apps = app.inventory.filter(a => a.cluster === 'D');
+  if (!apps.length){ showToast('Nessuna app nel cluster D', true); return; }
+  if (!window.jspdf || !window.jspdf.jsPDF){ showToast('Libreria PDF non caricata', true); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:'mm', format:'a4'});
+  const BLUE = [30, 74, 138];
+  const BLUE_DARK = [20, 46, 90];
+  const INK = [26, 31, 43];
+  const SOFT = [74, 81, 96];
+  const LINE = [212, 217, 224];
+  const W = 210, H = 297, ML = 22, MR = 22, MT = 25, MB = 22;
+  const CW = W - ML - MR;
+
+  // ---------- FRONTESPIZIO ----------
+  try { doc.addImage(LOGO_PDF_DATA, 'JPEG', ML, 14, 22, 22); } catch(e){}
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...BLUE_DARK);
+  doc.text(SCUOLA.nome, ML+26, 19);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...SOFT);
+  doc.text(SCUOLA.centro, ML+26, 24);
+  doc.text(`${SCUOLA.indirizzo} · Tel. ${SCUOLA.telefono} · ${SCUOLA.email}`, ML+26, 28);
+  doc.text(`Cod. mecc. ${SCUOLA.codMecc} · ${SCUOLA.parita}`, ML+26, 32);
+  doc.setDrawColor(...BLUE); doc.setLineWidth(.5); doc.line(ML, 42, W-MR, 42);
+  doc.setLineWidth(.2); doc.setDrawColor(...LINE); doc.line(ML, 44, W-MR, 44);
+
+  let y = 58;
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...SOFT);
+  doc.text('REGISTRO DEI TRATTAMENTI — categoria semplificata', W/2, y, {align:'center'});
+  y += 7;
+  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(...INK);
+  doc.text('Applicazioni senza trattamento', W/2, y, {align:'center'});
+  y += 8;
+  doc.text('di dati personali', W/2, y, {align:'center'});
+  y += 6;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...SOFT);
+  doc.text('Cluster D · art. 30 GDPR · Linee guida MIM 2025', W/2, y, {align:'center'});
+  y += 14;
+
+  // Box intro
+  doc.setDrawColor(...BLUE); doc.setLineWidth(.4);
+  doc.setFillColor(243, 246, 251);
+  doc.rect(ML, y, CW, 34, 'FD');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...BLUE_DARK);
+  doc.text('FINALITÀ DEL REGISTRO', ML+6, y+7);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...INK);
+  const intro = `Il presente registro raccoglie le applicazioni didattiche dell'ecosistema Sacra Famiglia che NON effettuano trattamento di dati personali ai sensi dell'art. 4.1 GDPR. Si tratta di contenuti informativi, simulatori, giochi educativi, glossari e strumenti di apprendimento che non raccolgono, archiviano né elaborano informazioni riconducibili a singoli studenti. In conformità alla metodologia WP248 del Gruppo ex-Art. 29 (EDPB), queste applicazioni non richiedono DPIA individuale ma sono documentate cumulativamente in questo registro semplificato, che costituisce evidenza di diligenza ai sensi dell'art. 30.5 GDPR e delle Linee guida MIM 2025.`;
+  const introLines = doc.splitTextToSize(intro, CW - 12);
+  doc.text(introLines, ML+6, y+12);
+  y += 42;
+
+  // Info
+  const rows = [
+    ['Titolare del trattamento', 'Dirigente Scolastico — Prof.ssa L. Ferraboschi'],
+    ['Referente operativo', 'Andrea Cerioli — Animatore Digitale'],
+    ['Numero di applicazioni censite', String(apps.length)],
+    ['Categoria di rischio', 'D — rischio minimo (nessun dato personale)'],
+    ['Base giuridica di riferimento', 'Art. 6.1.e GDPR — compito di interesse pubblico (D.Lgs. 297/1994)'],
+    ['Data registro', new Date().toLocaleDateString('it-IT')]
+  ];
+  doc.autoTable({
+    startY: y, body: rows, theme:'plain',
+    styles: {font:'helvetica', fontSize:8.5, cellPadding:2, textColor:INK, lineColor:LINE, lineWidth:.15},
+    columnStyles: { 0: {fontStyle:'bold', textColor:SOFT, cellWidth:60}, 1: {textColor:INK} },
+    margin: {left:ML, right:MR}
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // ---------- TABELLA APP ----------
+  const tableRows = apps.map((a, i) => [String(i+1), a.name, a.cat, a.url.replace(/^https?:\/\//,'')]);
+
+  doc.autoTable({
+    startY: y,
+    head: [['#', 'Applicazione', 'Categoria didattica', 'URL']],
+    body: tableRows,
+    theme: 'striped',
+    styles: {font:'helvetica', fontSize:7.5, cellPadding:1.8, textColor:INK, lineColor:LINE, lineWidth:.1, valign:'top'},
+    headStyles: {fillColor:BLUE, textColor:[252,252,253], fontStyle:'bold'},
+    columnStyles: {
+      0: {cellWidth:10, fontStyle:'bold', textColor:SOFT, halign:'center'},
+      1: {cellWidth:55, fontStyle:'bold'},
+      2: {cellWidth:40, textColor:SOFT},
+      3: {cellWidth:'auto', textColor:BLUE}
+    },
+    margin: {left:ML, right:MR},
+    didDrawPage: (data) => {
+      // Header pagina (solo dopo la prima)
+      if (data.pageNumber > 1){
+        doc.setDrawColor(...LINE); doc.setLineWidth(.2);
+        doc.line(ML, 15, W-MR, 15);
+        doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(...SOFT);
+        doc.text('Registro semplificato art. 30 · Cluster D · ' + SCUOLA.nome, ML, 11);
+        doc.text(`${apps.length} applicazioni`, W-MR, 11, {align:'right'});
+      }
+    }
+  });
+  y = doc.lastAutoTable.finalY + 10;
+
+  // ---------- NOTE FINALI ----------
+  if (y > H - MB - 70){ doc.addPage(); y = MT + 5; }
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...INK);
+  doc.text('Motivazione del mancato DPIA', ML, y);
+  doc.setDrawColor(...BLUE); doc.setLineWidth(.6);
+  doc.line(ML, y+2.5, ML+22, y+2.5);
+  y += 10;
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...INK);
+  const motivazione = [
+    'Ai sensi dell\'art. 35.1 GDPR, la DPIA è richiesta "quando un tipo di trattamento può presentare un rischio elevato per i diritti e le libertà delle persone fisiche". Le applicazioni elencate nel presente registro non soddisfano tale condizione per le seguenti ragioni:',
+    '',
+    '• non raccolgono alcun dato personale ai sensi dell\'art. 4.1 GDPR (informazioni riguardanti una persona fisica identificata o identificabile);',
+    '• eventuali metriche di utilizzo sono aggregate e anonime, prive di identificatori diretti o indiretti;',
+    '• non vengono memorizzate credenziali, risultati individuali o elementi di profilazione;',
+    '• non utilizzano servizi di terze parti che raccolgano dati personali in modo diretto (Google Fonts/CDN per il rendering rientrano nel trattamento tecnico necessario privo di profilazione).',
+    '',
+    'Coerentemente alla metodologia WP248 del Gruppo ex-Art. 29 (EDPB) e alle Linee guida MIM per l\'introduzione dell\'IA nelle Istituzioni scolastiche (v1.0, 2025), si ritiene che per questo insieme di applicazioni sia sufficiente una registrazione cumulativa nel presente documento, in luogo di DPIA individuali o di cluster complete. Il registro sarà aggiornato in caso di modifiche sostanziali (introduzione di funzionalità di raccolta dati, integrazione con servizi terzi, cambio di finalità).'
+  ];
+  motivazione.forEach(p => {
+    if (p === ''){ y += 2; return; }
+    const lines = doc.splitTextToSize(p, CW);
+    doc.text(lines, ML, y);
+    y += lines.length * 4.5;
+    if (y > H - MB - 30){ doc.addPage(); y = MT + 5; }
+  });
+
+  y += 6;
+
+  // ---------- FIRME ----------
+  if (y > H - MB - 50){ doc.addPage(); y = MT + 5; }
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...BLUE);
+  doc.text('APPROVAZIONE', ML, y);
+  y += 8;
+
+  [
+    ['TITOLARE DEL TRATTAMENTO', 'Dirigente Scolastico'],
+    ['REFERENTE OPERATIVO', 'Animatore Digitale']
+  ].forEach(f => {
+    doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(...SOFT);
+    doc.text(f[0], ML, y);
+    doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...INK);
+    doc.text(f[1], ML, y+5);
+    doc.setDrawColor(...LINE); doc.setLineWidth(.3);
+    doc.line(ML, y+18, ML+80, y+18);
+    doc.setFontSize(7.5); doc.setTextColor(...SOFT);
+    doc.text('firma e data', ML, y+22);
+    y += 30;
+  });
+
+  // Numerazione pagine
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++){
+    doc.setPage(i);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...SOFT);
+    doc.text(`Pagina ${i} di ${pageCount}`, W-MR, H-8, {align:'right'});
+    doc.text(SCUOLA.nome + ' · Registro art. 30 GDPR · Cluster D', ML, H-8);
+  }
+
+  // Save or upload
+  const filename = `Registro_art30_ClusterD_SacraFamiglia_${new Date().toISOString().slice(0,10)}.pdf`;
+
+  if (app.driveUrl){
+    // Propongo sia locale che Drive
+    const choice = confirm('Salvare su Drive istituzionale?\n\nOK = Drive\nAnnulla = scarica in locale');
+    if (choice){
+      try {
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+        showToast('Invio a Drive...');
+        const response = await fetch(app.driveUrl, {
+          method: 'POST',
+          headers: {'Content-Type': 'text/plain;charset=utf-8'},
+          body: JSON.stringify({pdf:pdfBase64, filename, meta:'Registro semplificato Cluster D', token: app.driveToken || ''})
+        });
+        const result = await response.json();
+        if (result.ok){
+          showToast(`Registro salvato su Drive (${apps.length} app)`);
+          if (result.url) window.open(result.url, '_blank');
+        } else {
+          showToast('Errore Drive, scarico in locale', true);
+          doc.save(filename);
+        }
+      } catch(err){
+        doc.save(filename);
+        showToast('Errore Drive, scaricato in locale', true);
+      }
+      return;
+    }
+  }
+  doc.save(filename);
+  showToast(`Registro scaricato (${apps.length} app cluster D)`);
+}
+
 
 // ========== INIT ==========
 window.addEventListener('DOMContentLoaded', () => { checkAuth(); });
