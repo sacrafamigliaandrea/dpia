@@ -629,6 +629,26 @@ button{font-family:inherit}
 .internal-alt-chip{display:inline-block;padding:4px 10px;background:var(--blue-faint);color:var(--blue-dark);font-size:12px;font-weight:500;border-radius:2px;border:1px solid var(--blue-soft)}
 .vendor-alt-note{font-size:12px;color:var(--ink-soft);margin-top:8px;font-style:italic}
 
+/* Scheda motivazione app interne */
+.rationale-box{padding:18px 22px;background:var(--cream);border-left:4px solid var(--blue);border-radius:3px}
+.rationale-label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--blue-dark);font-weight:600;margin-bottom:10px}
+.rationale-text{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink)}
+.rationale-footer{margin-top:22px;padding:14px 18px;background:#F8F9FB;border:1px dashed var(--line);border-radius:2px;font-size:12.5px;line-height:1.6;color:var(--ink-soft)}
+.rationale-footer strong{color:var(--blue-dark)}
+
+/* Link "motivazione" in riga inventario */
+.inv-rationale-link{color:var(--blue);text-decoration:underline;font-size:11px;margin-left:4px;cursor:pointer}
+.inv-rationale-link:hover{color:var(--blue-dark)}
+
+/* Form aggiunta app */
+.add-form{margin:16px 0}
+.add-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);font-weight:600;margin-bottom:6px;margin-top:14px}
+.add-input{width:100%;padding:10px 12px;font-family:inherit;font-size:14px;border:1px solid var(--line);border-radius:2px;background:var(--paper);color:var(--ink)}
+.add-input:focus{outline:none;border-color:var(--blue)}
+select.add-input{cursor:pointer}
+
+
+
 .vendor-status-line{margin-top:20px;padding:12px 14px;background:var(--cream);border-radius:2px;font-size:13px}
 .vs-active{color:#1E4A8A;font-weight:700}
 .vs-inactive{color:var(--ink-soft)}
@@ -1210,36 +1230,36 @@ const INVENTORY_SEED = [
   // --- PORTALE (top) ---
   {id:'inv-001', name:'TI ASCOLTO!', url:'https://sondaggiostudenti.vercel.app/', cat:'Portale', cluster:'E'},
   {id:'inv-002', name:'Calibro', url:'https://calibro.neocities.org/', cat:'Portale', cluster:'F'},
-  {id:'inv-003', name:'Patto Digitale di Famiglia', url:'https://pattodigitale.neocities.org/', cat:'Portale', cluster:null},
+  {id:'inv-003', name:'Patto Digitale di Famiglia', url:'https://pattodigitale.neocities.org/', cat:'Portale', cluster:'D'},
   {id:'inv-004', name:'Guida per Genitori', url:'https://genitori.neocities.org/', cat:'Portale', cluster:'D'},
   {id:'inv-005', name:'Scuola Digitale', url:'https://scuolaipad.neocities.org/', cat:'Portale', cluster:'D'},
   {id:'inv-006', name:'Didattica e AI', url:'https://chatbotai.neocities.org/', cat:'Portale', cluster:'D'},
   {id:'inv-007', name:'IN + IA', url:'https://ineai.neocities.org/', cat:'Portale', cluster:'D'},
   // --- CITTADINANZA DIGITALE ---
-  {id:'inv-008', name:"L'Occhio Critico", url:'https://guglielmoildentone.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-008', name:"L'Occhio Critico", url:'https://guglielmoildentone.neocities.org/', cat:'Cittadinanza Digitale', cluster:'E'},
   {id:'inv-009', name:'Riconosci la Manipolazione', url:'https://manipolazione.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-010', name:'Social sotto la Lente', url:'https://socialschool.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-011', name:'Sei un Piccione?', url:'https://comportamentismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:'E'},
-  {id:'inv-012', name:"Quanto consuma l'AI?", url:'https://aiconsumi.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-012', name:"Quanto consuma l'AI?", url:'https://aiconsumi.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-013', name:'Il Sicofante Digitale', url:'https://sicofante.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-014', name:'Famiglia Accorti', url:'https://famigliaaccorti.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-015', name:'Navigare Sicuri', url:'https://socialguide.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-016', name:'Pizzeria Google', url:'https://pizzeriagoogle.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-017', name:'Generatore di Password', url:'https://securepassword.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-018', name:'Stop Cyberbullismo', url:'https://cyberbullismo.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
-  {id:'inv-019', name:'Indagine Digitale 2026', url:'https://missionedigitale.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
-  {id:'inv-020', name:'CyberEscape', url:'https://cyberescape.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
-  {id:'inv-021', name:'Il Voto che Ruba', url:'https://truffa-ballerina.vercel.app/', cat:'Cittadinanza Digitale', cluster:null},
-  {id:'inv-022', name:'Cyber Sentinel', url:'https://attacchinformatici.neocities.org/', cat:'Cittadinanza Digitale', cluster:null},
+  {id:'inv-019', name:'Indagine Digitale 2026', url:'https://missionedigitale.neocities.org/', cat:'Cittadinanza Digitale', cluster:'E'},
+  {id:'inv-020', name:'CyberEscape', url:'https://cyberescape.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-021', name:'Il Voto che Ruba', url:'https://truffa-ballerina.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
+  {id:'inv-022', name:'Cyber Sentinel', url:'https://attacchinformatici.neocities.org/', cat:'Cittadinanza Digitale', cluster:'D'},
   {id:'inv-023', name:'Commissariato Digitale', url:'https://polizia-postale.vercel.app/', cat:'Cittadinanza Digitale', cluster:'D'},
   // --- LAB. SCRITTURA ---
   {id:'inv-024', name:'I Mattoncini del Testo', url:'https://mattoncini.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-025', name:"Impara dall'Errore", url:'https://errore.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
-  {id:'inv-026', name:'Fatto o Opinione?', url:'https://fattopinione.vercel.app/', cat:'Lab. Scrittura', cluster:null},
+  {id:'inv-026', name:'Fatto o Opinione?', url:'https://fattopinione.vercel.app/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-027', name:'Le 3 Forme del Testo', url:'https://scrivere.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-028', name:'Testo Descrittivo', url:'https://laboratorioscrittura2.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-029', name:'Scrivere con le Immagini', url:'https://immagine.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
-  {id:'inv-030', name:"La Bottega dell'Argomentazione", url:'https://insegnareapensare.vercel.app/', cat:'Lab. Scrittura', cluster:null},
+  {id:'inv-030', name:"La Bottega dell'Argomentazione", url:'https://insegnareapensare.vercel.app/', cat:'Lab. Scrittura', cluster:'E'},
   {id:'inv-031', name:'Testo Argomentativo', url:'https://laboratorioscrittura.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-032', name:'ArgoMentor', url:'https://argomentor.vercel.app/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-033', name:"Scrivere dall'Ascolto", url:'https://ascolto.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
@@ -1247,7 +1267,7 @@ const INVENTORY_SEED = [
   {id:'inv-035', name:'Video Shorts', url:'https://videoshorts.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-036', name:'Debate in Classe', url:'https://schooldebate.neocities.org/', cat:'Lab. Scrittura', cluster:'D'},
   {id:'inv-037', name:'BottegaScrivi', url:'https://laboscrittura.vercel.app/', cat:'Lab. Scrittura', cluster:'E'},
-  {id:'inv-038', name:'ScriviMeglio', url:'https://tracciatema.neocities.org/', cat:'Lab. Scrittura', cluster:null},
+  {id:'inv-038', name:'ScriviMeglio', url:'https://tracciatema.neocities.org/', cat:'Lab. Scrittura', cluster:'E'},
   // --- INFORMATICA & TECH ---
   {id:'inv-039', name:'Fake Hunter', url:'https://fakehunter.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
   {id:'inv-040', name:'Truffe & Phishing', url:'https://truffe.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
@@ -1256,7 +1276,7 @@ const INVENTORY_SEED = [
   {id:'inv-043', name:'Glossario Digitale', url:'https://glossarioinfo.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
   {id:'inv-044', name:'Sfida di Videoscrittura', url:'https://typegame.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
   {id:'inv-045', name:'Allenamento Tastiera', url:'https://tastiera.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
-  {id:'inv-046', name:'La Scala Digitale', url:'https://pesodigitale.neocities.org/', cat:'Informatica & Tech', cluster:null},
+  {id:'inv-046', name:'La Scala Digitale', url:'https://pesodigitale.neocities.org/', cat:'Informatica & Tech', cluster:'E'},
   {id:'inv-047', name:'Bar della Scuola', url:'https://barscuola.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
   {id:'inv-048', name:'Algoritmi e Reti Neurali', url:'https://genalfa.neocities.org/', cat:'Informatica & Tech', cluster:'D'},
   {id:'inv-049', name:'Guarda Due Volte', url:'https://escapecity.vercel.app/', cat:'Informatica & Tech', cluster:'D'},
@@ -1265,13 +1285,13 @@ const INVENTORY_SEED = [
   {id:'inv-051', name:'Ciro il Dinosauro', url:'https://sacrafamiglialabinfo.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-052', name:'Il Mondo dei Dinosauri', url:'https://dinosauri.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-053', name:'Il Corpo Umano', url:'https://apparati.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
-  {id:'inv-054', name:'Pontremoli - Tesina', url:'https://pontremoli.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:null},
+  {id:'inv-054', name:'Pontremoli - Tesina', url:'https://pontremoli.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-055', name:'Esame di Stato', url:'https://esame.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-056', name:'Missione INVALSI 2026', url:'https://invalsi.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-057', name:"Trasformiamo l'Errore in Opportunita", url:'https://errore.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-058', name:"Debate sull'Errore", url:'https://debaterrore.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-059', name:'Infografiche con Notebook LM', url:'https://notebooklmstyle.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
-  {id:'inv-060', name:'Arena del Pensiero', url:'https://teamdebate.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:null},
+  {id:'inv-060', name:'Arena del Pensiero', url:'https://teamdebate.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-061', name:'Canto III - Divina Commedia', url:'https://labinfo.my.canva.site/canto3', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-062', name:'I Geni della Tecnologia', url:'https://garagevalley.neocities.org/', cat:'Approfondimenti e Ricerche', cluster:'D'},
   {id:'inv-063', name:'Laboratorio Scientifico', url:'https://labscienze.vercel.app/', cat:'Approfondimenti e Ricerche', cluster:'D'},
@@ -2076,6 +2096,188 @@ const CLUSTERS = {
   F: { code:'F', name:'Strumenti professionali docenti', risk:'BASSO',
     desc:'Il sistema è accessibile esclusivamente dall\'area riservata docenti. I dati sono inseriti dai docenti (adulti consapevoli) in esercizio delle proprie funzioni professionali — simile a registro elettronico, verbali, griglie di valutazione. Base giuridica: obbligo legale/interesse pubblico dell\'istituzione scolastica.',
     fria:false }
+};
+
+// ========== TEMPLATE MOTIVAZIONE PER CLUSTER ==========
+// Giustificativi standard per ogni cluster, con riferimenti normativi.
+// Applicati automaticamente alle app interne, possono essere sovrascritti
+// con override specifici per singole app.
+const CLUSTER_RATIONALE_TEMPLATES = {
+  A: {
+    architecture: 'Da verificare caso per caso. Tipicamente: backend server-side con archiviazione persistente profili studente.',
+    dataProcessing: 'Raccolta sistematica di dati comportamentali, competenze o valutazioni degli studenti con costruzione di profili persistenti nel tempo.',
+    rationale: 'Classificazione in Cluster A (ALTO rischio) giustificata dalla presenza di profilazione persistente di studenti, rientrante nell\'Allegato III del Regolamento (UE) 2024/1689 (AI Act). Il sistema costruisce rappresentazioni valutative individuali che possono influenzare decisioni educative e di orientamento. Richiesta DPIA completa ex art. 35 GDPR e FRIA (Fundamental Rights Impact Assessment) ex AI Act.',
+    residualRisks: [
+      'Bias del modello di profilazione con discriminazione involontaria',
+      'Deriva d\'uso verso decisioni automatizzate ex art. 22 GDPR',
+      'Trasferimento profili oltre il perimetro scolastico'
+    ],
+    mitigations: [
+      'Supervisione umana costante delle valutazioni generate',
+      'Possibilità di contestazione da parte di studenti e famiglie',
+      'Cancellazione programmata a fine ciclo scolastico',
+      'Accesso riservato a docenti titolari della classe'
+    ],
+    legalRefs: ['GDPR art. 35 (DPIA)', 'AI Act art. 26-27 e Allegato III (alto rischio)', 'Linee guida MIM 2025 sez. 3']
+  },
+  B: {
+    architecture: 'Sistemi con monitoraggio real-time dei comportamenti durante l\'uso (click, tempi, pattern, rumore ambientale).',
+    dataProcessing: 'Raccolta in tempo reale di metriche comportamentali dello studente. Può essere in-app (SalaStudio, non trasmessa) o server-side.',
+    rationale: 'Classificazione in Cluster B giustificata dalla presenza di monitoraggio comportamentale sistematico. Rischio ALTO se utilizzato in contesti valutativi formali; MEDIO altrimenti. L\'architettura in-app (SalaStudio v2.2) mantiene i dati locali e non costituisce trasferimento; la variante server-side invece richiede DPIA + FRIA.',
+    residualRisks: [
+      'Effetto Hawthorne (modifica del comportamento per consapevolezza del monitoraggio)',
+      'Stress da valutazione durante verifiche formali',
+      'Falsi positivi dei sensori comportamentali'
+    ],
+    mitigations: [
+      'Trasparenza: studente sempre informato del monitoraggio attivo',
+      'Uso solo in contesti formativi, mai sommativi',
+      'Dati in-app non trasmessi a server esterni (SalaStudio)',
+      'Revisione manuale del docente prima di ogni valutazione'
+    ],
+    legalRefs: ['GDPR art. 35', 'AI Act art. 26 e Allegato III', 'Statuto studentesse e studenti art. 2']
+  },
+  C: {
+    architecture: 'Integrazione di Large Language Model (LLM) esterni (OpenAI GPT-4, Google Gemini, Anthropic Claude). Prompt trasferiti al fornitore.',
+    dataProcessing: 'Prompt degli studenti e output del modello trasferiti all\'infrastruttura del fornitore LLM. Trattamento soggetto a DPA specifico del fornitore.',
+    rationale: 'Classificazione in Cluster C giustificata dall\'uso di IA generativa con trasferimento dati a responsabile esterno del trattamento. Rischio MEDIO per la possibilità di hallucination, inserimento accidentale di dati personali nei prompt, e trattamento downstream del fornitore. Obblighi di trasparenza ex art. 50 AI Act.',
+    residualRisks: [
+      'Inserimento accidentale di dati personali di studenti nei prompt',
+      'Hallucination del modello con output errati ma autorevoli',
+      'Dipendenza pedagogica dallo strumento IA',
+      'Uso del prompt per training del modello se DPA non restrittivo'
+    ],
+    mitigations: [
+      'Prompt di sistema pre-configurato dal docente',
+      'Formazione studenti: no dati personali nei prompt',
+      'DPA con clausola esplicita di esclusione dal training',
+      'Supervisione docente durante l\'uso',
+      'Verifica output prima dell\'uso didattico'
+    ],
+    legalRefs: ['GDPR art. 28 (responsabile)', 'AI Act art. 50 (trasparenza)', 'Linee guida MIM 2025 sez. 4-5']
+  },
+  D: {
+    architecture: 'Applicazione single-page client-side (SPA) con architettura zero-backend. Esecuzione esclusivamente nel browser dello studente. Hosting statico su Neocities o Vercel.',
+    dataProcessing: 'Nessun dato personale trasmesso a server esterni. Eventuale uso di localStorage per stato dell\'applicazione (progressi, preferenze visive) — dati non identificativi e non esportati. Nessun cookie tracciante, nessun pixel di analytics, nessuna chiamata XHR/fetch a terze parti per raccolta dati.',
+    rationale: 'Classificazione in Cluster D (rischio MINIMO) giustificata dall\'assenza totale di trattamento di dati personali identificativi. L\'architettura zero-backend elimina per design la possibilità di trasferimento dati a responsabili esterni. Non è richiesta DPIA ex art. 35 GDPR; è sufficiente la registrazione nel Registro semplificato ex art. 30 GDPR come strumento didattico senza trattamento.',
+    residualRisks: [
+      'Uso di Content Security Policy (CSP) di Neocities/Vercel da verificare periodicamente',
+      'Eventuali iframe embed (YouTube) con tracking del fornitore terzo (mitigato: parametri rel=0, modestbranding)',
+      'Risorse esterne caricate via CDN (font, librerie) — da minimizzare'
+    ],
+    mitigations: [
+      'Codice sorgente interamente ispezionabile (single-file HTML)',
+      'Nessun fetch() o XHR a domini esterni per dati applicativi',
+      'localStorage usato solo per stato non personale (es. progresso gioco)',
+      'Audit periodico del codice prima di modifiche sostanziali'
+    ],
+    legalRefs: ['GDPR art. 30 par. 5 (registro semplificato)', 'Principio di minimizzazione GDPR art. 5.1.c']
+  },
+  E: {
+    architecture: 'Applicazione client-side con raccolta dati studenti tramite image-pixel method verso Google Sheets via Apps Script. Nessun backend proprio, esecuzione nel browser con trasferimento asincrono dei dati raccolti.',
+    dataProcessing: 'Raccolta di dati inseriti dagli studenti durante l\'attività (risposte, nickname, scelte, produzioni testuali). Trasferimento via HTTP GET pixel-method a Google Sheets del docente. Dati archiviati nello spreadsheet Workspace scolastico.',
+    rationale: 'Classificazione in Cluster E (rischio BASSO-MEDIO) giustificata dalla presenza di raccolta dati personali studenti nominativi o aggregati, inseriti dagli studenti stessi. Il trasferimento avviene all\'interno del perimetro Workspace scolastico (già coperto da DPA Google Education), minimizzando il rischio. Richiesta DPIA semplificata focalizzata su minimizzazione, controllo accessi, cancellazione programmata.',
+    residualRisks: [
+      'Inserimento di dati personali eccessivi rispetto alla finalità didattica',
+      'Conservazione prolungata oltre l\'utilità dell\'attività',
+      'Accesso non autorizzato allo spreadsheet se condivisione non controllata',
+      'Rischio di re-identificazione in dati aggregati piccoli campioni'
+    ],
+    mitigations: [
+      'Uso in laboratorio con supervisione del docente',
+      'Nickname al posto di nome+cognome dove possibile',
+      'Cancellazione dello spreadsheet a fine anno scolastico',
+      'Spreadsheet condiviso solo con docenti titolari classe',
+      'Informativa famiglie con descrizione attività e dati raccolti'
+    ],
+    legalRefs: ['GDPR art. 5 (principi)', 'GDPR art. 30 (registro)', 'Workspace for Education DPA']
+  },
+  F: {
+    architecture: 'Applicazione client-side accessibile dall\'area riservata del portale docente. Autenticazione con password hardcoded o SSO Workspace. Raccolta dati inseriti esclusivamente dai docenti nell\'esercizio delle funzioni professionali.',
+    dataProcessing: 'Dati inseriti dai docenti nell\'esercizio delle proprie funzioni: valutazioni, griglie, note. Dati trattati analogamente a quelli del registro elettronico. Base giuridica: interesse pubblico e obbligo legale dell\'istituzione scolastica.',
+    rationale: 'Classificazione in Cluster F (rischio BASSO) giustificata dall\'accesso esclusivo dei docenti (adulti consapevoli) tramite area riservata. I dati trattati rientrano nelle funzioni professionali ordinarie, paragonabili all\'uso del registro elettronico cartaceo o digitale. Non c\'è trattamento diretto operato dagli studenti. DPIA semplificata con focus su controllo accessi.',
+    residualRisks: [
+      'Accesso non autorizzato se password area riservata compromessa',
+      'Condivisione impropria tra docenti di dati sensibili',
+      'Conservazione oltre il termine didattico'
+    ],
+    mitigations: [
+      'Password forte per area riservata + rotazione periodica',
+      'Accesso limitato ai soli docenti titolari',
+      'Istruzioni esplicite su finalità e limiti di trattamento',
+      'Cancellazione dati a fine ciclo scolastico'
+    ],
+    legalRefs: ['GDPR art. 6.1.e (interesse pubblico)', 'GDPR art. 9.2.g', 'D.Lgs. 297/1994 (TU Istruzione)']
+  }
+};
+
+// ========== OVERRIDE SPECIFICI APP INTERNE ==========
+// Le app che hanno caratteristiche uniche rispetto al template del loro cluster
+// ricevono override specifici. Questi si sovrappongono al template di default.
+const APP_RATIONALE_OVERRIDES = {
+  // === Cluster E: raccolta dati studenti ===
+  'inv-001': { // TI ASCOLTO!
+    architecture: 'SPA Vercel con 12 step questionario. Client-side completo, trasferimento dati via image-pixel a Google Sheet Apps Script v8. Admin dashboard protetta da password (comesei26).',
+    dataProcessing: 'Risposte a 12 domande con 3 opzioni testuali ciascuna. Raccolti: nickname studente, classe, risposte, Top Ten (social/gaming). 14 materie × 6 dimensioni. Generazione profilo daimon (narrativa), PDF export per studente.',
+    specificRisks: [
+      'Profilo narrativo daimon potrebbe essere interpretato come giudizio personale',
+      'Top Ten social/gaming è dato sensibile su abitudini digitali del minore',
+      'Dossier PDF per classe potrebbe essere condiviso impropriamente'
+    ],
+    specificMitigations: [
+      'Profilo daimon sempre presentato come ipotesi narrativa, non giudizio',
+      'Dossier PDF visibili solo alla docente referente',
+      'Cancellazione annuale dati al termine del ciclo',
+      'Spiegazione preliminare agli studenti del trattamento dati'
+    ]
+  },
+  'inv-003': { // Sei un Piccione?
+    architecture: 'SPA Neocities. Mini-game Skinneriano + dashboard docente via Google Sheets/Apps Script. Rinforzo variabile come oggetto di studio.',
+    dataProcessing: 'Dati aggregati: numero click, tempi di reazione, scelte nelle sessioni di gioco. Chart.js per dashboard docente. Nessun nominativo, solo pattern aggregati di classe.',
+    specificRisks: [
+      'Possibilità di ricostruzione individuo se classe piccola',
+      'Meccanica di rinforzo variabile potrebbe essere coinvolgente oltre il didatticamente utile'
+    ],
+    specificMitigations: [
+      'Uso esclusivo in laboratorio con debriefing metacognitivo',
+      'Limitazione tempo di sessione (max 15 minuti)',
+      'Tutti i dati aggregati, nessun identificativo personale'
+    ]
+  },
+  'inv-004': { // BottegaScrivi
+    architecture: 'SPA GitHub Pages (bottega.html). 8 tipologie testo, 44 modelli. 5 fasi (Osserva→Analizza→Pianifica→Scrivi→Confronta). Noise meter comportamentale aggregato. PIN docente "prina".',
+    dataProcessing: 'Bozze testi degli studenti salvate in localStorage con nickname. Rubric primaria/secondaria. Noise meter aggregato a livello di sessione (no identificazione individuale). No trasferimento server-side.',
+    specificRisks: [
+      'Produzioni testuali possono contenere informazioni personali',
+      'Nickname studenti persistenti in localStorage del device laboratorio'
+    ],
+    specificMitigations: [
+      'Pulizia localStorage periodica degli iMac laboratorio',
+      'Formazione studenti: "cosa mettere e cosa non mettere in un tema scolastico"',
+      'Bozze non esportate verso server esterni'
+    ]
+  },
+  'inv-006': { // Autovalutazione Lezione — suppongo il nome esatto
+    architecture: 'Modulo di autovalutazione a fine attività. Client-side, invio dati via image-pixel a Google Sheet del docente.',
+    dataProcessing: 'Risposte di autovalutazione studenti. Dati aggregati o con identificativo classe/nickname.',
+    specificRisks: [],
+    specificMitigations: []
+  },
+  // === Cluster F: strumenti professionali docenti ===
+  'inv-002': { // Calibro
+    architecture: 'SPA Neocities area riservata docenti. Accesso con password. Due collaboratori: Prof. A. Cerioli + Prof.ssa L. Ferraboschi. Dashboard con curva di Gauss, Dewey spiral, sezione longitudinale.',
+    dataProcessing: 'Valutazioni studenti inserite dai docenti: Soft Skills, Competenze Chiave Europee, Competenze Digitali. Sistema qualitativo a 5 livelli con frecce trend. Paragonabile al registro elettronico.',
+    specificRisks: [
+      'Accesso non autorizzato se password area riservata condivisa impropriamente',
+      'Errori di valutazione difficili da correggere se non c\'è audit trail'
+    ],
+    specificMitigations: [
+      'Password forte + rotazione periodica',
+      'Accesso limitato a Prof. Cerioli e Prof.ssa Ferraboschi',
+      'Export regolare delle valutazioni per audit trail esterno',
+      'Trattamento con stessa base giuridica del registro elettronico'
+    ]
+  }
 };
 
 // ========== WIZARD QUESTIONS ==========
@@ -3777,6 +3979,386 @@ function toggleVendorActive(appId){
   renderInventory();
 }
 
+// ========== SCHEDA DI MOTIVAZIONE APP INTERNE ==========
+function buildAppRationale(a){
+  const cluster = a.cluster;
+  if (!cluster || !CLUSTER_RATIONALE_TEMPLATES[cluster]){
+    return null; // app non classificata, nessuna motivazione generabile
+  }
+  const tpl = CLUSTER_RATIONALE_TEMPLATES[cluster];
+  const override = APP_RATIONALE_OVERRIDES[a.id] || {};
+
+  return {
+    architecture: override.architecture || tpl.architecture,
+    dataProcessing: override.dataProcessing || tpl.dataProcessing,
+    rationale: tpl.rationale,
+    residualRisks: override.specificRisks && override.specificRisks.length ? override.specificRisks : tpl.residualRisks,
+    mitigations: override.specificMitigations && override.specificMitigations.length ? override.specificMitigations : tpl.mitigations,
+    legalRefs: tpl.legalRefs
+  };
+}
+
+function openAppRationale(appId){
+  const a = app.inventory.find(x => x.id === appId);
+  if (!a) return;
+  if (a.source === 'thirdparty'){
+    openVendorDetail(appId);
+    return;
+  }
+  document.getElementById('modal').classList.add('wide');
+  const rat = buildAppRationale(a);
+  if (!rat){
+    document.getElementById('modalContent').innerHTML = `
+      <h3>Scheda di motivazione — ${escapeHtml(a.name)}</h3>
+      <p class="vendor-intro">L'applicazione non è ancora stata classificata. Avvia il triage per generare la scheda di motivazione.</p>
+      <div class="vendor-actions">
+        <button class="btn" onclick="closeModal(); openTriage('${a.id}')">Avvia triage</button>
+        <button class="btn secondary" onclick="closeModal()">Chiudi</button>
+      </div>`;
+    document.getElementById('modalBack').classList.add('active');
+    return;
+  }
+
+  const cluster = CLUSTERS[a.cluster];
+  const origin = a.origin || 'seed';
+  const originLabel = {
+    'seed': 'Ecosistema interno (seed iniziale)',
+    'external': 'Aggiunta manuale via URL',
+    'external-teacher': 'Applicazione di altro docente (URL esterno)'
+  }[origin] || 'Non specificato';
+
+  const row2 = (attr, desc) => `<tr><td class="vt-attr">${attr}</td><td class="vt-desc">${desc}</td></tr>`;
+
+  // TABELLA 1: Identificazione
+  const tblIdent = `<table class="vendor-table"><thead><tr><th>Attributo</th><th>Descrizione</th></tr></thead><tbody>
+    ${row2('Nome applicazione', `<strong>${escapeHtml(a.name)}</strong>`)}
+    ${row2('URL', `<a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url)} ↗</a>`)}
+    ${row2('Categoria didattica', escapeHtml(a.cat || '—'))}
+    ${row2('Cluster assegnato', `<span class="cluster-pill cluster-${a.cluster}">${a.cluster}</span> ${escapeHtml(cluster.name)} — rischio ${escapeHtml(cluster.risk)}`)}
+    ${row2('Origine', escapeHtml(originLabel))}
+    ${a.author ? row2('Autore dichiarato', escapeHtml(a.author)) : row2('Autore', 'Prof. Andrea Cerioli — Animatore Digitale')}
+    ${row2('ID registro', `<code style="font-size:11.5px">${escapeHtml(a.id)}</code>`)}
+  </tbody></table>`;
+
+  // TABELLA 2: Architettura tecnica
+  const tblArch = `<table class="vendor-table"><thead><tr><th>Attributo</th><th>Descrizione</th></tr></thead><tbody>
+    ${row2('Architettura', escapeHtml(rat.architecture))}
+    ${row2('Hosting', a.url.includes('neocities') ? 'Neocities (hosting statico)' : a.url.includes('vercel') ? 'Vercel (hosting statico con CDN edge)' : a.url.includes('github.io') ? 'GitHub Pages (hosting statico)' : 'Da verificare')}
+  </tbody></table>`;
+
+  // TABELLA 3: Trattamento dati
+  const tblData = `<table class="vendor-table"><thead><tr><th>Attributo</th><th>Descrizione</th></tr></thead><tbody>
+    ${row2('Dati trattati', escapeHtml(rat.dataProcessing))}
+  </tbody></table>`;
+
+  // TABELLA 4: Giustificazione cluster
+  const tblRationale = `<div class="rationale-box">
+    <div class="rationale-label">Giustificazione dell'assegnazione al Cluster ${a.cluster}</div>
+    <p class="rationale-text">${escapeHtml(rat.rationale)}</p>
+  </div>`;
+
+  // TABELLA 5: Rischi residui e mitigazioni
+  const tblRisks = `<table class="vendor-table vt-3col"><thead><tr><th>Rischio residuo</th><th style="width:200px">Mitigazione adottata</th></tr></thead><tbody>
+    ${rat.residualRisks.map((r, i) => {
+      const mit = rat.mitigations[i] || rat.mitigations[0] || '—';
+      return `<tr><td class="vt-desc">${escapeHtml(r)}</td><td class="vt-action">${escapeHtml(mit)}</td></tr>`;
+    }).join('')}
+  </tbody></table>`;
+
+  // TABELLA 6: Riferimenti normativi
+  const tblRefs = `<table class="vendor-table"><thead><tr><th>Riferimento normativo</th></tr></thead><tbody>
+    ${rat.legalRefs.map(ref => `<tr><td class="vt-desc">${escapeHtml(ref)}</td></tr>`).join('')}
+  </tbody></table>`;
+
+  const today = new Date().toLocaleDateString('it-IT');
+  const validUntil = new Date(Date.now() + 365*24*60*60*1000).toLocaleDateString('it-IT');
+
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Scheda di motivazione — ${escapeHtml(a.name)}</h3>
+    <p class="vendor-intro">Giustificazione dell'assegnazione al cluster di rischio per il Data Protection Officer. Scheda generata automaticamente dal template del Cluster ${a.cluster}, con eventuali override per specificità dell'applicazione.</p>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">1</span> Identificazione dell'applicazione</div>
+      ${tblIdent}
+    </div>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">2</span> Architettura tecnica</div>
+      ${tblArch}
+    </div>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">3</span> Trattamento dati</div>
+      ${tblData}
+    </div>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">4</span> Giustificazione dell'assegnazione</div>
+      ${tblRationale}
+    </div>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">5</span> Rischi residui e mitigazioni</div>
+      ${tblRisks}
+    </div>
+
+    <div class="vendor-block">
+      <div class="vendor-block-title"><span class="vbn">6</span> Riferimenti normativi applicati</div>
+      ${tblRefs}
+    </div>
+
+    <div class="rationale-footer">
+      <strong>Dichiarazione di conformità.</strong><br>
+      Scheda generata il <strong>${today}</strong> dall'Animatore Digitale ${escapeHtml(app.schoolData && app.schoolData.animatore || 'Andrea Cerioli')}.<br>
+      Validità fino al <strong>${validUntil}</strong>. Da rivedere in caso di modifiche sostanziali all'applicazione o ad ogni cambio di anno scolastico.
+    </div>
+
+    <div class="vendor-actions">
+      <button class="btn secondary" onclick="window.print()">Stampa scheda motivazione</button>
+      <button class="btn" onclick="exportDPOReport('${a.id}')">Genera report per DPO (PDF)</button>
+      <button class="btn secondary" onclick="closeModal()">Chiudi</button>
+    </div>
+  `;
+  document.getElementById('modalBack').classList.add('active');
+  const modal = document.getElementById('modalContent');
+  if (modal) modal.scrollTop = 0;
+}
+
+function exportDPOReport(appId){
+  const a = app.inventory.find(x => x.id === appId);
+  if (!a){ showToast('App non trovata'); return; }
+  if (typeof window.jspdf === 'undefined' || !window.jspdf){
+    showToast('Libreria PDF non caricata, riprova tra qualche secondo');
+    return;
+  }
+  buildDPOReportPDF(a);
+}
+
+function buildDPOReportPDF(a){
+  const rat = buildAppRationale(a);
+  if (!rat){ showToast('Applicazione non classificata'); return; }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 18; // margine
+  let y = M;
+
+  const today = new Date().toLocaleDateString('it-IT');
+  const validUntil = new Date(Date.now() + 365*24*60*60*1000).toLocaleDateString('it-IT');
+  const cluster = CLUSTERS[a.cluster];
+  const origin = a.origin || 'seed';
+  const originLabel = {
+    'seed': 'Ecosistema interno (seed iniziale)',
+    'external': 'Aggiunta manuale via URL',
+    'external-teacher': 'Applicazione di altro docente (URL esterno)'
+  }[origin] || 'Non specificato';
+  const schoolName = (app.schoolData && app.schoolData.name) || 'Scuola Paritaria Sacra Famiglia';
+  const animatore = (app.schoolData && app.schoolData.animatore) || 'Andrea Cerioli';
+
+  // === INTESTAZIONE ===
+  try {
+    if (typeof LOGO_PDF_DATA !== 'undefined' && LOGO_PDF_DATA){
+      doc.addImage(LOGO_PDF_DATA, 'JPEG', M, y, 18, 18);
+    }
+  } catch(e){}
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(30, 74, 138);
+  doc.text(schoolName, M + 22, y + 7);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(90, 98, 112);
+  doc.text('Governance IA scolastica · Report per Data Protection Officer', M + 22, y + 12);
+  doc.text('Orzinuovi (BS) · ' + today, M + 22, y + 17);
+  y += 25;
+  doc.setDrawColor(30, 74, 138);
+  doc.setLineWidth(0.5);
+  doc.line(M, y, W - M, y);
+  y += 8;
+
+  // === TITOLO REPORT ===
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Scheda di motivazione classificazione', M, y);
+  y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(30, 30, 30);
+  doc.text(a.name, M, y);
+  y += 10;
+
+  // === SEZIONE 1: IDENTIFICAZIONE (tabella) ===
+  const sectionTitle = (title) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(30, 74, 138);
+    doc.text(title.toUpperCase(), M, y);
+    y += 5;
+  };
+
+  sectionTitle('1. Identificazione applicazione');
+  const tbl1 = [
+    ['Nome', a.name],
+    ['URL', a.url],
+    ['Categoria didattica', a.cat || '—'],
+    ['Cluster assegnato', `${a.cluster} — ${cluster.name} (rischio ${cluster.risk})`],
+    ['Origine', originLabel],
+    ['Autore', a.author || 'Prof. ' + animatore + ' — Animatore Digitale'],
+    ['ID registro', a.id]
+  ];
+  doc.autoTable({
+    startY: y,
+    head: [['Attributo', 'Descrizione']],
+    body: tbl1,
+    theme: 'grid',
+    headStyles: {fillColor: [247, 245, 238], textColor: [90,98,112], fontSize: 8, fontStyle: 'bold'},
+    bodyStyles: {fontSize: 9, textColor: [30,30,30]},
+    columnStyles: {0: {cellWidth: 45, fontStyle: 'bold', textColor: [30,74,138]}},
+    margin: {left: M, right: M}
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // === SEZIONE 2: ARCHITETTURA ===
+  if (y > H - 60) { doc.addPage(); y = M; }
+  sectionTitle('2. Architettura tecnica');
+  const hosting = a.url.includes('neocities') ? 'Neocities (hosting statico)' 
+    : a.url.includes('vercel') ? 'Vercel (hosting statico con CDN edge)'
+    : a.url.includes('github.io') ? 'GitHub Pages (hosting statico)' 
+    : 'Da verificare';
+  doc.autoTable({
+    startY: y,
+    head: [['Attributo', 'Descrizione']],
+    body: [['Architettura', rat.architecture], ['Hosting', hosting]],
+    theme: 'grid',
+    headStyles: {fillColor: [247, 245, 238], textColor: [90,98,112], fontSize: 8, fontStyle: 'bold'},
+    bodyStyles: {fontSize: 9, textColor: [30,30,30]},
+    columnStyles: {0: {cellWidth: 45, fontStyle: 'bold', textColor: [30,74,138]}},
+    margin: {left: M, right: M}
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // === SEZIONE 3: TRATTAMENTO DATI ===
+  if (y > H - 60) { doc.addPage(); y = M; }
+  sectionTitle('3. Trattamento dati');
+  doc.autoTable({
+    startY: y,
+    head: [['Attributo', 'Descrizione']],
+    body: [['Dati trattati', rat.dataProcessing]],
+    theme: 'grid',
+    headStyles: {fillColor: [247, 245, 238], textColor: [90,98,112], fontSize: 8, fontStyle: 'bold'},
+    bodyStyles: {fontSize: 9, textColor: [30,30,30]},
+    columnStyles: {0: {cellWidth: 45, fontStyle: 'bold', textColor: [30,74,138]}},
+    margin: {left: M, right: M}
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // === SEZIONE 4: GIUSTIFICAZIONE ===
+  if (y > H - 80) { doc.addPage(); y = M; }
+  sectionTitle('4. Giustificazione cluster ' + a.cluster);
+  doc.setFillColor(247, 245, 238);
+  doc.setDrawColor(30, 74, 138);
+  doc.setLineWidth(0.8);
+  const ratHeight = 50;
+  doc.rect(M, y, W - 2*M, ratHeight, 'F');
+  doc.setLineCap('butt');
+  doc.line(M, y, M, y + ratHeight); // barra sinistra
+  doc.setLineWidth(1.5);
+  doc.line(M + 0.5, y, M + 0.5, y + ratHeight);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(30, 30, 30);
+  const lines = doc.splitTextToSize(rat.rationale, W - 2*M - 8);
+  doc.text(lines, M + 4, y + 6);
+  y += ratHeight + 8;
+
+  // === SEZIONE 5: RISCHI E MITIGAZIONI ===
+  if (y > H - 60) { doc.addPage(); y = M; }
+  sectionTitle('5. Rischi residui e mitigazioni');
+  const risksBody = rat.residualRisks.map((r, i) => [r, rat.mitigations[i] || rat.mitigations[0] || '—']);
+  doc.autoTable({
+    startY: y,
+    head: [['Rischio residuo', 'Mitigazione adottata']],
+    body: risksBody,
+    theme: 'grid',
+    headStyles: {fillColor: [247, 245, 238], textColor: [90,98,112], fontSize: 8, fontStyle: 'bold'},
+    bodyStyles: {fontSize: 9, textColor: [30,30,30]},
+    columnStyles: {0: {cellWidth: 90}},
+    margin: {left: M, right: M}
+  });
+  y = doc.lastAutoTable.finalY + 8;
+
+  // === SEZIONE 6: RIFERIMENTI NORMATIVI ===
+  if (y > H - 60) { doc.addPage(); y = M; }
+  sectionTitle('6. Riferimenti normativi');
+  doc.autoTable({
+    startY: y,
+    head: [['Riferimento']],
+    body: rat.legalRefs.map(r => [r]),
+    theme: 'grid',
+    headStyles: {fillColor: [247, 245, 238], textColor: [90,98,112], fontSize: 8, fontStyle: 'bold'},
+    bodyStyles: {fontSize: 9, textColor: [30,30,30]},
+    margin: {left: M, right: M}
+  });
+  y = doc.lastAutoTable.finalY + 12;
+
+  // === DICHIARAZIONE DI CONFORMITÀ ===
+  if (y > H - 60) { doc.addPage(); y = M; }
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.3);
+  doc.line(M, y, W - M, y);
+  y += 8;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(30, 74, 138);
+  doc.text('Dichiarazione di conformità', M, y);
+  y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  const decl = `La presente scheda di motivazione è stata generata il ${today} dall'Animatore Digitale ${animatore} della ${schoolName}, sulla base del template di cluster ${a.cluster} e degli eventuali override specifici per l'applicazione. Il documento ha validità fino al ${validUntil} ed è da rivedere in caso di modifiche sostanziali all'applicazione o al cambio di anno scolastico. La presente scheda è predisposta per la condivisione con il Data Protection Officer ai fini della verifica di conformità al Regolamento (UE) 2016/679 (GDPR) e al Regolamento (UE) 2024/1689 (AI Act).`;
+  const declLines = doc.splitTextToSize(decl, W - 2*M);
+  doc.text(declLines, M, y);
+  y += declLines.length * 4 + 8;
+
+  // Firma
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(30, 74, 138);
+  doc.text('Animatore Digitale', M, y);
+  doc.text('Data Protection Officer', W / 2 + 5, y);
+  y += 4;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
+  doc.text(animatore, M, y);
+  doc.text('(firma per presa visione)', W / 2 + 5, y);
+  y += 12;
+  doc.setDrawColor(150, 150, 150);
+  doc.setLineWidth(0.3);
+  doc.line(M, y, M + 60, y);
+  doc.line(W / 2 + 5, y, W / 2 + 5 + 60, y);
+
+  // Footer pagina
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++){
+    doc.setPage(i);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`DPIA Studio · ${schoolName} · Pagina ${i} di ${pageCount}`, W / 2, H - 8, {align: 'center'});
+  }
+
+  // Salvataggio
+  const safeName = a.name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+  const filename = `Scheda_DPO_${safeName}_${new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(filename);
+  showToast('Report DPO generato: ' + filename);
+}
+
+
 function filterBySource(src, btn){
   app.filterSource = src;
   document.querySelectorAll('.inv-source-toggle button').forEach(b => b.classList.remove('active'));
@@ -3823,7 +4405,7 @@ function renderInventory(){
       <td>
         <div class="inv-app-cell">
           <span class="inv-app-name">${escapeHtml(a.name)}${a.source === 'thirdparty' ? `<span class="inv-source-badge thirdparty" title="Servizio di terze parti">3P</span>` : ''}${a.individualUse ? `<span class="inv-individual-flag" title="Uso individuale docente — DPA non in essere a livello istituto">USO INDIVIDUALE</span>` : ''}</span>
-          <span class="inv-app-cat">${escapeHtml(a.cat)}${a.source === 'thirdparty' ? ` · <a href="#" onclick="event.preventDefault(); openVendorDetail('${a.id}')" style="color:var(--blue-mid);text-decoration:underline;font-size:11px">info fornitore</a>` : ''}</span>
+          <span class="inv-app-cat">${escapeHtml(a.cat)}${a.source === 'thirdparty' ? ` · <a href="#" onclick="event.preventDefault(); openVendorDetail('${a.id}')" style="color:var(--blue-mid);text-decoration:underline;font-size:11px">info fornitore</a>` : (a.cluster ? ` · <a href="#" onclick="event.preventDefault(); openAppRationale('${a.id}')" style="color:var(--blue-mid);text-decoration:underline;font-size:11px">motivazione</a>` : '')}</span>
         </div>
       </td>
       <td class="inv-url-cell"><a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.url.replace(/^https?:\/\//,''))}</a></td>
@@ -4009,16 +4591,81 @@ async function deleteInvApp(id){
 }
 
 async function addInventoryApp(){
-  const name = prompt('Nome dell\'applicazione:');
-  if (!name || !name.trim()) return;
-  const url = prompt('URL dell\'applicazione:', 'https://');
-  if (!url || !url.trim()) return;
-  const cat = prompt('Categoria:', 'Altro') || 'Altro';
+  openAddAppModal();
+}
+
+function openAddAppModal(){
+  document.getElementById('modal').classList.add('wide');
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Aggiungi applicazione all'inventario</h3>
+    <p class="vendor-intro">Inserisci i dati dell'applicazione. Se è un'app di un altro insegnante, compila anche "Autore" per tracciabilità.</p>
+
+    <div class="add-form">
+      <label class="add-label">Nome applicazione *</label>
+      <input type="text" id="addAppName" class="add-input" placeholder="Es: CyberSafe Quiz">
+
+      <label class="add-label">URL *</label>
+      <input type="url" id="addAppUrl" class="add-input" placeholder="https://...">
+
+      <label class="add-label">Categoria didattica</label>
+      <input type="text" id="addAppCat" class="add-input" placeholder="Es: Cittadinanza Digitale" value="Altro">
+
+      <label class="add-label">Origine</label>
+      <select id="addAppOrigin" class="add-input" onchange="toggleAuthorField()">
+        <option value="external">Aggiunta manuale (app propria o nuova)</option>
+        <option value="external-teacher">Applicazione di altro docente</option>
+      </select>
+
+      <div id="authorFieldWrap" style="display:none">
+        <label class="add-label">Autore dichiarato</label>
+        <input type="text" id="addAppAuthor" class="add-input" placeholder="Nome del docente autore">
+      </div>
+
+      <p style="font-size:12px;color:var(--ink-soft);margin-top:14px;line-height:1.5">Dopo l'aggiunta, l'applicazione apparirà come "Da classificare" nell'inventario. Avvia il triage per assegnarla a un cluster di rischio.</p>
+    </div>
+
+    <div class="vendor-actions">
+      <button class="btn" onclick="submitAddApp()">Aggiungi all'inventario</button>
+      <button class="btn secondary" onclick="closeModal()">Annulla</button>
+    </div>`;
+  document.getElementById('modalBack').classList.add('active');
+  setTimeout(() => { const el = document.getElementById('addAppName'); if (el) el.focus(); }, 100);
+}
+
+function toggleAuthorField(){
+  const origin = document.getElementById('addAppOrigin').value;
+  const wrap = document.getElementById('authorFieldWrap');
+  if (wrap) wrap.style.display = origin === 'external-teacher' ? 'block' : 'none';
+}
+
+async function submitAddApp(){
+  const name = document.getElementById('addAppName').value.trim();
+  const url = document.getElementById('addAppUrl').value.trim();
+  const cat = document.getElementById('addAppCat').value.trim() || 'Altro';
+  const origin = document.getElementById('addAppOrigin').value;
+  const author = origin === 'external-teacher' ? (document.getElementById('addAppAuthor').value.trim() || 'Non specificato') : null;
+
+  if (!name){ showToast('Inserisci il nome dell\'applicazione'); return; }
+  if (!url || !url.startsWith('http')){ showToast('Inserisci un URL valido'); return; }
+
   const newId = 'inv-' + Date.now().toString(36);
-  app.inventory.push({id:newId, name:name.trim(), url:url.trim(), cat:cat.trim(), cluster:null});
+  const newApp = {
+    id: newId,
+    name: name,
+    url: url,
+    cat: cat,
+    cluster: null,
+    source: 'internal',
+    origin: origin,
+    addedDate: new Date().toISOString().slice(0, 10)
+  };
+  if (author) newApp.author = author;
+
+  app.inventory.push(newApp);
   await saveInventory();
+  closeModal();
   renderInventory();
-  showToast('App aggiunta');
+  showToast(`"${name}" aggiunta all'inventario (da classificare)`);
 }
 
 async function resetInventory(){
