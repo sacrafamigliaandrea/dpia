@@ -2233,6 +2233,11 @@ const CLUSTER_DESC_SHORT = {
   E: 'Raccolta occasionale'
 };
 
+// ========== AUTH HASH ==========
+// Hash SHA-256 della password hardcoded. Rigenerare con genera-hash-dpia.html
+// e sostituire il valore PLACEHOLDER qui sotto.
+const AUTH_HASH = 'd323838bd8b1b4071dd8ed1f4040750327da0aa6bf162a86f11154cccce38b93';
+
 // ========== APP STATE ==========
 let app = { dossiers:{}, current:null, view:'dash', driveUrl:'', authed:false, inventory:[], invFilter:'all' };
 
@@ -2245,32 +2250,17 @@ async function sha256(msg){
 
 // ========== AUTH FLOW ==========
 async function checkAuth(){
-  // carica logo nelle UI
+  // Carica logo nelle UI
   document.getElementById('authLogo').src = LOGO_DATA;
   document.getElementById('topLogo').src = LOGO_DATA;
 
-  let pwdHash = null;
-  try {
-    const r = await window.storage.get('dpia-pwd-hash');
-    if (r && r.value) pwdHash = r.value;
-  } catch(e){}
-
-  if (!pwdHash){
-    // setup password
-    document.getElementById('authTitle').textContent = 'Configurazione iniziale';
-    document.getElementById('authLabel').textContent = 'Imposta password';
-    document.getElementById('authConfirmWrap').style.display = 'block';
-    document.getElementById('authSubmit').textContent = 'Imposta password e accedi';
-    document.getElementById('authHint').style.display = 'block';
-    document.getElementById('authReset').style.display = 'none';
-  } else {
-    document.getElementById('authTitle').textContent = 'Accesso riservato';
-    document.getElementById('authLabel').textContent = 'Password';
-    document.getElementById('authConfirmWrap').style.display = 'none';
-    document.getElementById('authSubmit').textContent = 'Accedi';
-    document.getElementById('authHint').style.display = 'none';
-    document.getElementById('authReset').style.display = 'block';
-  }
+  // Hash hardcoded: mostro sempre la schermata di login senza setup
+  document.getElementById('authTitle').textContent = 'Accesso riservato';
+  document.getElementById('authLabel').textContent = 'Password';
+  document.getElementById('authConfirmWrap').style.display = 'none';
+  document.getElementById('authSubmit').textContent = 'Accedi';
+  document.getElementById('authHint').style.display = 'none';
+  document.getElementById('authReset').style.display = 'block';
   setTimeout(() => document.getElementById('authPwd').focus(), 100);
 }
 
@@ -2280,50 +2270,25 @@ async function doAuth(){
   err.classList.remove('show');
 
   if (!pwd){
-    err.textContent = 'Inserisci una password';
+    err.textContent = 'Inserisci la password';
     err.classList.add('show');
     return;
   }
 
-  let pwdHash = null;
-  try {
-    const r = await window.storage.get('dpia-pwd-hash');
-    if (r && r.value) pwdHash = r.value;
-  } catch(e){}
-
-  if (!pwdHash){
-    // setup
-    const confirm = document.getElementById('authPwdConfirm').value;
-    if (pwd.length < 6){
-      err.textContent = 'La password deve essere di almeno 6 caratteri';
-      err.classList.add('show');
-      return;
-    }
-    if (pwd !== confirm){
-      err.textContent = 'Le due password non coincidono';
-      err.classList.add('show');
-      return;
-    }
-    const hash = await sha256(pwd);
-    await window.storage.set('dpia-pwd-hash', hash);
+  const hash = await sha256(pwd);
+  if (hash === AUTH_HASH){
     enterApp();
   } else {
-    const hash = await sha256(pwd);
-    if (hash === pwdHash){
-      enterApp();
-    } else {
-      err.textContent = 'Password errata';
-      err.classList.add('show');
-      document.getElementById('authPwd').value = '';
-      document.getElementById('authPwd').focus();
-    }
+    err.textContent = 'Password errata';
+    err.classList.add('show');
+    document.getElementById('authPwd').value = '';
+    document.getElementById('authPwd').focus();
   }
 }
 
 async function resetAuth(){
-  if (!confirm('Vuoi davvero resettare? Verranno cancellati la password, TUTTI i fascicoli e l\'inventario locale. Esporta prima in JSON se vuoi conservarli.')) return;
+  if (!confirm('Vuoi davvero resettare? Verranno cancellati TUTTI i fascicoli e l\'inventario locale. Esporta prima in JSON se vuoi conservarli. La password resta invariata (hardcoded nel codice).')) return;
   try {
-    await window.storage.delete('dpia-pwd-hash');
     await window.storage.delete('dpia-studio');
     await window.storage.delete('dpia-drive-url');
     await window.storage.delete('dpia-drive-token');
