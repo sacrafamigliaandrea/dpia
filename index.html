@@ -4001,6 +4001,360 @@ function toggleVendorActive(appId){
   renderInventory();
 }
 
+// ========== EXPORT BOLLINI PER PORTALE ==========
+function openBadgesModal(){
+  document.getElementById('modal').classList.add('wide');
+  
+  // Conteggi per il riepilogo
+  const interne = app.inventory.filter(a => (a.source || 'internal') === 'internal' && a.cluster);
+  const terze = app.inventory.filter(a => a.source === 'thirdparty' && a.active && a.cluster);
+  const counts = {A:0, B:0, C:0, D:0, E:0, F:0};
+  interne.forEach(a => { if (counts[a.cluster] !== undefined) counts[a.cluster]++; });
+  
+  document.getElementById('modalContent').innerHTML = `
+    <h3>Esporta bollini per il portale</h3>
+    <p class="vendor-intro">Genera il file <code>dpia-badges.js</code> da caricare sul tuo portale acerio.vercel.app. Lo script inietterà automaticamente accanto al nome di ogni applicazione un piccolo bollino colorato che mostra il cluster di rischio assegnato (D, E, F, ecc.). Trasparenza completa per studenti, docenti, genitori e DPO.</p>
+    
+    <div class="vendor-block">
+      <div class="vendor-block-title">Riepilogo bollini da esportare</div>
+      <table class="vendor-table">
+        <thead><tr><th>Cluster</th><th>App interne</th><th>Descrizione</th></tr></thead>
+        <tbody>
+          <tr><td class="vt-attr"><span class="cluster-pill cluster-D">D</span> Senza dati personali</td><td class="vt-desc"><strong>${counts.D}</strong> applicazioni</td><td class="vt-desc">Rischio MINIMO</td></tr>
+          <tr><td class="vt-attr"><span class="cluster-pill cluster-E">E</span> Raccolta dati studenti</td><td class="vt-desc"><strong>${counts.E}</strong> applicazioni</td><td class="vt-desc">Rischio BASSO-MEDIO</td></tr>
+          <tr><td class="vt-attr"><span class="cluster-pill cluster-F">F</span> Strumenti docenti</td><td class="vt-desc"><strong>${counts.F}</strong> applicazioni</td><td class="vt-desc">Rischio BASSO</td></tr>
+          ${counts.C > 0 ? `<tr><td class="vt-attr"><span class="cluster-pill cluster-C">C</span> IA generativa</td><td class="vt-desc"><strong>${counts.C}</strong> applicazioni</td><td class="vt-desc">Rischio MEDIO</td></tr>` : ''}
+          ${counts.B > 0 ? `<tr><td class="vt-attr"><span class="cluster-pill cluster-B">B</span> Monitoraggio</td><td class="vt-desc"><strong>${counts.B}</strong> applicazioni</td><td class="vt-desc">Rischio ALTO-MEDIO</td></tr>` : ''}
+          ${counts.A > 0 ? `<tr><td class="vt-attr"><span class="cluster-pill cluster-A">A</span> Profilazione</td><td class="vt-desc"><strong>${counts.A}</strong> applicazioni</td><td class="vt-desc">Rischio ALTO</td></tr>` : ''}
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="vendor-block">
+      <div class="vendor-block-title">Procedura di pubblicazione</div>
+      <ol style="padding-left:22px;font-size:13.5px;line-height:1.7;color:var(--ink)">
+        <li>Clicca <strong>Genera dpia-badges.js</strong> qui sotto per scaricare il file</li>
+        <li>Carica <code>dpia-badges.js</code> nella root del repository GitHub di acerio.vercel.app</li>
+        <li>Verifica che <code>index.html</code> contenga <code>&lt;script src="dpia-badges.js" defer&gt;&lt;/script&gt;</code> (già presente)</li>
+        <li>Commit + push: il deploy Vercel è automatico, i bollini compaiono in pochi secondi</li>
+      </ol>
+    </div>
+    
+    <div class="vendor-actions">
+      <button class="btn" onclick="generateBadgesJS()">Genera dpia-badges.js</button>
+      <button class="btn secondary" onclick="closeModal()">Chiudi</button>
+    </div>
+  `;
+  document.getElementById('modalBack').classList.add('active');
+}
+
+function generateBadgesJS(){
+  // Database: solo app interne classificate
+  const apps = app.inventory.filter(a => (a.source || 'internal') === 'internal' && a.cluster);
+  
+  // Costruzione mapping URL → cluster
+  // Normalizzo URL rimuovendo trailing slash per match più solido sul portale
+  const urlMap = {};
+  apps.forEach(a => {
+    const norm = a.url.replace(/\/$/, '').toLowerCase();
+    urlMap[norm] = {
+      cluster: a.cluster,
+      name: a.name
+    };
+  });
+  
+  // Cluster info: nome esteso, descrizione breve, colore
+  const clusterMeta = {
+    A: {label:'A', name:'Profilazione studenti', risk:'ALTO', color:'#8B4A3C', bg:'#F4E6E2'},
+    B: {label:'B', name:'Monitoraggio comportamentale', risk:'ALTO-MEDIO', color:'#B8860B', bg:'#FBF3DC'},
+    C: {label:'C', name:'IA generativa', risk:'MEDIO', color:'#1E4A8A', bg:'#E4EAF3'},
+    D: {label:'D', name:'Senza dati personali', risk:'MINIMO', color:'#6B7280', bg:'#EDEFF2'},
+    E: {label:'E', name:'Raccolta dati studenti', risk:'BASSO-MEDIO', color:'#4A5160', bg:'#F1F3F7'},
+    F: {label:'F', name:'Strumenti professionali docenti', risk:'BASSO', color:'#2C5F8D', bg:'#E4EAF3'}
+  };
+  
+  const today = new Date().toISOString().slice(0, 10);
+  const totalApps = apps.length;
+  
+  // Costruisco il file JavaScript
+  const jsContent = `/* =============================================================================
+ * dpia-badges.js
+ * Bollini di conformità GDPR/AI Act per il portale Sacra Famiglia
+ * 
+ * Generato automaticamente da DPIA Studio il ${today}
+ * ${totalApps} applicazioni classificate
+ * 
+ * Ogni link nel portale che corrisponde a un'app classificata riceve un piccolo
+ * badge colorato accanto al nome, indicante il cluster di rischio.
+ * 
+ * Cluster:
+ *   A = Profilazione studenti (ALTO)
+ *   B = Monitoraggio comportamentale (ALTO-MEDIO)
+ *   C = IA generativa (MEDIO)
+ *   D = Senza dati personali (MINIMO)
+ *   E = Raccolta dati studenti (BASSO-MEDIO)
+ *   F = Strumenti professionali docenti (BASSO)
+ * ============================================================================= */
+
+(function() {
+  'use strict';
+  
+  const URL_MAP = ${JSON.stringify(urlMap, null, 2)};
+  
+  const CLUSTER_META = ${JSON.stringify(clusterMeta, null, 2)};
+  
+  // Inietta CSS dei badge
+  function injectStyles() {
+    if (document.getElementById('dpia-badges-style')) return;
+    const css = \`
+      .dpia-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        margin-left: 6px;
+        font-family: 'IBM Plex Sans Condensed', system-ui, sans-serif;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        border-radius: 3px;
+        vertical-align: 1px;
+        cursor: help;
+        transition: transform 0.15s ease;
+      }
+      .dpia-badge:hover {
+        transform: translateY(-1px);
+      }
+      .dpia-A { background: #F4E6E2; color: #8B4A3C; }
+      .dpia-B { background: #FBF3DC; color: #B8860B; }
+      .dpia-C { background: #E4EAF3; color: #1E4A8A; }
+      .dpia-D { background: #EDEFF2; color: #6B7280; }
+      .dpia-E { background: #F1F3F7; color: #4A5160; }
+      .dpia-F { background: #E4EAF3; color: #2C5F8D; }
+      
+      /* Legenda fissa in basso a destra */
+      .dpia-legend {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        background: #FFFFFF;
+        border: 1px solid #DDE1E7;
+        border-radius: 4px;
+        padding: 12px 14px;
+        font-family: 'IBM Plex Sans', system-ui, sans-serif;
+        font-size: 11.5px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        z-index: 9999;
+        max-width: 280px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.2s, transform 0.2s;
+      }
+      .dpia-legend.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .dpia-legend-toggle {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        background: #1E4A8A;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-family: 'IBM Plex Sans Condensed', system-ui, sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        z-index: 9999;
+        transition: transform 0.15s ease, background 0.15s;
+      }
+      .dpia-legend-toggle:hover { background: #142E5A; transform: scale(1.05); }
+      .dpia-legend-toggle.hidden { display: none; }
+      .dpia-legend-title {
+        font-weight: 700;
+        color: #142E5A;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #DDE1E7;
+      }
+      .dpia-legend-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+        line-height: 1.4;
+      }
+      .dpia-legend-row:last-child { margin-bottom: 0; }
+      .dpia-legend-close {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #5A6270;
+        font-size: 16px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 2px 6px;
+      }
+      .dpia-legend-close:hover { color: #1E4A8A; }
+      .dpia-legend-footer {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px dotted #DDE1E7;
+        font-size: 10px;
+        color: #5A6270;
+        font-style: italic;
+      }
+    \`;
+    const style = document.createElement('style');
+    style.id = 'dpia-badges-style';
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+  
+  // Normalizza URL per il match
+  function normalizeUrl(url) {
+    return url.replace(/\/$/, '').toLowerCase();
+  }
+  
+  // Inietta il badge accanto al testo
+  function injectBadge(linkElement, cluster) {
+    const meta = CLUSTER_META[cluster];
+    if (!meta) return;
+    
+    // Cerca il contenitore del nome (gestisce diverse strutture HTML del portale)
+    const nameEl = linkElement.querySelector('.link-name') || linkElement;
+    
+    // Evita doppi badge
+    if (nameEl.querySelector('.dpia-badge')) return;
+    
+    const badge = document.createElement('span');
+    badge.className = 'dpia-badge dpia-' + cluster;
+    badge.textContent = meta.label;
+    badge.title = 'Cluster ' + cluster + ': ' + meta.name + ' — Rischio ' + meta.risk + '. Classificato secondo GDPR e AI Act.';
+    
+    nameEl.appendChild(badge);
+  }
+  
+  // Crea legenda flottante
+  function createLegend() {
+    const counts = {};
+    Object.values(URL_MAP).forEach(item => {
+      counts[item.cluster] = (counts[item.cluster] || 0) + 1;
+    });
+    
+    const toggle = document.createElement('button');
+    toggle.className = 'dpia-legend-toggle';
+    toggle.textContent = 'i';
+    toggle.title = 'Legenda bollini conformità';
+    toggle.setAttribute('aria-label', 'Mostra legenda bollini DPIA');
+    
+    const legend = document.createElement('div');
+    legend.className = 'dpia-legend';
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'dpia-legend-close';
+    closeBtn.textContent = '×';
+    closeBtn.setAttribute('aria-label', 'Chiudi legenda');
+    
+    const title = document.createElement('div');
+    title.className = 'dpia-legend-title';
+    title.textContent = 'Bollini conformità GDPR / AI Act';
+    
+    legend.appendChild(closeBtn);
+    legend.appendChild(title);
+    
+    Object.keys(CLUSTER_META).forEach(cluster => {
+      if (!counts[cluster]) return;
+      const row = document.createElement('div');
+      row.className = 'dpia-legend-row';
+      const badge = document.createElement('span');
+      badge.className = 'dpia-badge dpia-' + cluster;
+      badge.textContent = cluster;
+      const text = document.createElement('span');
+      text.textContent = CLUSTER_META[cluster].name + ' (' + counts[cluster] + ')';
+      row.appendChild(badge);
+      row.appendChild(text);
+      legend.appendChild(row);
+    });
+    
+    const footer = document.createElement('div');
+    footer.className = 'dpia-legend-footer';
+    footer.textContent = 'Aggiornato al ${today} — ' + Object.keys(URL_MAP).length + ' applicazioni';
+    legend.appendChild(footer);
+    
+    document.body.appendChild(toggle);
+    document.body.appendChild(legend);
+    
+    toggle.addEventListener('click', () => {
+      legend.classList.add('visible');
+      toggle.classList.add('hidden');
+    });
+    closeBtn.addEventListener('click', () => {
+      legend.classList.remove('visible');
+      toggle.classList.remove('hidden');
+    });
+  }
+  
+  // Funzione principale: scansiona i link del portale e inietta i badge
+  function applyBadges() {
+    injectStyles();
+    
+    let injected = 0;
+    const links = document.querySelectorAll('a[href]');
+    
+    links.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('http')) return;
+      
+      const norm = normalizeUrl(href);
+      const item = URL_MAP[norm];
+      if (item) {
+        injectBadge(link, item.cluster);
+        injected++;
+      }
+    });
+    
+    if (injected > 0) {
+      createLegend();
+    }
+    
+    console.log('[DPIA Badges] ' + injected + ' bollini iniettati su ' + Object.keys(URL_MAP).length + ' app classificate');
+  }
+  
+  // Inizializza al DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyBadges);
+  } else {
+    applyBadges();
+  }
+})();
+`;
+  
+  // Download del file
+  const blob = new Blob([jsContent], {type: 'application/javascript'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'dpia-badges.js';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  showToast(`File dpia-badges.js scaricato (${apps.length} app)`);
+}
+
 // ========== SCHEDA DI MOTIVAZIONE APP INTERNE ==========
 function buildAppRationale(a){
   const cluster = a.cluster;
