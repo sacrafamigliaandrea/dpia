@@ -3782,9 +3782,27 @@ async function loadInventory(){
       });
       // Integra servizi terzi non ancora presenti nell'inventario salvato
       const existingIds = new Set(app.inventory.map(a => a.id));
-      const missing = THIRDPARTY_SEED.filter(tp => !existingIds.has(tp.id));
-      if (missing.length > 0){
-        app.inventory = app.inventory.concat(JSON.parse(JSON.stringify(missing)));
+      const existingUrls = new Set(app.inventory.map(a => (a.url || '').replace(/\/$/, '').toLowerCase()));
+      
+      const missingTp = THIRDPARTY_SEED.filter(tp => !existingIds.has(tp.id));
+      if (missingTp.length > 0){
+        app.inventory = app.inventory.concat(JSON.parse(JSON.stringify(missingTp)));
+      }
+      
+      // NUOVO: integra anche le app interne mancanti dal seed (match per URL normalizzato)
+      // Questo permette di aggiungere nuove app al seed e farle apparire al refresh
+      const missingInt = INVENTORY_SEED.filter(s => {
+        if (existingIds.has(s.id)) return false;
+        const sUrl = (s.url || '').replace(/\/$/, '').toLowerCase();
+        return !existingUrls.has(sUrl);
+      });
+      if (missingInt.length > 0){
+        const newInt = missingInt.map(a => ({...a, source: 'internal'}));
+        app.inventory = app.inventory.concat(newInt);
+        console.log('[DPIA] Aggiunte ' + missingInt.length + ' app interne nuove dal seed');
+      }
+      
+      if (missingTp.length > 0 || missingInt.length > 0){
         await saveInventory();
       }
       // MIGRAZIONE: per ogni servizio thirdparty già presente, aggiunge campi mancanti
