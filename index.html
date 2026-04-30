@@ -2612,6 +2612,9 @@ function renderStepNav(){
 document.getElementById('btnHome').onclick = () => goTo('dash');
 
 // ========== DASHBOARD ==========
+// Stub vuoto per compatibilità con vecchie chiamate; non più usata attivamente
+function updateInventoryTileCount(){ /* no-op */ }
+
 function renderDashboard(){
   updateInventoryTileCount();
   const list = document.getElementById('dossierList');
@@ -5301,11 +5304,12 @@ function renderInventory(){
   if (app.filterSource === 'internal') items = items.filter(a => (a.source || 'internal') === 'internal');
   else if (app.filterSource === 'thirdparty') items = items.filter(a => a.source === 'thirdparty');
   
-  // Filtro per portale (acerio/sacrafamiglia/tutti) — applicato solo ad app interne
+  // Filtro per portale (acerio/sacrafamiglia/tutti)
+  // - "Ogni portale" mostra app interne + terzi
+  // - "Acerio" / "Sacra Famiglia" mostra SOLO app interne di quel portale (esclude terzi)
   if (app.filterPortal && app.filterPortal !== 'all'){
     items = items.filter(a => {
-      // I servizi terzi sono sempre visibili (sono in entrambi i portali)
-      if (a.source === 'thirdparty') return true;
+      if (a.source === 'thirdparty') return false;  // terzi nascosti dal filtro portale
       return (a.portal || 'acerio') === app.filterPortal;
     });
   }
