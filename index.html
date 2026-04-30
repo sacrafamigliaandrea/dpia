@@ -837,6 +837,10 @@ select.add-input{cursor:pointer}
       <svg viewBox="0 0 16 16" fill="none"><path d="M3 3 H10 L13 6 V13 H3 Z M10 3 V6 H13 M5 9 H11 M5 11 H9" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg>
       Pagina pubblica
     </button>
+    <button class="btn sm secondary" onclick="importInventoryBatch()" title="Importa una lista di app da file JSON">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M8 2 L8 11 M5 8 L8 11 L11 8 M3 13 L13 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Importa app
+    </button>
     <button class="btn sm" onclick="openBadgesModal()" style="background:var(--blue-dark);border-color:var(--blue-dark)">
       <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M5.5 8 L7.2 9.5 L10.5 6.5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Bollini portale
@@ -1323,10 +1327,10 @@ const INVENTORY_SEED = [
   {id:'inv-087', name:'Harry Potter e la Camera dei Segreti', url:'https://harrypotter-2.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-088', name:'Ventimila Leghe sotto i Mari', url:'https://ventimila-leghe.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-089', name:'Pennuti Spennati', url:'https://pennutispennati.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
-  {id:'inv-090', name:"L'Agnello Rimbalzello", url:'https://agnellorimbalzello.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
+  {id:'inv-090', name:"L'Agnello Rimbalzello", url:'https://agnellorimbalzello.vercel.app/', cat:'Biblioteca Digitale', cluster:'E'},
   {id:'inv-091', name:'La Mossa di Geri', url:'https://gerisgame.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-092', name:'Le Nuvole di Gus', url:'https://parzialmentenuvoloso.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
-  {id:'inv-093', name:'Il Cigno Appiccica', url:'https://cignoappiccica.vercel.app/', cat:'Biblioteca Digitale', cluster:'E'},
+  {id:'inv-093', name:'Il Cigno Appiccica', url:'https://cignoappiccica.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-094', name:'I Tre Porcellini', url:'https://treporcellini.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-095', name:'Il Pifferaio Magico', url:'https://pifferaio.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
   {id:'inv-096', name:'Il Drago e il Leprotto', url:'https://dragoleprotto.vercel.app/', cat:'Biblioteca Digitale', cluster:'D'},
@@ -4353,6 +4357,176 @@ function generateBadgesJS(){
   URL.revokeObjectURL(url);
   
   showToast(`File dpia-badges.js scaricato (${apps.length} app)`);
+}
+
+// ========== IMPORT BATCH INVENTARIO ==========
+function importInventoryBatch(){
+  // Crea input file dinamico se non esiste
+  let input = document.getElementById('importInventoryInput');
+  if (!input){
+    input = document.createElement('input');
+    input.type = 'file';
+    input.id = 'importInventoryInput';
+    input.accept = '.json,application/json';
+    input.style.display = 'none';
+    input.addEventListener('change', handleImportInventoryFile);
+    document.body.appendChild(input);
+  }
+  input.click();
+}
+
+async function handleImportInventoryFile(e){
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const data = JSON.parse(reader.result);
+      if (!Array.isArray(data)){
+        showToast('Il file deve contenere un array di applicazioni', true);
+        e.target.value = '';
+        return;
+      }
+      // Mostra anteprima e conferma
+      showImportPreview(data);
+    } catch(err){
+      showToast('File JSON non valido: ' + err.message, true);
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function showImportPreview(entries){
+  // Normalizza URL
+  const normalize = u => (u || '').replace(/\/$/, '').replace(/^https?:\/\//, '').toLowerCase();
+  
+  // Categorizza ogni voce
+  const categories = { add: [], update: [], skip: [] };
+  const existingMap = {};
+  app.inventory.forEach(a => { existingMap[normalize(a.url)] = a; });
+  
+  entries.forEach(e => {
+    if (!e.url || !e.name){
+      categories.skip.push({entry: e, reason: 'manca url o name'});
+      return;
+    }
+    const norm = normalize(e.url);
+    const existing = existingMap[norm];
+    if (existing){
+      // Verifica se serve aggiornamento
+      const needsUpdate = (e.cluster && e.cluster !== existing.cluster) || 
+                          (e.note && e.note !== existing.note) ||
+                          (e.category && e.category !== existing.cat);
+      if (needsUpdate){
+        categories.update.push({entry: e, existing: existing});
+      } else {
+        categories.skip.push({entry: e, reason: 'già presente, nessuna modifica'});
+      }
+    } else {
+      categories.add.push(e);
+    }
+  });
+  
+  document.getElementById('modal').classList.add('wide');
+  
+  let html = `
+    <h3>Importazione inventario da JSON</h3>
+    <p class="vendor-intro">File analizzato: <strong>${entries.length}</strong> applicazioni totali. Verifica il riepilogo prima di confermare.</p>
+    
+    <div class="vendor-block">
+      <div class="vendor-block-title">Riepilogo operazioni</div>
+      <table class="vendor-table">
+        <thead><tr><th>Azione</th><th>Numero</th><th>Descrizione</th></tr></thead>
+        <tbody>
+          <tr><td class="vt-attr"><strong style="color:#1E4A8A">Da aggiungere</strong></td><td class="vt-desc"><strong>${categories.add.length}</strong></td><td class="vt-desc">App nuove non presenti nel seed</td></tr>
+          <tr><td class="vt-attr"><strong style="color:#B8860B">Da aggiornare</strong></td><td class="vt-desc"><strong>${categories.update.length}</strong></td><td class="vt-desc">App esistenti con cluster/categoria/note diversi</td></tr>
+          <tr><td class="vt-attr"><strong style="color:#5A6270">Da saltare</strong></td><td class="vt-desc"><strong>${categories.skip.length}</strong></td><td class="vt-desc">App già presenti senza modifiche o invalide</td></tr>
+        </tbody>
+      </table>
+    </div>`;
+  
+  if (categories.add.length > 0){
+    html += `
+    <div class="vendor-block">
+      <div class="vendor-block-title">App da aggiungere (${categories.add.length})</div>
+      <table class="vendor-table vt-3col">
+        <thead><tr><th>Nome</th><th>URL</th><th>Cluster</th></tr></thead>
+        <tbody>
+          ${categories.add.map(e => `<tr><td class="vt-attr">${escapeHtml(e.name)}</td><td class="vt-desc"><code style="font-size:11px">${escapeHtml(e.url)}</code></td><td class="vt-action"><span class="cluster-pill cluster-${e.cluster||'D'}">${e.cluster||'D'}</span></td></tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+  
+  if (categories.update.length > 0){
+    html += `
+    <div class="vendor-block">
+      <div class="vendor-block-title">App da aggiornare (${categories.update.length})</div>
+      <table class="vendor-table vt-3col">
+        <thead><tr><th>Nome</th><th>Cluster (attuale → nuovo)</th><th>Modifiche</th></tr></thead>
+        <tbody>
+          ${categories.update.map(u => {
+            const changes = [];
+            if (u.entry.cluster && u.entry.cluster !== u.existing.cluster) changes.push(`cluster: ${u.existing.cluster||'-'} → ${u.entry.cluster}`);
+            if (u.entry.category && u.entry.category !== u.existing.cat) changes.push(`categoria: ${u.existing.cat} → ${u.entry.category}`);
+            if (u.entry.note && u.entry.note !== u.existing.note) changes.push('nota aggiornata');
+            return `<tr><td class="vt-attr">${escapeHtml(u.entry.name)}</td><td class="vt-desc"><span class="cluster-pill cluster-${u.existing.cluster||'D'}">${u.existing.cluster||'-'}</span> → <span class="cluster-pill cluster-${u.entry.cluster}">${u.entry.cluster}</span></td><td class="vt-action">${changes.join('<br>')}</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+  
+  html += `
+    <div class="vendor-actions">
+      <button class="btn" onclick='applyImportInventory(${JSON.stringify(entries).replace(/'/g, "&#39;")})'>Applica importazione</button>
+      <button class="btn secondary" onclick="closeModal()">Annulla</button>
+    </div>`;
+  
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalBack').classList.add('active');
+}
+
+async function applyImportInventory(entries){
+  const normalize = u => (u || '').replace(/\/$/, '').replace(/^https?:\/\//, '').toLowerCase();
+  const existingMap = {};
+  app.inventory.forEach(a => { existingMap[normalize(a.url)] = a; });
+  
+  let added = 0, updated = 0, skipped = 0;
+  
+  entries.forEach(e => {
+    if (!e.url || !e.name){ skipped++; return; }
+    const norm = normalize(e.url);
+    const existing = existingMap[norm];
+    
+    if (existing){
+      let changed = false;
+      if (e.cluster && e.cluster !== existing.cluster){ existing.cluster = e.cluster; changed = true; }
+      if (e.category && e.category !== existing.cat){ existing.cat = e.category; changed = true; }
+      if (e.note){ existing.note = e.note; changed = true; }
+      if (changed){ updated++; } else { skipped++; }
+    } else {
+      const newId = 'inv-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,5);
+      app.inventory.push({
+        id: newId,
+        name: e.name,
+        url: e.url,
+        cat: e.category || 'Altro',
+        cluster: e.cluster || null,
+        source: 'internal',
+        origin: 'imported',
+        note: e.note || '',
+        addedDate: new Date().toISOString().slice(0, 10)
+      });
+      added++;
+    }
+  });
+  
+  await saveInventory();
+  closeModal();
+  renderInventory();
+  showToast(`Import completato: ${added} aggiunte, ${updated} aggiornate, ${skipped} saltate`);
 }
 
 // ========== SCHEDA DI MOTIVAZIONE APP INTERNE ==========
