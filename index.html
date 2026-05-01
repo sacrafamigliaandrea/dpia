@@ -5664,6 +5664,540 @@ function buildDPOReportPDF(a){
 }
 
 
+// ====================================================================
+// GENERAZIONE DOCUMENTI DI CONFORMITÀ PER CLUSTER
+// ====================================================================
+
+// Helper: filtra inventario per cluster, escludendo terzi
+function getInventoryForCluster(clusterCode){
+  return app.inventory.filter(a => 
+    a.cluster === clusterCode && 
+    a.source !== 'thirdparty'
+  );
+}
+
+// Helper: testo wrappato che ritorna il numero di righe stampate
+function pdfDrawText(doc, text, x, y, maxWidth, lineHeight){
+  const lines = doc.splitTextToSize(text, maxWidth);
+  lines.forEach((ln, i) => doc.text(ln, x, y + i*lineHeight));
+  return lines.length;
+}
+
+// =========================================================
+// REGISTRO SEMPLIFICATO art. 30 GDPR (Cluster D)
+// Un unico PDF tabellare con tutte le app senza dati personali
+// =========================================================
+function generateRegistroD(){
+  const apps = getInventoryForCluster('D');
+  if (apps.length === 0){
+    showToast('Nessuna applicazione classificata Cluster D', true);
+    return;
+  }
+  if (typeof window.jspdf === 'undefined' || !window.jspdf){
+    showToast('Libreria PDF non caricata, riprova tra qualche secondo', true);
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 15;
+  let y = M;
+
+  // === PAGINA 1: Copertina + intro ===
+  // Header colorato
+  doc.setFillColor(20, 46, 90);
+  doc.rect(0, 0, W, 40, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text('REGISTRO SEMPLIFICATO DEI TRATTAMENTI', W/2, 18, {align:'center'});
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Applicazioni didattiche senza trattamento di dati personali (Cluster D)', W/2, 26, {align:'center'});
+  doc.text('ex art. 30 par. 5 GDPR', W/2, 32, {align:'center'});
+
+  y = 50;
+  doc.setTextColor(26, 31, 43);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+
+  // Box informazioni istituto
+  doc.setDrawColor(212, 217, 224);
+  doc.setFillColor(247, 245, 238);
+  doc.rect(M, y, W - 2*M, 30, 'FD');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Titolare del trattamento:', M + 3, y + 6);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Scuola Paritaria Sacra Famiglia, Orzinuovi (BS)', M + 50, y + 6);
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Responsabile tecnico:', M + 3, y + 12);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Andrea Cerioli — Animatore Digitale', M + 50, y + 12);
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Data documento:', M + 3, y + 18);
+  doc.setFont('helvetica', 'normal');
+  doc.text(new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}), M + 50, y + 18);
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Validità:', M + 3, y + 24);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Anno scolastico in corso, da rivedere annualmente', M + 50, y + 24);
+
+  y += 38;
+
+  // Premessa giuridica
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Premessa', M, y);
+  y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+  
+  const premessa = `Il presente registro semplificato documenta le applicazioni didattiche prodotte e/o pubblicate dall'istituto che, per architettura tecnica e modalità d'uso, non comportano alcun trattamento di dati personali identificativi degli studenti. Tali applicazioni sono caratterizzate da architettura "zero-backend" (single-page client-side, esecuzione interamente nel browser dello studente, assenza di server applicativo proprietario, assenza di trasmissione dati a sistemi esterni).
+
+Ai sensi dell'art. 30 par. 5 GDPR, l'obbligo di tenuta del Registro dei trattamenti completo non si applica quando il trattamento non è suscettibile di presentare un rischio per i diritti e le libertà degli interessati, è occasionale, e non riguarda categorie particolari di dati. Le applicazioni qui elencate rispondono a tutti e tre i criteri.
+
+Il presente documento ha funzione documentale di trasparenza e accountability ex art. 5.2 GDPR. Non sostituisce la valutazione caso per caso che il DPO o l'Autorità di controllo possano richiedere.`;
+
+  const lines1 = pdfDrawText(doc, premessa, M, y, W - 2*M, 4);
+  y += lines1 * 4 + 6;
+
+  // Statistiche
+  doc.setFillColor(228, 234, 243);
+  doc.rect(M, y, W - 2*M, 14, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(20, 46, 90);
+  doc.text(`Applicazioni Cluster D incluse nel registro: ${apps.length}`, M + 3, y + 6);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(74, 81, 96);
+  
+  // Conta per origine
+  const byOrigin = {};
+  apps.forEach(a => {
+    const o = a.origin || 'seed';
+    byOrigin[o] = (byOrigin[o] || 0) + 1;
+  });
+  let originText = 'Distribuzione: ';
+  Object.entries(byOrigin).forEach(([o, n], i) => {
+    if (i > 0) originText += ' · ';
+    const label = o === 'seed' ? 'inventario interno' :
+                  o === 'external' ? 'aggiunte manuali' :
+                  o === 'external-teacher' ? 'app di altri docenti' :
+                  o === 'imported-from-portal' ? 'importate da portale' : o;
+    originText += `${n} ${label}`;
+  });
+  doc.text(originText, M + 3, y + 11);
+
+  y += 20;
+
+  // === TABELLA delle app ===
+  // Colonne: # | Nome app | URL | Autore | Data
+  const colW = [10, 60, 75, 35, 0]; // somma uguale a CW
+  const headerY = y;
+  
+  doc.setFillColor(20, 46, 90);
+  doc.rect(M, y, W - 2*M, 7, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  let x = M + 2;
+  doc.text('#', x, y + 5); x += colW[0];
+  doc.text('Nome applicazione', x, y + 5); x += colW[1];
+  doc.text('URL', x, y + 5); x += colW[2];
+  doc.text('Autore', x, y + 5);
+  
+  y += 8;
+  doc.setTextColor(26, 31, 43);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+
+  let rowIndex = 1;
+  apps.forEach(a => {
+    // Calcolo altezza riga
+    const nameLines = doc.splitTextToSize(a.name || '(senza nome)', colW[1] - 2);
+    const urlText = (a.url || '').replace(/^https?:\/\//,'').replace(/\/$/, '');
+    const urlLines = doc.splitTextToSize(urlText, colW[2] - 2);
+    const author = a.author || (a.origin === 'external-teacher' ? 'Altro docente' : 'Animatore Digitale');
+    const authorLines = doc.splitTextToSize(author, colW[3] - 2);
+    const maxLines = Math.max(nameLines.length, urlLines.length, authorLines.length);
+    const rowH = Math.max(5, maxLines * 3.2 + 2);
+    
+    // Verifico spazio pagina
+    if (y + rowH > H - 20){
+      // Footer pagina + nuova pagina
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Registro Cluster D · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+      doc.addPage();
+      y = M;
+      // Ripeto header tabella
+      doc.setFillColor(20, 46, 90);
+      doc.rect(M, y, W - 2*M, 7, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      let x2 = M + 2;
+      doc.text('#', x2, y + 5); x2 += colW[0];
+      doc.text('Nome applicazione', x2, y + 5); x2 += colW[1];
+      doc.text('URL', x2, y + 5); x2 += colW[2];
+      doc.text('Autore', x2, y + 5);
+      y += 8;
+      doc.setTextColor(26, 31, 43);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+    }
+    
+    // Riga alternata
+    if (rowIndex % 2 === 0){
+      doc.setFillColor(247, 248, 250);
+      doc.rect(M, y, W - 2*M, rowH, 'F');
+    }
+    
+    let xx = M + 2;
+    doc.text(String(rowIndex), xx, y + 4); xx += colW[0];
+    nameLines.forEach((ln, i) => doc.text(ln, xx, y + 4 + i*3.2));
+    xx += colW[1];
+    urlLines.forEach((ln, i) => doc.text(ln, xx, y + 4 + i*3.2));
+    xx += colW[2];
+    authorLines.forEach((ln, i) => doc.text(ln, xx, y + 4 + i*3.2));
+    
+    // Linea separatrice
+    doc.setDrawColor(230, 232, 236);
+    doc.line(M, y + rowH, W - M, y + rowH);
+    
+    y += rowH;
+    rowIndex++;
+  });
+
+  y += 5;
+
+  // === SEZIONE FINALE: Motivazione comune + spazio firma ===
+  if (y > H - 80) { doc.addPage(); y = M; }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Motivazione comune della classificazione', M, y);
+  y += 7;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+  
+  const motivazione = `Tutte le applicazioni elencate nel presente registro condividono le seguenti caratteristiche tecniche, verificate dall'Animatore Digitale al momento della classificazione:
+
+• Architettura zero-backend: l'applicazione viene servita come file statico (HTML/CSS/JS) da hosting CDN (Vercel, Neocities). Non esiste server applicativo proprietario, non esiste database, non esiste sistema di autenticazione.
+
+• Esecuzione client-side: l'intera logica applicativa viene eseguita nel browser dello studente. I dati eventualmente inseriti restano sulla macchina locale (memoria del browser, localStorage) e non vengono trasmessi.
+
+• Assenza di trasmissione dati: l'applicazione non effettua chiamate AJAX/fetch verso endpoint che raccolgono dati personali. L'unica comunicazione è il caricamento iniziale dei file statici e di eventuali risorse pubbliche (font Google Fonts, librerie CDN come Chart.js o jsPDF).
+
+• Assenza di tracking: nessuna applicazione integra Google Analytics, pixel di tracciamento, cookie di profilazione, fingerprinting del browser.
+
+• Assenza di registrazione utente: nessuna richiesta di nome, email, account, identificativo personale.
+
+Trattandosi di applicazioni che non integrano alcuna forma di trattamento dei dati personali, non si configurano i presupposti per l'applicazione del GDPR ai sensi degli artt. 2 e 4. Il presente registro è tenuto a fini documentali e di accountability proattiva.`;
+
+  const lines2 = pdfDrawText(doc, motivazione, M, y, W - 2*M, 4);
+  y += lines2 * 4 + 10;
+
+  // Spazio firma
+  if (y > H - 50) { doc.addPage(); y = M + 10; }
+
+  doc.setDrawColor(212, 217, 224);
+  doc.line(M, y, W - M, y);
+  y += 8;
+  
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Sottoscrizioni', M, y);
+  y += 8;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+
+  // Due colonne firme
+  const colFirmaW = (W - 2*M - 10) / 2;
+  
+  doc.text("L'Animatore Digitale", M, y);
+  doc.text("Per presa visione — il DPO", M + colFirmaW + 10, y);
+  y += 14;
+  doc.line(M, y, M + colFirmaW, y);
+  doc.line(M + colFirmaW + 10, y, W - M, y);
+  y += 4;
+  doc.setFontSize(8);
+  doc.setTextColor(74, 81, 96);
+  doc.text('Andrea Cerioli', M, y);
+  doc.text('(nome e firma)', M + colFirmaW + 10, y);
+
+  // Footer ultima pagina
+  doc.setFontSize(7);
+  doc.setTextColor(150, 150, 150);
+  doc.text(`Registro Cluster D · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+
+  const filename = `Registro_Semplificato_ClusterD_${new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(filename);
+  showToast(`Registro semplificato generato: ${apps.length} app · ${filename}`);
+}
+
+
+// =========================================================
+// DPIA DI CLUSTER (A, B, C, E, F)
+// Genera un PDF con copertina + lista applicazioni del cluster
+// + motivazione cluster (da CLUSTER_RATIONALE_TEMPLATES)
+// + spazio firma
+// =========================================================
+function generateClusterDPIA(clusterCode){
+  const apps = getInventoryForCluster(clusterCode);
+  if (apps.length === 0){
+    showToast(`Nessuna applicazione classificata Cluster ${clusterCode}`, true);
+    return;
+  }
+  if (typeof window.jspdf === 'undefined' || !window.jspdf){
+    showToast('Libreria PDF non caricata, riprova tra qualche secondo', true);
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 15;
+  let y = M;
+
+  const cluster = CLUSTERS[clusterCode];
+  const rationale = (typeof CLUSTER_RATIONALE_TEMPLATES !== 'undefined') ? CLUSTER_RATIONALE_TEMPLATES[clusterCode] : null;
+  
+  // Colore in base a cluster
+  const clusterColors = {
+    A: [139, 74, 60], B: [184, 134, 11], C: [30, 74, 138],
+    D: [107, 114, 128], E: [74, 81, 96], F: [44, 95, 141]
+  };
+  const cc = clusterColors[clusterCode] || [30, 74, 138];
+
+  // Header colorato
+  doc.setFillColor(cc[0], cc[1], cc[2]);
+  doc.rect(0, 0, W, 45, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text(`DPIA DI CLUSTER ${clusterCode}`, W/2, 18, {align:'center'});
+  doc.setFontSize(13);
+  doc.setFont('helvetica', 'normal');
+  doc.text(cluster.name, W/2, 27, {align:'center'});
+  doc.setFontSize(9);
+  doc.text(`Rischio: ${cluster.risk}${cluster.fria ? ' · FRIA obbligatoria' : ''}`, W/2, 34, {align:'center'});
+  doc.text(`${apps.length} applicazioni classificate`, W/2, 40, {align:'center'});
+
+  y = 55;
+  doc.setTextColor(26, 31, 43);
+  doc.setFontSize(10);
+
+  // Box info istituto
+  doc.setDrawColor(212, 217, 224);
+  doc.setFillColor(247, 245, 238);
+  doc.rect(M, y, W - 2*M, 24, 'FD');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('Titolare:', M + 3, y + 6);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Scuola Paritaria Sacra Famiglia, Orzinuovi (BS)', M + 25, y + 6);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Responsabile:', M + 3, y + 12);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Andrea Cerioli — Animatore Digitale', M + 25, y + 12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Data:', M + 3, y + 18);
+  doc.setFont('helvetica', 'normal');
+  doc.text(new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}), M + 25, y + 18);
+  
+  y += 32;
+
+  // Descrizione cluster
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Descrizione del cluster', M, y);
+  y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+  const descLines = pdfDrawText(doc, cluster.desc, M, y, W - 2*M, 4);
+  y += descLines * 4 + 6;
+
+  // === TABELLA app del cluster ===
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 46, 90);
+  doc.text(`Applicazioni assegnate al Cluster ${clusterCode} (${apps.length})`, M, y);
+  y += 6;
+
+  doc.setFillColor(cc[0], cc[1], cc[2]);
+  doc.rect(M, y, W - 2*M, 7, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.text('#', M + 2, y + 5);
+  doc.text('Applicazione', M + 12, y + 5);
+  doc.text('URL', M + 80, y + 5);
+  doc.text('Autore', M + 145, y + 5);
+  y += 8;
+  doc.setTextColor(26, 31, 43);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+
+  apps.forEach((a, idx) => {
+    const nameLines = doc.splitTextToSize(a.name || '(senza nome)', 65);
+    const urlText = (a.url || '').replace(/^https?:\/\//,'').replace(/\/$/, '');
+    const urlLines = doc.splitTextToSize(urlText, 60);
+    const author = a.author || (a.origin === 'external-teacher' ? 'Altro docente' : 'Animatore Digitale');
+    const maxLines = Math.max(nameLines.length, urlLines.length, 1);
+    const rowH = Math.max(5, maxLines * 3.2 + 2);
+    
+    if (y + rowH > H - 20){
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`DPIA Cluster ${clusterCode} · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+      doc.addPage();
+      y = M;
+    }
+    
+    if ((idx+1) % 2 === 0){
+      doc.setFillColor(247, 248, 250);
+      doc.rect(M, y, W - 2*M, rowH, 'F');
+    }
+    doc.setTextColor(26, 31, 43);
+    doc.text(String(idx+1), M + 2, y + 4);
+    nameLines.forEach((ln, i) => doc.text(ln, M + 12, y + 4 + i*3.2));
+    urlLines.forEach((ln, i) => doc.text(ln, M + 80, y + 4 + i*3.2));
+    doc.text(author, M + 145, y + 4);
+    
+    y += rowH;
+  });
+  
+  y += 8;
+
+  // === Sezioni rationale (se disponibili) ===
+  if (rationale){
+    if (y > H - 60) { doc.addPage(); y = M; }
+    
+    const sections = [
+      ['Architettura tecnica', rationale.architecture],
+      ['Trattamento dati', rationale.dataProcessing],
+      ['Motivazione classificazione', rationale.rationale],
+    ];
+    
+    sections.forEach(([title, text]) => {
+      if (y > H - 30) { doc.addPage(); y = M; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(20, 46, 90);
+      doc.text(title, M, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26, 31, 43);
+      const ll = pdfDrawText(doc, text, M, y, W - 2*M, 4);
+      y += ll * 4 + 5;
+    });
+
+    if (rationale.residualRisks && rationale.residualRisks.length){
+      if (y > H - 40) { doc.addPage(); y = M; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(20, 46, 90);
+      doc.text('Rischi residui', M, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26, 31, 43);
+      rationale.residualRisks.forEach(r => {
+        if (y > H - 15) { doc.addPage(); y = M; }
+        const lines = doc.splitTextToSize('• ' + r, W - 2*M - 5);
+        lines.forEach(ln => { doc.text(ln, M + 2, y); y += 4; });
+      });
+      y += 3;
+    }
+
+    if (rationale.mitigations && rationale.mitigations.length){
+      if (y > H - 40) { doc.addPage(); y = M; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(20, 46, 90);
+      doc.text('Misure di mitigazione', M, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26, 31, 43);
+      rationale.mitigations.forEach(r => {
+        if (y > H - 15) { doc.addPage(); y = M; }
+        const lines = doc.splitTextToSize('• ' + r, W - 2*M - 5);
+        lines.forEach(ln => { doc.text(ln, M + 2, y); y += 4; });
+      });
+      y += 3;
+    }
+
+    if (rationale.legalRefs && rationale.legalRefs.length){
+      if (y > H - 30) { doc.addPage(); y = M; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(20, 46, 90);
+      doc.text('Riferimenti normativi', M, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(26, 31, 43);
+      doc.text(rationale.legalRefs.join(' · '), M, y);
+      y += 8;
+    }
+  }
+
+  // === Spazio firma DPO ===
+  if (y > H - 50) { doc.addPage(); y = M + 10; }
+  
+  doc.setDrawColor(212, 217, 224);
+  doc.line(M, y, W - M, y);
+  y += 8;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Sottoscrizioni', M, y);
+  y += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+  const colFirmaW = (W - 2*M - 10) / 2;
+  doc.text("L'Animatore Digitale", M, y);
+  doc.text("Per presa visione — il DPO", M + colFirmaW + 10, y);
+  y += 14;
+  doc.line(M, y, M + colFirmaW, y);
+  doc.line(M + colFirmaW + 10, y, W - M, y);
+  y += 4;
+  doc.setFontSize(8);
+  doc.setTextColor(74, 81, 96);
+  doc.text('Andrea Cerioli', M, y);
+  doc.text('(nome e firma)', M + colFirmaW + 10, y);
+
+  // Footer
+  doc.setFontSize(7);
+  doc.setTextColor(150, 150, 150);
+  doc.text(`DPIA Cluster ${clusterCode} · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+
+  const filename = `DPIA_Cluster_${clusterCode}_${new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(filename);
+  showToast(`DPIA Cluster ${clusterCode} generato: ${apps.length} app · ${filename}`);
+}
+
+
 function filterBySource(src, btn){
   app.filterSource = src;
   // Resetto solo i bottoni del PRIMO toggle (source), non quelli del portale
