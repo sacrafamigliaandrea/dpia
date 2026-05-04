@@ -534,6 +534,48 @@ button{font-family:inherit}
 .inv-gen-section{margin-top:24px;padding:18px;background:var(--blue-faint);border:1px solid var(--blue);border-radius:2px}
 .inv-gen-head{font-size:15px;font-weight:600;color:var(--blue-dark);margin-bottom:8px;font-family:'IBM Plex Sans Condensed',sans-serif}
 .inv-gen-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;line-height:1.5}
+
+/* === Legenda Cluster === */
+.cluster-legend-panel{margin-top:24px;background:var(--paper);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.cluster-legend-panel[open] .cluster-legend-summary{border-bottom:1px solid var(--line)}
+.cluster-legend-summary{padding:12px 18px;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--cream);user-select:none}
+.cluster-legend-summary::-webkit-details-marker{display:none}
+.cluster-legend-summary::before{content:'›';font-size:18px;color:var(--blue-dark);transition:transform .15s;display:inline-block;margin-right:8px;font-weight:700}
+.cluster-legend-panel[open] .cluster-legend-summary::before{transform:rotate(90deg)}
+.cluster-legend-title{font-size:14px;font-weight:600;color:var(--blue-dark);font-family:'IBM Plex Sans Condensed',sans-serif;flex:1}
+.cluster-legend-stats{font-size:11.5px;color:var(--ink-soft);font-weight:400}
+.cluster-legend-body{padding:16px 18px}
+.cluster-legend-intro{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px}
+.cluster-legend-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.cluster-legend-card{padding:12px;background:var(--cream);border:1px solid var(--line);border-radius:2px;border-left-width:3px}
+.cluster-legend-card.cluster-A{border-left-color:#8B4A3C}
+.cluster-legend-card.cluster-B{border-left-color:#B8860B}
+.cluster-legend-card.cluster-C{border-left-color:#1E4A8A}
+.cluster-legend-card.cluster-D{border-left-color:#6B7280}
+.cluster-legend-card.cluster-E{border-left-color:#4A5160}
+.cluster-legend-card.cluster-F{border-left-color:#2C5F8D}
+.cluster-legend-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cluster-legend-badge{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:2px;font-weight:700;font-size:13px;color:#fff}
+.cluster-legend-badge.cluster-A{background:#8B4A3C}
+.cluster-legend-badge.cluster-B{background:#B8860B}
+.cluster-legend-badge.cluster-C{background:#1E4A8A}
+.cluster-legend-badge.cluster-D{background:#6B7280}
+.cluster-legend-badge.cluster-E{background:#4A5160}
+.cluster-legend-badge.cluster-F{background:#2C5F8D}
+.cluster-legend-card-name{font-size:13px;font-weight:600;color:var(--ink);font-family:'IBM Plex Sans Condensed',sans-serif;flex:1}
+.cluster-legend-card-risk{font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding:2px 7px;border-radius:2px;background:var(--paper);color:var(--ink-soft);border:1px solid var(--line)}
+.cluster-legend-card-risk.risk-high{background:#FBE6E1;color:#8B2920;border-color:#E8B5AB}
+.cluster-legend-card-risk.risk-mid-high{background:#FBF3DC;color:#8B5C00;border-color:#E8CC85}
+.cluster-legend-card-risk.risk-mid{background:#E4EAF3;color:#1E4A8A;border-color:#B5C5DB}
+.cluster-legend-card-risk.risk-low-mid{background:#F0F1F4;color:#4A5160;border-color:#D4D7DD}
+.cluster-legend-card-risk.risk-low{background:#E8EFF6;color:#2C5F8D;border-color:#BACDDF}
+.cluster-legend-card-risk.risk-min{background:#F5F6F8;color:#6B7280;border-color:#DDE1E7}
+.cluster-legend-card-desc{font-size:11.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:8px}
+.cluster-legend-card-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:var(--ink-soft);padding-top:8px;border-top:1px dashed var(--line)}
+.cluster-legend-card-count{font-weight:600;color:var(--blue-dark)}
+.cluster-legend-card-fria{padding:2px 7px;background:#FBE6E1;color:#8B2920;border-radius:2px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.cluster-legend-footer{margin-top:14px;padding:10px 12px;background:var(--cream);border-radius:2px;font-size:11px;color:var(--ink-soft);line-height:1.5}
+
 .inv-gen-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
 .inv-gen-card{padding:14px;background:var(--paper);border:1px solid var(--line);border-radius:2px;display:flex;flex-direction:column;gap:8px}
 .inv-gen-card h4{font-size:13.5px;font-weight:600;color:var(--ink);font-family:'IBM Plex Sans Condensed',sans-serif;display:flex;align-items:center;gap:8px}
@@ -949,6 +991,20 @@ select.add-input{cursor:pointer}
       <tbody id="invTableBody"></tbody>
     </table>
   </div>
+
+  <details class="cluster-legend-panel" open>
+    <summary class="cluster-legend-summary">
+      <span class="cluster-legend-title">Legenda cluster — tassonomia DPIA Studio</span>
+      <span class="cluster-legend-stats" id="clusterLegendStats"></span>
+    </summary>
+    <div class="cluster-legend-body">
+      <div class="cluster-legend-intro">Schema di classificazione delle applicazioni in 6 cluster, allineato al GDPR (art. 35 DPIA) e al Regolamento UE 2024/1689 (AI Act). Ogni applicazione dell'inventario è assegnata a un cluster sulla base dell'architettura tecnica e del trattamento dei dati effettuato.</div>
+      <div class="cluster-legend-grid" id="clusterLegendGrid"></div>
+      <div class="cluster-legend-footer">
+        <strong>Riferimenti normativi:</strong> GDPR artt. 5, 6, 30, 35 · AI Act artt. 26-27 e 50 · Allegato III AI Act · D.Lgs. 196/2003 e 101/2018 · L. 92/2019 (Educazione Civica) · Linee Guida MIM 2025
+      </div>
+    </div>
+  </details>
 
   <div class="inv-gen-section">
     <div class="inv-gen-head">Genera documenti di conformità</div>
@@ -6499,6 +6555,7 @@ function renderInventory(){
 
   renderInventoryStats();
   renderInventoryGenCards();
+  renderClusterLegend();
 
   const filter = document.getElementById('invFilter')?.value || 'all';
   const sort = document.getElementById('invSort')?.value || 'cat';
@@ -6653,6 +6710,55 @@ function renderInventoryGenCards(){
       <p>${escapeHtml(c.desc)}</p>
       <p style="font-size:11px;color:var(--blue-dark);font-weight:600">${n} applicazion${n===1?'e':'i'} assegnate</p>
       <button ${enabled?'':'disabled'} onclick="${action}">${c.action}</button>
+    </div>`;
+  }).join('');
+}
+
+// Mappa rischio → classe CSS per il badge
+function _riskClassFor(risk){
+  if (risk === 'ALTO') return 'risk-high';
+  if (risk === 'ALTO-MEDIO') return 'risk-mid-high';
+  if (risk === 'MEDIO') return 'risk-mid';
+  if (risk === 'BASSO-MEDIO') return 'risk-low-mid';
+  if (risk === 'BASSO') return 'risk-low';
+  if (risk === 'MINIMO') return 'risk-min';
+  return 'risk-min';
+}
+
+function renderClusterLegend(){
+  const grid = document.getElementById('clusterLegendGrid');
+  const statsLabel = document.getElementById('clusterLegendStats');
+  if (!grid) return;
+
+  // Conta app per cluster (escludendo terzi)
+  const counts = {A:0, B:0, C:0, D:0, E:0, F:0};
+  app.inventory.forEach(a => {
+    if (a.cluster && a.source !== 'thirdparty') counts[a.cluster]++;
+  });
+  const totalInternal = Object.values(counts).reduce((s,n) => s+n, 0);
+  const populatedClusters = Object.values(counts).filter(n => n>0).length;
+
+  if (statsLabel){
+    statsLabel.textContent = `${totalInternal} app interne classificate · ${populatedClusters}/6 cluster popolati`;
+  }
+
+  const order = ['A', 'B', 'C', 'D', 'E', 'F'];
+  grid.innerHTML = order.map(code => {
+    const cl = CLUSTERS[code];
+    if (!cl) return '';
+    const n = counts[code] || 0;
+    const riskClass = _riskClassFor(cl.risk);
+    return `<div class="cluster-legend-card cluster-${code}">
+      <div class="cluster-legend-card-head">
+        <span class="cluster-legend-badge cluster-${code}">${code}</span>
+        <span class="cluster-legend-card-name">${escapeHtml(cl.name)}</span>
+        <span class="cluster-legend-card-risk ${riskClass}">${escapeHtml(cl.risk)}</span>
+      </div>
+      <div class="cluster-legend-card-desc">${escapeHtml(cl.desc)}</div>
+      <div class="cluster-legend-card-meta">
+        <span class="cluster-legend-card-count">${n} ${n===1?'applicazione':'applicazioni'}</span>
+        ${cl.fria ? '<span class="cluster-legend-card-fria">FRIA obbligatoria</span>' : '<span style="font-size:10px">DPIA semplificata</span>'}
+      </div>
     </div>`;
   }).join('');
 }
