@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --blue:#1E4A8A;
@@ -953,6 +954,17 @@ select.add-input{cursor:pointer}
     <div class="inv-gen-head">Genera documenti di conformità</div>
     <div class="inv-gen-sub">A valle della classificazione, produci i documenti di governance IA per l'intero ecosistema. Ogni cluster ha un pulsante dedicato: per A, B, C, E crea una <strong>DPIA di cluster</strong> con la lista applicazioni pre-popolata (apri il wizard e la compili come una DPIA normale); per D, crea un <strong>Registro semplificato ex art. 30 GDPR</strong> — un unico PDF tabellare 2-3 pagine con tutte le app senza dati personali.</div>
     <div class="inv-gen-grid" id="invGenGrid"></div>
+  </div>
+
+  <div class="inv-gen-section" style="margin-top:14px;border-top:2px solid var(--line);padding-top:14px">
+    <div class="inv-gen-head">Registro dei trattamenti art. 30 GDPR</div>
+    <div class="inv-gen-sub">Esporta il registro istituzionale dei trattamenti in formato Excel, secondo lo schema standard a 10 colonne (Titolare, Denominazione, Finalità, Base giuridica, Categorie dati, Interessati, Destinatari, Trasferimenti extra UE, Retention, Misure sicurezza). Il registro contiene una riga per ciascun cluster effettivamente popolato dall'inventario corrente, con dati pre-compilati che riflettono la realtà dell'ecosistema (non template generici).</div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap">
+      <button class="btn primary" onclick="previewRegistroArt30()" id="btnPreviewReg30">Anteprima Registro</button>
+      <button class="btn secondary" onclick="generateRegistroArt30XLSX()" id="btnExportReg30">Esporta Excel</button>
+      <span id="reg30Stats" style="font-size:13px;color:var(--ink-soft);margin-left:auto"></span>
+    </div>
+    <div id="reg30Preview" style="display:none;margin-top:14px"></div>
   </div>
 </div>
 
@@ -6195,6 +6207,268 @@ function generateClusterDPIA(clusterCode){
   const filename = `DPIA_Cluster_${clusterCode}_${new Date().toISOString().slice(0, 10)}.pdf`;
   doc.save(filename);
   showToast(`DPIA Cluster ${clusterCode} generato: ${apps.length} app · ${filename}`);
+}
+
+
+// ====================================================================
+// REGISTRO TRATTAMENTI ART. 30 GDPR (export XLSX)
+// ====================================================================
+
+// Template per ogni cluster — popolato automaticamente con conteggi reali
+function buildRegistroArt30Rows(){
+  const stats = {A:0, B:0, C:0, D:0, E:0, F:0};
+  app.inventory.forEach(a => {
+    if (a.cluster && a.source !== 'thirdparty') stats[a.cluster] = (stats[a.cluster]||0) + 1;
+  });
+
+  const titolare = "Scuola Paritaria Sacra Famiglia, Orzinuovi (BS)";
+  const rows = [];
+
+  // Cluster D — App didattiche senza dati personali (la maggioranza)
+  if (stats.D > 0){
+    rows.push({
+      cluster: 'D',
+      titolare: titolare,
+      denominazione: `Web app didattiche senza trattamento di dati personali (${stats.D} applicazioni)`,
+      finalita: "Erogazione di attività didattiche interattive nell'ambito dei percorsi curricolari ed extracurricolari. Le applicazioni sono utilizzate dagli studenti durante l'attività in classe o in laboratorio, sotto supervisione del docente.",
+      baseGiuridica: "Art. 6.1.e GDPR (esecuzione di compito di interesse pubblico). Funzione docente ex art. 33 Cost. e art. 395 D.Lgs. 297/1994. L. 92/2019 (Educazione Civica).",
+      categorieDati: "Nessun dato personale identificativo raccolto. Architettura zero-backend: l'applicazione viene servita come file statico, esegue interamente nel browser dello studente, non trasmette dati a server proprietari, non utilizza cookie di profilazione, non registra utenti.",
+      interessati: "Non applicabile (assenza di trattamento di dati personali identificativi)",
+      destinatari: "Nessuno. Hosting tramite CDN pubblica (Vercel, Neocities) per la sola distribuzione dei file statici.",
+      trasferimentiExtraUE: "Possibili in fase di erogazione tramite CDN (server edge globali Vercel/Cloudflare/Fastly). Nessun trasferimento di dati personali, solo richiesta dei file statici dell'applicazione.",
+      retention: "Non applicabile (nessun dato raccolto). Le applicazioni stesse restano pubblicate per la durata del progetto didattico.",
+      misureSicurezza: "HTTPS end-to-end. Architettura senza backend proprietario. Bollino di classificazione DPIA pubblicato sui portali della scuola con descrizione del cluster. Inventario consultabile e aggiornabile tramite DPIA Studio."
+    });
+  }
+
+  // Cluster E — Raccolta dati studenti (sondaggi, quiz)
+  if (stats.E > 0){
+    rows.push({
+      cluster: 'E',
+      titolare: titolare,
+      denominazione: `Web app per raccolta strutturata di opinioni e autovalutazioni studenti (${stats.E} applicazioni)`,
+      finalita: "Raccolta di opinioni, autovalutazioni e risposte degli studenti a sondaggi e quiz didattici, nell'ambito dei percorsi di Educazione Civica e cittadinanza digitale. Restituzione aggregata alla classe e indicazione orientativa al docente per la programmazione didattica.",
+      baseGiuridica: "Art. 6.1.e GDPR (compito di interesse pubblico — funzione didattica). L. 92/2019 (Educazione Civica). Art. 33 Cost. (libertà di insegnamento). Non si applica art. 8 GDPR perché non si tratta di servizi della società dell'informazione offerti direttamente al minore.",
+      categorieDati: "Risposte chiuse codificate numericamente (1-3 o 1-10), classe di appartenenza, genere autodichiarato, timestamp di compilazione. Eventuali campi di testo libero a tema neutro a fine questionario. Nessun nome o cognome raccolto. Pseudonimizzazione robusta.",
+      interessati: "Studenti della scuola secondaria di primo grado partecipanti alle attività didattiche specifiche.",
+      destinatari: "Animatore Digitale (responsabile del trattamento). Nessuna comunicazione ad altri soggetti interni o esterni alla scuola in forma individuale. Restituzioni alla classe esclusivamente in forma aggregata.",
+      trasferimentiExtraUE: "Possibili tramite Google Workspace for Education (server EU principali, fallback US con SCC e adeguate garanzie ex art. 46 GDPR). DPA Google Workspace sottoscritto a livello istituzionale.",
+      retention: "Cancellazione programmata entro la fine dell'anno scolastico in cui i dati sono stati raccolti.",
+      misureSicurezza: "HTTPS end-to-end. Storage su Google Sheets di account istituzionale @sacrafamiglia.education. Accesso protetto da autenticazione a doppio fattore (2FA). Pseudonimizzazione dei record. Restituzione aggregata. Architettura proporzionata al rischio (parere WP216 sulla pseudonimizzazione)."
+    });
+  }
+
+  // Cluster C — Chatbot / IA generativa
+  if (stats.C > 0){
+    rows.push({
+      cluster: 'C',
+      titolare: titolare,
+      denominazione: `Web app con funzionalità di chatbot o IA generativa per supporto didattico (${stats.C} applicazioni)`,
+      finalita: "Supporto didattico tramite interazione conversazionale con modelli di intelligenza artificiale generativa, nell'ambito di attività progettate e supervisionate dal docente. Sviluppo di competenze critiche degli studenti rispetto all'IA generativa.",
+      baseGiuridica: "Art. 6.1.e GDPR (compito di interesse pubblico). Art. 50 AI Act (Regolamento UE 2024/1689) per gli obblighi di trasparenza. DPA del fornitore del modello sottostante.",
+      categorieDati: "Input testuali liberi forniti dagli studenti durante l'interazione. Possibili informazioni autodichiarate dallo studente nell'ambito del prompt. Nessun nome utente o credenziale richiesta dall'applicazione locale.",
+      interessati: "Studenti partecipanti alle attività didattiche specifiche, sotto supervisione docente.",
+      destinatari: "Fornitore del modello LLM (es. OpenAI, Anthropic, Google) tramite API ufficiale, in qualità di responsabile del trattamento ex art. 28 GDPR sulla base del DPA sottoscritto.",
+      trasferimentiExtraUE: "Sì, verso fornitori di modelli LLM con sede principalmente negli Stati Uniti. Garantiti tramite Standard Contractual Clauses (SCC) ex art. 46 GDPR e relativi DPA.",
+      retention: "Sessione conversazionale: nessuna persistenza locale oltre la sessione del browser. Storage lato fornitore LLM: secondo le politiche di retention del DPA sottoscritto (tipicamente 30 giorni per i log API).",
+      misureSicurezza: "HTTPS end-to-end. Uso esclusivamente in laboratorio sotto supervisione del docente. Informativa esplicita agli studenti sull'interazione con IA (obbligo art. 50 AI Act). Linee guida specifiche del docente sui prompt da non condividere. Nessuna trasmissione di dati identificativi nei prompt."
+    });
+  }
+
+  // Cluster F — Strumenti professionali docenti
+  if (stats.F > 0){
+    rows.push({
+      cluster: 'F',
+      titolare: titolare,
+      denominazione: `Strumenti professionali ad accesso riservato docenti (${stats.F} applicazioni)`,
+      finalita: "Supporto all'attività professionale del docente per gestione classi, valutazioni, programmazione, registri personali, e analoghe funzioni che rientrano nell'esercizio ordinario della funzione docente.",
+      baseGiuridica: "Art. 6.1.e GDPR (compito di interesse pubblico — funzione docente). Art. 6.1.c GDPR per i trattamenti che rispondono a obblighi legali (registro elettronico, valutazioni). Art. 33 Cost. e art. 395 D.Lgs. 297/1994.",
+      categorieDati: "Dati inseriti dai docenti nell'esercizio della loro funzione professionale: nominativi studenti, valutazioni, annotazioni didattiche, dati di programmazione. Categoria analoga al registro elettronico.",
+      interessati: "Studenti dell'istituto (oggetto della valutazione e annotazione). Docenti utilizzatori (autori del trattamento).",
+      destinatari: "Docente titolare del trattamento. Eventualmente Dirigenza per finalità istituzionali specifiche, secondo le procedure interne.",
+      trasferimentiExtraUE: "Possibili tramite Google Workspace for Education se l'applicazione vi si appoggia (SCC + DPA). In caso di applicazioni fully client-side, nessun trasferimento.",
+      retention: "Anno scolastico per i dati di programmazione. Conservazione decennale per i dati che alimentano valutazioni formali, secondo prassi del registro elettronico istituzionale.",
+      misureSicurezza: "Autenticazione obbligatoria con credenziali docente. HTTPS end-to-end. Logging accessi tramite Google Workspace. Accesso ristretto al solo docente titolare. Le applicazioni sono affiancate al registro elettronico Mastercom istituzionale, non lo sostituiscono."
+    });
+  }
+
+  // Cluster A — Profilazione studenti (solo se popolato)
+  if (stats.A > 0){
+    rows.push({
+      cluster: 'A',
+      titolare: titolare,
+      denominazione: `Sistemi di profilazione studenti (${stats.A} applicazioni)`,
+      finalita: "Costruzione di profili individuali persistenti di studenti per finalità di valutazione, orientamento o personalizzazione didattica. Trattamento ad ALTO rischio.",
+      baseGiuridica: "Art. 6.1.e GDPR + DPIA completa ex art. 35 + FRIA ex AI Act art. 26-27 e Allegato III.",
+      categorieDati: "Dati comportamentali, valutativi, di apprendimento aggregati nel tempo. Categoria particolare se include indicatori di salute, disabilità, status socio-economico.",
+      interessati: "Studenti dell'istituto.",
+      destinatari: "Da definire caso per caso. Soggetti interni autorizzati alla valutazione formale.",
+      trasferimentiExtraUE: "Da valutare caso per caso. Sconsigliato per il rischio.",
+      retention: "Limitata al ciclo scolastico, con cancellazione obbligatoria al termine.",
+      misureSicurezza: "DPIA completa, FRIA, supervisione umana costante, possibilità di contestazione, cancellazione programmata, accesso ristretto."
+    });
+  }
+
+  // Cluster B — Monitoraggio comportamentale (solo se popolato)
+  if (stats.B > 0){
+    rows.push({
+      cluster: 'B',
+      titolare: titolare,
+      denominazione: `Sistemi di monitoraggio comportamentale (${stats.B} applicazioni)`,
+      finalita: "Raccolta in tempo reale di metriche comportamentali (click, tempi, pattern) durante l'uso dell'applicazione. Rischio ALTO se in contesti valutativi.",
+      baseGiuridica: "Art. 6.1.e GDPR + DPIA + FRIA. Trasparenza obbligatoria: studente informato del monitoraggio attivo.",
+      categorieDati: "Metriche comportamentali in tempo reale. Possibili indicatori di stato emotivo o di attenzione.",
+      interessati: "Studenti durante l'uso dell'applicazione.",
+      destinatari: "Docente supervisore. Nessuna trasmissione esterna se architettura in-app (es. SalaStudio).",
+      trasferimentiExtraUE: "Nessuno per architetture in-app. Da valutare per varianti server-side.",
+      retention: "Sessione di utilizzo. Nessuna persistenza oltre la sessione per architetture in-app.",
+      misureSicurezza: "Trasparenza preventiva, uso solo formativo (mai sommativo), dati locali non trasmessi, supervisione docente."
+    });
+  }
+
+  return rows;
+}
+
+// Anteprima testuale del registro nella pagina
+function previewRegistroArt30(){
+  const rows = buildRegistroArt30Rows();
+  const target = document.getElementById('reg30Preview');
+  const stats = document.getElementById('reg30Stats');
+  
+  if (rows.length === 0){
+    target.innerHTML = '<div style="padding:14px;background:#FBF3DC;border-left:3px solid #B8860B;border-radius:4px;font-size:13px">Nessuna applicazione classificata. Classifica almeno una app prima di generare il registro.</div>';
+    target.style.display = 'block';
+    return;
+  }
+
+  const fields = [
+    ['titolare', 'Titolare'],
+    ['denominazione', 'Denominazione trattamento'],
+    ['finalita', 'Finalità'],
+    ['baseGiuridica', 'Base giuridica'],
+    ['categorieDati', 'Categorie dati'],
+    ['interessati', 'Interessati'],
+    ['destinatari', 'Destinatari'],
+    ['trasferimentiExtraUE', 'Trasferimenti extra UE'],
+    ['retention', 'Retention'],
+    ['misureSicurezza', 'Misure sicurezza']
+  ];
+
+  let html = '<div style="font-size:13px;color:var(--ink);margin-bottom:10px"><strong>Anteprima del registro:</strong> ' + rows.length + ' righe (una per cluster popolato). Verificare i contenuti prima dell\'export.</div>';
+  
+  rows.forEach((r, i) => {
+    html += `<details style="margin-bottom:8px;border:1px solid var(--line);border-radius:6px;background:#fff" ${i===0?'open':''}>`;
+    html += `<summary style="padding:10px 14px;cursor:pointer;font-weight:600;color:var(--blue-dark);background:#f7f5ee;border-radius:6px 6px 0 0">Riga ${i+1} — Cluster ${r.cluster}: ${r.denominazione}</summary>`;
+    html += '<div style="padding:10px 14px">';
+    fields.forEach(([key, label]) => {
+      html += `<div style="margin-bottom:8px"><strong style="color:var(--blue-dark);font-size:12px">${label}:</strong><br><span style="font-size:13px;color:var(--ink-soft)">${r[key]}</span></div>`;
+    });
+    html += '</div></details>';
+  });
+
+  target.innerHTML = html;
+  target.style.display = 'block';
+  stats.textContent = `${rows.length} righe pronte per l'export`;
+}
+
+// Export XLSX vero e proprio
+function generateRegistroArt30XLSX(){
+  if (typeof XLSX === 'undefined'){
+    showToast('Libreria XLSX non caricata, riprova tra qualche secondo', true);
+    return;
+  }
+  
+  const rows = buildRegistroArt30Rows();
+  if (rows.length === 0){
+    showToast('Nessuna applicazione classificata. Classifica almeno una app prima di esportare.', true);
+    return;
+  }
+
+  // Costruisco array di array nello stesso ordine del template DPO
+  const data = [
+    ['Titolare', 'Denominazione trattamento', 'Finalità', 'Base giuridica', 'Categorie dati', 'Interessati', 'Destinatari', 'Trasferimenti extra UE', 'Retention', 'Misure sicurezza']
+  ];
+  rows.forEach(r => {
+    data.push([
+      r.titolare, r.denominazione, r.finalita, r.baseGiuridica,
+      r.categorieDati, r.interessati, r.destinatari,
+      r.trasferimentiExtraUE, r.retention, r.misureSicurezza
+    ]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  
+  // Larghezza colonne ragionevoli
+  ws['!cols'] = [
+    {wch:30}, {wch:45}, {wch:50}, {wch:35},
+    {wch:50}, {wch:25}, {wch:30}, {wch:40},
+    {wch:30}, {wch:50}
+  ];
+
+  // Altezza riga 1 (header) maggiore
+  ws['!rows'] = [{hpt:24}];
+
+  // Stile celle: header in blu istituzionale
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let C = range.s.c; C <= range.e.c; C++){
+    const cellAddr = XLSX.utils.encode_cell({r:0, c:C});
+    if (ws[cellAddr]){
+      ws[cellAddr].s = {
+        font: {bold:true, color:{rgb:'FFFFFF'}, sz:11},
+        fill: {fgColor:{rgb:'1E4A8A'}},
+        alignment: {vertical:'center', horizontal:'left', wrapText:true}
+      };
+    }
+  }
+  // Wrap text per tutte le altre celle
+  for (let R = 1; R <= range.e.r; R++){
+    for (let C = range.s.c; C <= range.e.c; C++){
+      const cellAddr = XLSX.utils.encode_cell({r:R, c:C});
+      if (ws[cellAddr]){
+        ws[cellAddr].s = {
+          alignment: {vertical:'top', horizontal:'left', wrapText:true},
+          font: {sz:10}
+        };
+      }
+    }
+  }
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Registro_Trattamenti_Art30');
+
+  // Sheet aggiuntivo: nota metodologica
+  const noteData = [
+    ['Registro dei trattamenti ex art. 30 GDPR'],
+    ['Scuola Paritaria Sacra Famiglia, Orzinuovi (BS)'],
+    [''],
+    ['Data documento:', new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'})],
+    ['Responsabile compilazione:', 'Andrea Cerioli — Animatore Digitale'],
+    [''],
+    ['Note metodologiche'],
+    [''],
+    ['Il presente registro contiene una riga per ciascun cluster di trattamento effettivamente popolato dall\'inventario corrente delle applicazioni della scuola, classificato tramite DPIA Studio.'],
+    [''],
+    ['I dati riportati riflettono la realtà operativa dell\'ecosistema digitale della scuola, non template generici. In particolare:'],
+    ['- Il Cluster D (App didattiche senza dati personali) costituisce la maggioranza dell\'inventario e non comporta trattamento di dati personali identificativi degli studenti.'],
+    ['- I cluster A e B (Profilazione e Monitoraggio) sono presenti nel registro solo se effettivamente popolati. La loro assenza documenta che la scuola non opera trattamenti ad alto rischio sistematici.'],
+    [''],
+    ['Il registro è generato automaticamente dal DPIA Studio sulla base dell\'inventario corrente. Per eventuali aggiornamenti del perimetro, è sufficiente rigenerare il file.'],
+    [''],
+    ['Riferimenti normativi:'],
+    ['- Art. 30 Regolamento UE 2016/679 (GDPR)'],
+    ['- D.Lgs. 196/2003 come modificato dal D.Lgs. 101/2018'],
+    ['- L. 62/2000 (parità scolastica)'],
+    ['- L. 92/2019 (Educazione Civica)'],
+    ['- D.Lgs. 297/1994 art. 395 (funzione docente)'],
+    ['- Regolamento UE 2024/1689 (AI Act) per i trattamenti dei cluster A, B, C']
+  ];
+  const wsNote = XLSX.utils.aoa_to_sheet(noteData);
+  wsNote['!cols'] = [{wch:30}, {wch:80}];
+  XLSX.utils.book_append_sheet(wb, wsNote, 'Note_metodologiche');
+
+  const filename = `Registro_Trattamenti_Art30_${new Date().toISOString().slice(0,10)}.xlsx`;
+  XLSX.writeFile(wb, filename);
+  showToast(`Registro art. 30 esportato: ${rows.length} righe · ${filename}`);
 }
 
 
