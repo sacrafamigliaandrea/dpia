@@ -998,6 +998,9 @@ select.add-input{cursor:pointer}
       <span class="cluster-legend-stats" id="clusterLegendStats"></span>
     </summary>
     <div class="cluster-legend-body">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+        <button class="btn secondary" onclick="generateClusterLegendPDF()" style="font-size:12px">Esporta PDF stampabile</button>
+      </div>
       <div class="cluster-legend-intro">Schema di classificazione delle applicazioni in 6 cluster, allineato al GDPR (art. 35 DPIA) e al Regolamento UE 2024/1689 (AI Act). Ogni applicazione dell'inventario è assegnata a un cluster sulla base dell'architettura tecnica e del trattamento dei dati effettuato.</div>
       <div class="cluster-legend-grid" id="clusterLegendGrid"></div>
       <div class="cluster-legend-footer">
@@ -6761,6 +6764,258 @@ function renderClusterLegend(){
       </div>
     </div>`;
   }).join('');
+}
+
+// =========================================================
+// LEGENDA CLUSTER — export PDF stampabile
+// =========================================================
+function generateClusterLegendPDF(){
+  if (typeof window.jspdf === 'undefined' || !window.jspdf){
+    showToast('Libreria PDF non caricata, riprova tra qualche secondo', true);
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 15;
+  let y = M;
+
+  // Conteggi reali
+  const counts = {A:0, B:0, C:0, D:0, E:0, F:0};
+  app.inventory.forEach(a => {
+    if (a.cluster && a.source !== 'thirdparty') counts[a.cluster]++;
+  });
+  const totalInternal = Object.values(counts).reduce((s,n) => s+n, 0);
+  const populatedClusters = Object.values(counts).filter(n => n>0).length;
+
+  // Colori in base a cluster (RGB) — coerenti con badge UI e bollini portali
+  const clusterColors = {
+    A: [139, 74, 60],
+    B: [184, 134, 11],
+    C: [30, 74, 138],
+    D: [107, 114, 128],
+    E: [74, 81, 96],
+    F: [44, 95, 141]
+  };
+  
+  // Colori del livello rischio (RGB) per il badge rischio
+  const riskColorBg = {
+    'ALTO': [251, 230, 225], 'ALTO-MEDIO': [251, 243, 220],
+    'MEDIO': [228, 234, 243], 'BASSO-MEDIO': [240, 241, 244],
+    'BASSO': [232, 239, 246], 'MINIMO': [245, 246, 248]
+  };
+  const riskColorText = {
+    'ALTO': [139, 41, 32], 'ALTO-MEDIO': [139, 92, 0],
+    'MEDIO': [30, 74, 138], 'BASSO-MEDIO': [74, 81, 96],
+    'BASSO': [44, 95, 141], 'MINIMO': [107, 114, 128]
+  };
+
+  // === HEADER ===
+  doc.setFillColor(20, 46, 90);
+  doc.rect(0, 0, W, 40, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.text('LEGENDA CLUSTER DPIA STUDIO', W/2, 18, {align:'center'});
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.text('Tassonomia di classificazione delle applicazioni didattiche', W/2, 26, {align:'center'});
+  doc.setFontSize(9);
+  doc.text('Allineata a GDPR (Regolamento UE 2016/679) e AI Act (Regolamento UE 2024/1689)', W/2, 33, {align:'center'});
+
+  y = 50;
+
+  // === BOX INFO ISTITUTO ===
+  doc.setDrawColor(212, 217, 224);
+  doc.setFillColor(247, 245, 238);
+  doc.rect(M, y, W - 2*M, 22, 'FD');
+  doc.setTextColor(26, 31, 43);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('Istituto:', M + 3, y + 6);
+  doc.setFont('helvetica', 'normal');
+  doc.text('Scuola Paritaria Sacra Famiglia, Orzinuovi (BS)', M + 22, y + 6);
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Data:', M + 3, y + 12);
+  doc.setFont('helvetica', 'normal');
+  doc.text(new Date().toLocaleDateString('it-IT', {day:'2-digit', month:'long', year:'numeric'}), M + 22, y + 12);
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Stato inventario:', M + 3, y + 18);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`${totalInternal} applicazioni interne classificate · ${populatedClusters} di 6 cluster popolati`, M + 38, y + 18);
+
+  y += 30;
+
+  // === INTRO ===
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(20, 46, 90);
+  doc.text('Schema di classificazione', M, y);
+  y += 6;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 31, 43);
+  
+  const intro = "Ogni applicazione dell'inventario è assegnata a uno dei sei cluster sotto descritti, sulla base dell'architettura tecnica e del trattamento dei dati effettuato. Ai cluster ad alto rischio (A e B) corrispondono obblighi rafforzati di valutazione (DPIA completa + FRIA ai sensi dell'AI Act). Ai cluster a basso rischio (D, E, F) corrispondono regimi proporzionati al rischio reale.";
+  const introLines = doc.splitTextToSize(intro, W - 2*M);
+  introLines.forEach((ln, i) => doc.text(ln, M, y + i*4));
+  y += introLines.length * 4 + 6;
+
+  // === CARD CLUSTER ===
+  const order = ['A', 'B', 'C', 'D', 'E', 'F'];
+  const cardW = (W - 2*M - 6) / 2;  // due colonne con gap di 6mm
+  const cardH = 56;
+  const gap = 6;
+  
+  for (let i = 0; i < order.length; i++){
+    const code = order[i];
+    const cl = CLUSTERS[code];
+    if (!cl) continue;
+    
+    const col = i % 2;
+    const xCard = M + col * (cardW + gap);
+    
+    // Verifico spazio (a fine ogni 2 card calcolo se passare a nuova pagina)
+    if (col === 0 && y + cardH > H - 25){
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.text(`Legenda cluster · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+      doc.addPage();
+      y = M;
+    }
+    
+    const cc = clusterColors[code];
+    const n = counts[code] || 0;
+    
+    // Sfondo card
+    doc.setFillColor(247, 245, 238);
+    doc.setDrawColor(212, 217, 224);
+    doc.rect(xCard, y, cardW, cardH, 'FD');
+    
+    // Border-left colorato (3mm)
+    doc.setFillColor(cc[0], cc[1], cc[2]);
+    doc.rect(xCard, y, 1.5, cardH, 'F');
+    
+    // Badge codice (quadratino colorato)
+    doc.setFillColor(cc[0], cc[1], cc[2]);
+    doc.rect(xCard + 5, y + 4, 8, 8, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(code, xCard + 9, y + 9.8, {align:'center'});
+    
+    // Nome cluster
+    doc.setTextColor(26, 31, 43);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    const nameLines = doc.splitTextToSize(cl.name, cardW - 50);
+    nameLines.forEach((ln, idx) => doc.text(ln, xCard + 16, y + 7 + idx*4));
+    
+    // Badge rischio (in alto a destra)
+    const riskBg = riskColorBg[cl.risk] || [240, 241, 244];
+    const riskTxt = riskColorText[cl.risk] || [74, 81, 96];
+    doc.setFillColor(riskBg[0], riskBg[1], riskBg[2]);
+    const riskW = cl.risk.length * 1.6 + 4;
+    doc.rect(xCard + cardW - riskW - 3, y + 4, riskW, 5, 'F');
+    doc.setTextColor(riskTxt[0], riskTxt[1], riskTxt[2]);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.text(cl.risk, xCard + cardW - riskW/2 - 3, y + 7.5, {align:'center'});
+    
+    // Descrizione (centrale)
+    doc.setTextColor(74, 81, 96);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    const descLines = doc.splitTextToSize(cl.desc, cardW - 8);
+    const maxDescLines = Math.min(descLines.length, 6);
+    for (let li = 0; li < maxDescLines; li++){
+      doc.text(descLines[li], xCard + 4, y + 18 + li*3.5);
+    }
+    
+    // Footer card (separatore + count + FRIA/DPIA)
+    const footerY = y + cardH - 7;
+    doc.setDrawColor(212, 217, 224);
+    doc.setLineDashPattern([0.5, 0.5], 0);
+    doc.line(xCard + 3, footerY, xCard + cardW - 3, footerY);
+    doc.setLineDashPattern([], 0);
+    
+    doc.setTextColor(20, 46, 90);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.text(`${n} ${n===1?'applicazione':'applicazioni'}`, xCard + 4, footerY + 4);
+    
+    // Indicatore FRIA / DPIA
+    if (cl.fria){
+      doc.setFillColor(251, 230, 225);
+      doc.rect(xCard + cardW - 31, footerY + 1, 28, 4.5, 'F');
+      doc.setTextColor(139, 41, 32);
+      doc.setFontSize(6.5);
+      doc.text('FRIA OBBLIGATORIA', xCard + cardW - 17, footerY + 4, {align:'center'});
+    } else {
+      doc.setTextColor(107, 114, 128);
+      doc.setFontSize(6.5);
+      doc.text('DPIA semplificata', xCard + cardW - 4, footerY + 4, {align:'right'});
+    }
+    
+    if (col === 1) y += cardH + 4;
+  }
+  
+  // Se l'ultima card è in colonna 0, aumento y comunque
+  if (order.length % 2 === 1) y += cardH + 4;
+
+  // === FOOTER NORMATIVO ===
+  if (y > H - 50) { doc.addPage(); y = M; }
+  
+  y += 4;
+  doc.setFillColor(247, 248, 250);
+  doc.setDrawColor(212, 217, 224);
+  const footRefH = 28;
+  doc.rect(M, y, W - 2*M, footRefH, 'FD');
+  
+  doc.setTextColor(20, 46, 90);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.text('Riferimenti normativi', M + 3, y + 6);
+  
+  doc.setTextColor(26, 31, 43);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  const refs = [
+    'GDPR — Regolamento (UE) 2016/679 — artt. 5, 6, 30, 35',
+    'AI Act — Regolamento (UE) 2024/1689 — artt. 26-27 e 50, Allegato III',
+    'Codice Privacy — D.Lgs. 196/2003 come modificato dal D.Lgs. 101/2018',
+    'L. 92/2019 (Educazione Civica) · L. 62/2000 (parità scolastica)',
+    'Linee Guida Ministero dell\'Istruzione e del Merito 2025'
+  ];
+  refs.forEach((r, idx) => {
+    doc.text('· ' + r, M + 3, y + 11 + idx*3.5);
+  });
+
+  y += footRefH + 4;
+
+  // Nota di chiusura
+  if (y < H - 25){
+    doc.setTextColor(107, 114, 128);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(7.5);
+    const nota = "La presente legenda è generata automaticamente dal DPIA Studio sulla base dell'inventario corrente. La classificazione delle singole applicazioni resta soggetta alla valutazione del DPO dell'istituto e ai rilievi delle autorità competenti.";
+    const notaLines = doc.splitTextToSize(nota, W - 2*M);
+    notaLines.forEach((ln, idx) => doc.text(ln, M, y + idx*3.5));
+  }
+
+  // Footer pagina
+  doc.setFontSize(7);
+  doc.setTextColor(150, 150, 150);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Legenda cluster · pag. ${doc.internal.getNumberOfPages()}`, W - M, H - 8, {align:'right'});
+
+  const filename = `Legenda_Cluster_DPIA_Studio_${new Date().toISOString().slice(0, 10)}.pdf`;
+  doc.save(filename);
+  showToast(`Legenda cluster esportata: ${filename}`);
 }
 
 function toggleInvSel(id){
